@@ -1,17 +1,17 @@
-import React from 'react';
-import { sideBarItems } from '../data/sidebar-items.const';
-import styled from 'styled-components';
+import React from "react";
+import { sideBarItems } from "../data/sidebar-items.const";
+import styled from "styled-components";
 
 // Inline styles
 const itemWrapper = {
-  display: 'flex',
-  color: 'blue'
+  display: "flex",
+  color: "blue",
 };
 
 // Styled-components
 const SidebarParent = styled.div`
   background: #0a3546;
-  width: 250px;
+  width: auto;
   height: 100vh;
 `;
 const SidebarHead = styled.div`
@@ -44,24 +44,24 @@ const SideBarItemIcon = styled.img``;
 
 const Sidebar = () => {
   return (
-    <>
-      <SidebarParent>
-        <SidebarHead>Sree Ambika Sago</SidebarHead>
-        {sideBarItems.map((itemSection, parentIdx) => (
-          <>
-            <SidebarHeader key={parentIdx}>{itemSection.itemHeader}</SidebarHeader>
-            {itemSection.items.map((items, idx) => (
-              <div key={idx} style={itemWrapper}>
-                <SideBarItemIcon src={items.src}></SideBarItemIcon>
-                <SideBarItems>
-                  <p>{items.name}</p>
-                </SideBarItems>
-              </div>
-            ))}
-          </>
-        ))}
-      </SidebarParent>
-    </>
+    <SidebarParent>
+      <SidebarHead>Sree Ambika Sago</SidebarHead>
+      {sideBarItems.map((itemSection, parentIdx) => (
+        <>
+          <SidebarHeader key={parentIdx}>
+            {itemSection.itemHeader}
+          </SidebarHeader>
+          {itemSection.items.map((items, idx) => (
+            <div key={idx} style={itemWrapper}>
+              <SideBarItemIcon src={items.src}></SideBarItemIcon>
+              <SideBarItems>
+                <p>{items.name}</p>
+              </SideBarItems>
+            </div>
+          ))}
+        </>
+      ))}
+    </SidebarParent>
   );
 };
 
