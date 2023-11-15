@@ -1,10 +1,10 @@
-import React from "react";
-import Sidebar from "./Sidebar";
+import React from 'react';
+import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 const Layout = () => {
   return (
     <div>
-      <div style={{ display: "flex" }}>
+      <div style={{ display: 'flex' }}>
         <Sidebar />
         <div>
           <Navbar />
