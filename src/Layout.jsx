@@ -1,19 +1,19 @@
-import React from "react";
-import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row, Col } from "react-bootstrap";
-import AppRoutes from "./routes";
+import React from 'react';
+import Sidebar from './components/Sidebar';
+import Header from './components/Header';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Row, Col } from 'react-bootstrap';
+import AppRoutes from './routes';
 
 const justForRef = {
-  border: "2px solid grey",
+  border: '2px solid grey'
 };
 const headerStyle = {
-  height: "5%",
+  height: '5%'
 };
 
 const zeroPaddings = {
-  padding: "0px",
+  padding: '0px'
 };
 
 const Layout = () => {
