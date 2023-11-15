@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 function Table() {
-  return (
-    <div>Dynamic table</div>
-  )
+  return <div>Dynamic table</div>;
 }
 
-export default Table
+export default Table;
