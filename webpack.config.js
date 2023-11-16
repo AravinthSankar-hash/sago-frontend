@@ -2,9 +2,9 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: path.join(__dirname, "src", "index.js"),
+    entry: path.join(__dirname, 'src', 'index.js'),
     output: {
-        path: path.resolve(__dirname, "dist"),
+        path: path.resolve(__dirname, 'dist')
     },
     devServer: {
         historyApiFallback: true
@@ -14,9 +14,9 @@ module.exports = {
             {
                 test: /\.js$|jsx/,
                 use: {
-                    loader: "babel-loader",
+                    loader: 'babel-loader',
                     options: {
-                        presets: ['@babel/preset-env', ['@babel/preset-react', { "runtime": "automatic" }]]
+                        presets: ['@babel/preset-env', ['@babel/preset-react', { runtime: 'automatic' }]]
                     }
                 }
             },
@@ -26,10 +26,10 @@ module.exports = {
                     {
                         loader: 'svg-url-loader',
                         options: {
-                            limit: 10000,
-                        },
-                    },
-                ],
+                            limit: 10000
+                        }
+                    }
+                ]
             },
             {
                 test: /\.css$/,
@@ -37,10 +37,12 @@ module.exports = {
             }
         ]
     },
-    plugins: [new HtmlWebpackPlugin({
-        template: path.resolve(__dirname, "public", "index.html"),
-        favicon: "./public/favicon.ico",
-        filename: "index.html",
-        manifest: "./public/manifest.json"
-    })]
-}
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: path.resolve(__dirname, 'public', 'index.html'),
+            favicon: './public/favicon.ico',
+            filename: 'index.html',
+            manifest: './public/manifest.json'
+        })
+    ]
+};
