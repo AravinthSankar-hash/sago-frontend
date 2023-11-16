@@ -4,17 +4,23 @@ import Header from './components/Header.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import AppRoutes from './routes.jsx';
+import styled from 'styled-components';
 
 const justForRef = {
-  border: '2px solid grey'
+  marginTop: '30px'
 };
 const headerStyle = {
-  height: '5%'
+  height: '8%'
 };
 
 const zeroPaddings = {
   padding: '0px'
 };
+
+const SpanBottom = styled.span`
+  margin: 0;
+  border: 1px solid #ebeef0;
+`;
 
 const Layout = () => {
   return (
@@ -26,11 +32,10 @@ const Layout = () => {
           </Col>
           <Col>
             <Row style={headerStyle}>
-              <Col lg style={justForRef}>
-                <Header></Header>
-              </Col>
+              <Header></Header>
+              <SpanBottom></SpanBottom>
             </Row>
-            <Row>
+            <Row style={justForRef}>
               <AppRoutes />
             </Row>
           </Col>

@@ -1,11 +1,29 @@
 import React from 'react';
 import { sideBarItems } from '../data/sidebar-items.const';
 import styled from 'styled-components';
+import sago_logo from '../assets/images/sago_logo.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { Container, Row, Col } from 'react-bootstrap';
 
 // Inline styles
 const itemWrapper = {
   display: 'flex',
-  color: 'blue'
+  color: 'blue',
+  margin: '0 35px'
+};
+
+const headerHeadDropdown = {
+  padding: '20px 0',
+  background: '#57D0FF',
+  textAlign: 'center'
+};
+
+const logoFix = {
+  margin: '0 5px',
+  width: '35px',
+  height: '30px',
+  padding: '0px 5px'
 };
 
 // Styled-components
@@ -16,21 +34,34 @@ const SidebarParent = styled.div`
 `;
 const SidebarHead = styled.div`
   background: #00b7ff;
-  padding: 20px;
   color: #ffffff;
-  font-size: 20px;
   font-family: Roboto;
+  display: flex;
+  font-size: 16px;
 `;
 const SidebarHeader = styled.p`
+  padding-top: 0%;
   color: #5c9eb8;
   font-family: Roboto;
-  margin: 3%;
+  margin: 13px 35px;
+  font-size: 10px;
+`;
+const SidebarHeaderName = styled.p`
+  margin: 0;
+  align-items: center;
+`;
+const SidebarFooter = styled.div`
+  margin: 35px 0 10px 30%;
+  font-family: Roboto;
+  font-size: 10px;
+  color: #00b7ff;
 `;
 const SideBarItems = styled.div`
   color: #ffffff;
   padding: 0px 24px;
+  text-align: center;
   transition: all 0.25s ease-in-out;
-  margin: 0px 12px;
+  margin: 0px 0;
   font: 14px;
   border-radius: 4px;
   &:hover {
@@ -40,12 +71,26 @@ const SideBarItems = styled.div`
     font-weight: bold;
   }
 `;
-const SideBarItemIcon = styled.img``;
+const SideBarItemIcon = styled.img`
+  padding-top: 0px;
+`;
 
 const Sidebar = () => {
   return (
     <SidebarParent>
-      <SidebarHead>Sree Ambika Sago</SidebarHead>
+      <SidebarHead>
+        <Container fluid>
+          <Row style={{ alignItems: 'center' }}>
+            <Col lg="10" style={{ display: 'flex' }}>
+              <img src={sago_logo} alt="" style={logoFix} />
+              <SidebarHeaderName>Sree Ambika Sago</SidebarHeaderName>
+            </Col>
+            <Col lg="2" style={headerHeadDropdown}>
+              <FontAwesomeIcon icon={faAngleDown} />
+            </Col>
+          </Row>
+        </Container>
+      </SidebarHead>
       {sideBarItems.map((itemSection, parentIdx) => (
         <>
           <SidebarHeader key={parentIdx}>{itemSection.itemHeader}</SidebarHeader>
@@ -59,6 +104,13 @@ const Sidebar = () => {
           ))}
         </>
       ))}
+      <SidebarFooter>
+        <Container fluid>
+          <Row>
+            <Col>Version 0.1</Col>
+          </Row>
+        </Container>
+      </SidebarFooter>
     </SidebarParent>
   );
 };
