@@ -1,9 +1,9 @@
 import React from 'react';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
+import Sidebar from './components/Sidebar.jsx';
+import Header from './components/Header.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
-import AppRoutes from './routes';
+import AppRoutes from './routes.jsx';
 
 const justForRef = {
   border: '2px solid grey'
