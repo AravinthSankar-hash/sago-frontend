@@ -6,10 +6,13 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, "dist"),
     },
+    devServer: {
+        historyApiFallback: true
+    },
     module: {
         rules: [
             {
-                test: /\.?js$/,
+                test: /\.js$|jsx/,
                 use: {
                     loader: "babel-loader",
                     options: {
@@ -27,6 +30,10 @@ module.exports = {
                         },
                     },
                 ],
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
             }
         ]
     },

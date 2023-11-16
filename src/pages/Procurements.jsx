@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import Table from '../components/Table';
+import Table from '../components/Table.jsx';
 function Procurements() {
   return (
     <Container>
