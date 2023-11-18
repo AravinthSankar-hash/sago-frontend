@@ -27,7 +27,7 @@ const Layout = () => {
     <div>
       <Container fluid>
         <Row>
-          <Col style={zeroPaddings} lg="2" sm>
+          <Col style={zeroPaddings} lg="2" md="4" sm>
             <Sidebar></Sidebar>
           </Col>
           <Col>

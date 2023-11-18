@@ -8,9 +8,10 @@ import { Container, Row, Col } from 'react-bootstrap';
 
 // Inline styles
 const itemWrapper = {
-  display: 'flex',
+  display: 'inline-flex',
   color: 'blue',
-  margin: '0 35px'
+  margin: '0 35px',
+  'margin-top': '15px'
 };
 
 const headerHeadDropdown = {
@@ -50,15 +51,19 @@ const SidebarHeaderName = styled.p`
   margin: 0;
   align-items: center;
 `;
-const SidebarFooter = styled.div`
-  margin: 35px 0 10px 30%;
+const SidebarFooter = styled.p`
+  position: absolute;
+  bottom: 5%;
+  margin-left: 5%;
+  font-weight: bolder;
+  letter-spacing: 0.1em;
   font-family: Roboto;
-  font-size: 10px;
+  font-size: 12px;
   color: #00b7ff;
 `;
 const SideBarItems = styled.div`
   color: #ffffff;
-  padding: 0px 24px;
+  padding: 0px 28px;
   text-align: center;
   transition: all 0.25s ease-in-out;
   margin: 0px 0;
@@ -97,20 +102,12 @@ const Sidebar = () => {
           {itemSection.items.map((items, idx) => (
             <div key={idx} style={itemWrapper}>
               <SideBarItemIcon src={items.src}></SideBarItemIcon>
-              <SideBarItems>
-                <p>{items.name}</p>
-              </SideBarItems>
+              <SideBarItems>{items.name}</SideBarItems>
             </div>
           ))}
         </>
       ))}
-      <SidebarFooter>
-        <Container fluid>
-          <Row>
-            <Col>Version 0.1</Col>
-          </Row>
-        </Container>
-      </SidebarFooter>
+      <SidebarFooter>Version 0.1</SidebarFooter>
     </SidebarParent>
   );
 };
