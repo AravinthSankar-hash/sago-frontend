@@ -10,7 +10,7 @@ const justForRef = {
   marginTop: '30px'
 };
 const headerStyle = {
-  height: '8%'
+  height: '56px'
 };
 
 const zeroPaddings = {
@@ -27,15 +27,16 @@ const Layout = () => {
     <div>
       <Container fluid>
         <Row>
-          <Col style={zeroPaddings} lg="2" md="4" sm>
+          <Col style={zeroPaddings} lg="2" sm md="3">
             <Sidebar></Sidebar>
           </Col>
-          <Col>
+          {/* Considering full view port - header 56px as per figma and remaining for the dynamic routes*/}
+          <Col className="vh-100">
             <Row style={headerStyle}>
               <Header></Header>
               <SpanBottom></SpanBottom>
             </Row>
-            <Row style={justForRef}>
+            <Row style={{ height: 'calc(100% - 56px)' }}>
               <AppRoutes />
             </Row>
           </Col>

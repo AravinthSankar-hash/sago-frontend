@@ -1,0 +1,23 @@
+/* AG Grid Custom CSS */
+.ag-center-cols-container {
+  width: 100% !important;
+}
+
+.ag-theme-alpine {
+  --ag-header-foreground-color: #6b778c;
+  --ag-header-background-color: #ffffff;
+}
+
+.ag-theme-alpine .ag-header {
+  border-bottom: solid 2px #ebeef0 !important;
+}
+
+.ag-root-wrapper.ag-ltr.ag-layout-normal {
+  border: 2px solid #ebeef0;
+  border-radius: 8px;
+}
+
+/* Made the even row to be not white as the header is already white */
+.ag-theme-alpine .ag-row-even {
+  background-color: #f8f8f8;
+}
