@@ -21,10 +21,18 @@ function Procurements() {
       </Row>
       <Row>
         <Col className="d-flex flex-column justify-content-center">
-          <div className="bg-info p-3 mt-2">For filters</div>
+          <div className="bg-info p-3 mt-2" style={{ height: '120px' }}>
+            For filters
+          </div>
           <div>
             <AgGridTable
-              columnDefs={[{ field: 'make' }, { field: 'model' }, { field: 'price' }]}
+              columnDefs={[
+                { field: 'make' },
+                { field: 'model' },
+                { field: 'price' },
+                { field: 'location' },
+                { field: 'pincode' }
+              ]}
               rowData={tableColumns}
             />
           </div>

@@ -9,7 +9,22 @@
 }
 
 .ag-theme-alpine .ag-header {
-  border-bottom: solid 2px #ebeef0 !important;
+  border-bottom: solid 3px #ebeef0 !important;
+}
+.ag-paging-panel {
+  border-top: 0px #ebeef0 !important;
+}
+
+.ag-row {
+  border-bottom: 0px !important;
+}
+
+.ag-row-odd {
+  background-color: #f8f8f8;
+}
+
+.ag-theme-alpine .ag-row-even {
+  background-color: #ffffff !important;
 }
 
 .ag-root-wrapper.ag-ltr.ag-layout-normal {
@@ -20,4 +35,23 @@
 /* Made the even row to be not white as the header is already white */
 .ag-theme-alpine .ag-row-even {
   background-color: #f8f8f8;
+}
+
+.btn-secondary {
+  --bs-btn-color: 'white' !important;
+  --bs-btn-bg: 'white' !important;
+  --bs-btn-hover-bg: rgb(235, 238, 240) !important;
+  --bs-btn-hover-color: black !important;
+  --bs-btn-active-color: black !important;
+  --bs-btn-active-bg: rgb(235, 238, 240) !important;
+  --bs-btn-active-border-color: 'white' !important;
+  border: 0px;
+}
+
+.agrid-custom-height {
+  height: 600px; /* Default height */
+
+  @media (max-height: 875px) {
+    height: 500px; /* Set a different height for screens shorter than 300px */
+  }
 }
