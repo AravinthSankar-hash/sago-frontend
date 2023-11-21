@@ -6,9 +6,6 @@ import { Container, Row, Col } from 'react-bootstrap';
 import AppRoutes from './routes.jsx';
 import styled from 'styled-components';
 
-const justForRef = {
-  marginTop: '30px'
-};
 const headerStyle = {
   height: '56px'
 };
