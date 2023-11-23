@@ -15,7 +15,3 @@
 .ag-theme-alpine.agrid-custom-height::-webkit-scrollbar-track {
   background-color: #fafbfc;
 }
-
-.agrid-custom-height {
-  height: 100vh;
-}
