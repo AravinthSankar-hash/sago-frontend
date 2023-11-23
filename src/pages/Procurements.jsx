@@ -6,6 +6,7 @@ import DateSelector from '../components/DateSelector';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CatalogNewCustForm from '../components/CatalogNewCustForm';
 
 function Procurements() {
   const [tableColumns, setTableColuns] = useState([]);
@@ -42,7 +43,7 @@ function Procurements() {
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showNewForm ? (
-            <div>FORM COMES HERE</div>
+            <CatalogNewCustForm />
           ) : (
             <div>
               <div className="p-3 mt-2" style={{ height: '120px' }}>
