@@ -7,10 +7,17 @@ import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CatalogNewCustForm from '../components/CatalogNewCustForm';
+import IconButton from '@mui/material/IconButton';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import '../css/index.css';
 
 function Procurements() {
   const [tableColumns, setTableColuns] = useState([]);
   const [showNewForm, setShowNewForm] = useState(false);
+  const [chipsSelected, setChipsSelected] = React.useState(false);
+
   useEffect(() => {
     console.log(1);
     fetch('http://localhost:3001/columns')
@@ -27,7 +34,7 @@ function Procurements() {
   };
   return (
     <Container style={{ background: '#EBEEF0' }}>
-      <Row style={{ background: 'grey', height: '56px' }}>
+      <Row style={{ background: '#ffffff', height: '56px' }}>
         <Col>
           <ArrowBackIcon
             style={{ cursor: 'pointer' }}
@@ -46,9 +53,9 @@ function Procurements() {
             <CatalogNewCustForm />
           ) : (
             <div>
-              <div className="p-3 mt-2" style={{ height: '120px' }}>
+              <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
                 <Row>
-                  <Col lg="4">
+                  <Col lg="3">
                     <SearchBox></SearchBox>
                   </Col>
                   <Col lg="2">
@@ -57,14 +64,70 @@ function Procurements() {
                   <Col lg="2">
                     <DateSelector customLabel="To"></DateSelector>
                   </Col>
-                  <Col lg="4">
-                    <Button variant="outlined" onClick={() => showForm(true)}>
-                      <AddIcon fontSize="small" />
+                  <Col lg="2" style={{ display: 'flex', justifyContent: 'space-around' }}>
+                    <IconButton size="small">
+                      <IosShareIcon
+                        fontSize="small"
+                        style={{
+                          wordSpacing: 1
+                        }}
+                      />
+                      Export Data
+                    </IconButton>
+                  </Col>
+                  <Col lg="3">
+                    <Button
+                      sx={{
+                        borderColor: '#00B7FF',
+                        borderRadius: '8px',
+                        border: '2px solid',
+                        color: '#00B7FF',
+                        font: '14px',
+                        textTransform: 'none',
+                        fontWeight: 'bold'
+                      }}
+                      variant="outlined"
+                      onClick={() => showForm(true)}>
+                      <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
                       New Procurement
                     </Button>
                   </Col>
                 </Row>
-                <Row></Row>
+                <Row className="mt-3">
+                  <Stack direction="row" spacing={1}>
+                    <p style={{ color: '#6B778C' }}>Filter by : </p>
+                    <Chip
+                      label="All"
+                      color="primary"
+                      variant={chipsSelected ? 'filled' : 'outlined'}
+                      onClick={() => setChipsSelected((s) => !s)}
+                      sx={{
+                        border: '2px solid',
+                        borderRadius: '8px'
+                      }}
+                    />
+                    <Chip
+                      label="Paid"
+                      color="primary"
+                      variant={chipsSelected ? 'filled' : 'outlined'}
+                      sx={{
+                        border: '2px solid',
+                        borderRadius: '8px'
+                      }}
+                      onClick={() => setChipsSelected((s) => !s)}
+                    />
+                    <Chip
+                      label="Unpaid"
+                      color="primary"
+                      variant={chipsSelected ? 'filled' : 'outlined'}
+                      sx={{
+                        border: '2px solid',
+                        borderRadius: '8px'
+                      }}
+                      onClick={() => setChipsSelected((s) => !s)}
+                    />
+                  </Stack>
+                </Row>
               </div>
               <div>
                 <AgGridTable

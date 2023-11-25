@@ -4,20 +4,15 @@ import Header from './components/Header.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import AppRoutes from './routes.jsx';
-import styled from 'styled-components';
 
 const headerStyle = {
-  height: '56px'
+  height: '56px',
+  'border-bottom': '3px solid #EBEEF0'
 };
 
 const zeroPaddings = {
   padding: '0px'
 };
-
-const SpanBottom = styled.span`
-  margin: 0;
-  border: 1px solid #ebeef0;
-`;
 
 const Layout = () => {
   return (
@@ -31,7 +26,6 @@ const Layout = () => {
           <Col className="vh-100">
             <Row style={headerStyle}>
               <Header></Header>
-              <SpanBottom></SpanBottom>
             </Row>
             <Row style={{ height: 'calc(100% - 56px)' }}>
               <AppRoutes />
