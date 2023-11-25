@@ -11,7 +11,7 @@ const itemWrapper = {
   display: 'inline-flex',
   color: 'blue',
   margin: '0 35px',
-  'margin-top': '15px'
+  marginTop: '15px'
 };
 
 const headerHeadDropdown = {

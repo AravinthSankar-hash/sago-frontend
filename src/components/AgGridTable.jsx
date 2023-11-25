@@ -11,7 +11,7 @@ const AgGridTable = (props) => {
   const pageSize = 10;
 
   const [pageCount, setPageCount] = useState(10);
-  const gridStyle = useMemo(() => ({ width: '100%', 'border-radius': '30px' }), []);
+  const gridStyle = useMemo(() => ({ width: '100%', borderRadius: '30px' }), []);
 
   const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
 
