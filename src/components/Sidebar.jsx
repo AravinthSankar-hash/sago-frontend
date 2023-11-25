@@ -5,6 +5,7 @@ import sago_logo from '../assets/images/sago_logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { Container, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 // Inline styles
 const itemWrapper = {
@@ -81,6 +82,7 @@ const SideBarItemIcon = styled.img`
 `;
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   return (
     <SidebarParent>
       <SidebarHead>
@@ -100,7 +102,7 @@ const Sidebar = () => {
         <>
           <SidebarHeader key={parentIdx}>{itemSection.itemHeader}</SidebarHeader>
           {itemSection.items.map((items, idx) => (
-            <div key={idx} style={itemWrapper}>
+            <div key={idx} style={itemWrapper} onClick={() => navigate(items?.route || '/')}>
               <SideBarItemIcon src={items.src}></SideBarItemIcon>
               <SideBarItems>{items.name}</SideBarItems>
             </div>

@@ -55,3 +55,7 @@
     height: 500px; /* Set a different height for screens shorter than 300px */
   }
 }
+
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+  font-size: 0.9rem !important;
+}
