@@ -6,7 +6,7 @@ import DateSelector from '../components/DateSelector';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CatalogNewCustForm from '../components/CatalogNewCustForm';
+import CatalogNewCustForm from '../components/forms/CatalogNewCust.jsx';
 import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
