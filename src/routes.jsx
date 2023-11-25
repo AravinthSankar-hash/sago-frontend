@@ -1,16 +1,16 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import NotFound from './pages/NotFound.jsx';
 import Procurements from './pages/Procurements.jsx';
+import Catalog from './pages/Catalog.jsx';
 
 function AppRoutes() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Procurements />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Procurements />} />
+      <Route path="/catalog" element={<Catalog />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 

@@ -13,7 +13,7 @@ export const sideBarItems = [
   {
     itemHeader: 'REPORTS',
     items: [
-      { name: 'DashBoard', src: dashIcon },
+      { name: 'DashBoard', src: dashIcon, route: '/' },
       { name: 'Inventory', src: inventIcon },
       { name: 'Approvals', src: approvIcon }
     ]
@@ -36,6 +36,6 @@ export const sideBarItems = [
   },
   {
     itemHeader: 'DATA',
-    items: [{ name: 'Cataglog', src: catIcon }]
+    items: [{ name: 'Cataglog', src: catIcon, route: '/catalog' }]
   }
 ];
