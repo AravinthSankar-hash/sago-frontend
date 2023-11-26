@@ -1,6 +1,6 @@
-import React, { useMemo, useRef, useEffect, useState } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
-import '../css/catalogNewCust.css';
+import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
 
 function CatalogNewCustForm() {
@@ -10,23 +10,23 @@ function CatalogNewCustForm() {
     formState: { errors }
   } = useForm();
   const onSubmit = (data) => console.log(data);
-  const [scrollable, setScrollable] = useState(true);
+  // const [scrollable, setScrollable] = useState(true);
   const containerRef = useRef();
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (container.scrollHeight > container.clientHeight) {
-      setScrollable(true);
-    } else {
-      setScrollable(false);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const container = containerRef.current;
+  //   if (container.scrollHeight > container.clientHeight) {
+  //     setScrollable(true);
+  //   } else {
+  //     setScrollable(false);
+  //   }
+  // }, []);
 
   const gridStyle = useMemo(
     () => ({
       width: '100%',
       borderRadius: '10px',
-      overflowY: scrollable ? 'auto' : 'hidden',
+      overflowY: 'auto',
       maxHeight: '750px',
       backgroundColor: 'white',
       fontSize: '14px',
@@ -43,21 +43,21 @@ function CatalogNewCustForm() {
   };
 
   const inputStyle = {
+    backgroundImage: 'url("data:image/svg+xml, ...")', // SVG data for the caret icon
+    backgroundPosition: 'right 10px top 50%', // Adjust as needed
+    backgroundRepeat: 'no-repeat',
     background: `linear-gradient(0deg, #FAFBFC, #FAFBFC), linear-gradient(0deg, #DFE1E6, #DFE1E6)`,
     border: '2px solid #DFE1E6'
   };
 
   return (
-    <Container
-      ref={containerRef}
-      className="ag-theme-alpine agrid-custom-height mt-4"
-      style={gridStyle}>
+    <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
       <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
         <Form.Label className="mt-4" style={headingStyle}>
           1. Customer details
         </Form.Label>
         <Row className="mb-3 mt-3">
-          <Form.Group as={Col} xs={3} controlId="formBasicName">
+          <Form.Group as={Col} xs={3} controlId="NewCustformName">
             <Form.Label>
               Customer Name <span style={{ color: 'red' }}>*</span>
             </Form.Label>
@@ -69,14 +69,15 @@ function CatalogNewCustForm() {
             {errors.name && <Form.Text className="text-danger">{errors.name.message}</Form.Text>}
           </Form.Group>
 
-          <Form.Group as={Col} xs={3} controlId="formBasicType">
+          <Form.Group as={Col} xs={3} controlId="NewCustformType">
             <Form.Label>
               Customer Type <span style={{ color: 'red' }}>*</span>
             </Form.Label>
             <Form.Select
-              defaultValue="Choose..."
+              aria-label="Default select example"
+              // defaultValue=""
               style={inputStyle}
-              type="select"
+              // type="select"
               {...register('type', { required: 'This field is required' })}>
               <option value="">Choose Something</option>
               <option>...</option>
@@ -84,7 +85,7 @@ function CatalogNewCustForm() {
             {errors.type && <Form.Text className="text-danger">{errors.type.message}</Form.Text>}
           </Form.Group>
 
-          <Form.Group as={Col} xs={3} controlId="FormBasicPhone">
+          <Form.Group as={Col} xs={3} controlId="NewCustFormPhone">
             <Form.Label>
               Phone No. <span style={{ color: 'red' }}>*</span>
             </Form.Label>
@@ -99,18 +100,18 @@ function CatalogNewCustForm() {
                 },
                 maxLength: 10
               })}
-            />{' '}
+            />
             {errors.phone && <Form.Text className="text-danger">{errors.phone.message}</Form.Text>}
           </Form.Group>
         </Row>
 
         <Row className="mb-3">
-          <Form.Group as={Col} xs={3} controlId="FormBasicAltPhone">
+          <Form.Group as={Col} xs={3} controlId="NewCustFormAltPhone">
             <Form.Label>Alt. Phone No.</Form.Label>
-            <Form.Control style={inputStyle} type="tel" />{' '}
+            <Form.Control style={inputStyle} type="tel" {...register('altphone')} />
           </Form.Group>
 
-          <Form.Group as={Col} xs={3} controlId="formBasicEmail">
+          <Form.Group as={Col} xs={3} controlId="NewCustformEmail">
             <Form.Label>
               E-mail <span style={{ color: 'red' }}>*</span>
             </Form.Label>
@@ -128,7 +129,7 @@ function CatalogNewCustForm() {
             {errors.email && <Form.Text className="text-danger">{errors.email.message}</Form.Text>}
           </Form.Group>
 
-          <Form.Group as={Col} xs={3} controlId="FormBasicAadhar">
+          <Form.Group as={Col} xs={3} controlId="NewCustFormAadhar">
             <Form.Label>
               Aadhar No. <span style={{ color: 'red' }}>*</span>
             </Form.Label>
@@ -142,7 +143,7 @@ function CatalogNewCustForm() {
                 },
                 required: 'This field is required'
               })}
-            />{' '}
+            />
             {errors.aadhar && (
               <Form.Text className="text-danger">{errors.aadhar.message}</Form.Text>
             )}
@@ -153,7 +154,7 @@ function CatalogNewCustForm() {
           2. Address details
         </Form.Label>
         <Row className="mb-3 mt-3">
-          <Form.Group as={Col} xs={6} controlId="FormBasicAddress">
+          <Form.Group as={Col} xs={6} controlId="NewCustFormAddress">
             <Form.Label>
               Address <span style={{ color: 'red' }}>*</span>
             </Form.Label>
@@ -163,14 +164,14 @@ function CatalogNewCustForm() {
               {...register('address', {
                 required: 'This field is required'
               })}
-            />{' '}
+            />
             {errors.address && (
               <Form.Text className="text-danger">{errors.address.message}</Form.Text>
             )}
           </Form.Group>
         </Row>
         <Row className="mb-3">
-          <Form.Group as={Col} xs={3} controlId="FormBasicCity">
+          <Form.Group as={Col} xs={3} controlId="NewCustFormCity">
             <Form.Label>
               City<span style={{ color: 'red' }}>*</span>
             </Form.Label>
@@ -180,11 +181,11 @@ function CatalogNewCustForm() {
               {...register('city', {
                 required: 'This field is required'
               })}
-            />{' '}
+            />
             {errors.city && <Form.Text className="text-danger">{errors.city.message}</Form.Text>}
           </Form.Group>
 
-          <Form.Group as={Col} xs={3} controlId="FormBasicPincode">
+          <Form.Group as={Col} xs={3} controlId="NewCustFormPincode">
             <Form.Label>
               Pincode <span style={{ color: 'red' }}>*</span>
             </Form.Label>
@@ -198,7 +199,7 @@ function CatalogNewCustForm() {
                   message: 'Enter a valid six-digit PIN code'
                 }
               })}
-            />{' '}
+            />
             {errors.pincode && (
               <Form.Text className="text-danger">{errors.pincode.message}</Form.Text>
             )}
@@ -210,20 +211,26 @@ function CatalogNewCustForm() {
         </Form.Label>
 
         <Row className="mb-3 mt-2">
-          <Form.Group as={Col} xs={3} controlId="FormBasicGstNo">
+          <Form.Group as={Col} xs={3} controlId="NewCustFormGstNo">
             <Form.Label>GST No.</Form.Label>
-            <Form.Control style={inputStyle} type="text" />
+            <Form.Control style={inputStyle} type="text" {...register('gstnum')} />
           </Form.Group>
 
-          <Form.Group as={Col} xs={3} controlId="FormBasicPanNo">
+          <Form.Group as={Col} xs={3} controlId="NewCustFormPanNo">
             <Form.Label>PAN No.</Form.Label>
-            <Form.Control style={inputStyle} type="text" />
+            <Form.Control style={inputStyle} type="text" {...register('pan')} />
           </Form.Group>
         </Row>
         <Row className="mb-3">
-          <Form.Group className="mb-3" as={Col} xs={6} controlId="FormBasicDes">
+          <Form.Group className="mb-3" as={Col} xs={6} controlId="NewCustFormDes">
             <Form.Label>Description</Form.Label>
-            <Form.Control as="textarea" rows={5} style={inputStyle} type="text" />
+            <Form.Control
+              as="textarea"
+              rows={5}
+              style={inputStyle}
+              type="text"
+              {...register('description')}
+            />
           </Form.Group>
         </Row>
         <Button variant="primary" className="mb-4" type="submit" style={buttonStyle}>
