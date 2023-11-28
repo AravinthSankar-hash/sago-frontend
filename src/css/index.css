@@ -70,3 +70,8 @@
 .css-hg18dx-MuiButtonBase-root-MuiTab-root.Mui-selected {
   color: #00b7ff !important;
 }
+
+/* On focused primary color for all input border in procurements */
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #00b7ff !important;
+}

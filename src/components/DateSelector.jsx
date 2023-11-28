@@ -9,7 +9,17 @@ export default function DateSelector({ customLabel }) {
     <div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Container components={['DatePicker']}>
-          <DatePicker label={customLabel} />
+          <DatePicker
+            label={customLabel}
+            slotProps={{
+              textField: {
+                size: 'small',
+                style: {
+                  backgroundColor: 'white'
+                }
+              }
+            }}
+          />
         </Container>
       </LocalizationProvider>
     </div>

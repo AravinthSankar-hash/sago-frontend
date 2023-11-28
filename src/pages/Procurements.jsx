@@ -16,7 +16,7 @@ import '../css/index.css';
 function Procurements() {
   const [tableColumns, setTableColuns] = useState([]);
   const [showNewForm, setShowNewForm] = useState(false);
-  const [chipsSelected, setChipsSelected] = React.useState(false);
+  const [chipsSelected, setChipsSelected] = useState(false);
 
   useEffect(() => {
     console.log(1);
@@ -31,6 +31,9 @@ function Procurements() {
   }, []);
   const showForm = (shouldShow) => {
     setShowNewForm(shouldShow);
+  };
+  const handleChipsSelect = () => {
+    setChipsSelected(!chipsSelected);
   };
   return (
     <Container style={{ background: '#EBEEF0' }}>
@@ -59,7 +62,7 @@ function Procurements() {
                     <SearchBox></SearchBox>
                   </Col>
                   <Col lg="2">
-                    <DateSelector customLabel="From"></DateSelector>
+                    <DateSelector size="smaller" customLabel="From"></DateSelector>
                   </Col>
                   <Col lg="2">
                     <DateSelector customLabel="To"></DateSelector>
@@ -79,6 +82,7 @@ function Procurements() {
                     <Button
                       sx={{
                         borderColor: '#00B7FF',
+                        backgroundColor: 'white',
                         borderRadius: '8px',
                         border: '2px solid',
                         color: '#00B7FF',
@@ -99,32 +103,39 @@ function Procurements() {
                     <Chip
                       label="All"
                       color="primary"
-                      variant={chipsSelected ? 'filled' : 'outlined'}
-                      onClick={() => setChipsSelected((s) => !s)}
                       sx={{
-                        border: '2px solid',
-                        borderRadius: '8px'
+                        border: '2px solid #00b7ff',
+                        borderRadius: '8px',
+                        backgroundColor: 'white',
+                        color: '#00b7ff'
                       }}
                     />
                     <Chip
                       label="Paid"
                       color="primary"
-                      variant={chipsSelected ? 'filled' : 'outlined'}
                       sx={{
-                        border: '2px solid',
-                        borderRadius: '8px'
+                        border: '2px solid #00b7ff',
+                        borderRadius: '8px',
+                        backgroundColor: 'white',
+                        color: '#00b7ff'
                       }}
-                      onClick={() => setChipsSelected((s) => !s)}
+                      q
                     />
                     <Chip
                       label="Unpaid"
-                      color="primary"
-                      variant={chipsSelected ? 'filled' : 'outlined'}
                       sx={{
-                        border: '2px solid',
-                        borderRadius: '8px'
+                        border: '2px solid #00b7ff',
+                        borderRadius: '8px',
+                        backgroundColor: chipsSelected ? '#00b7ff' : 'white',
+                        color: chipsSelected ? 'white' : '#00b7ff',
+                        ':hover': {
+                          background: '#00b7ff',
+                          color: 'white',
+                          boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)'
+                        },
+                        cursor: 'pointer'
                       }}
-                      onClick={() => setChipsSelected((s) => !s)}
+                      onClick={handleChipsSelect}
                     />
                   </Stack>
                 </Row>
