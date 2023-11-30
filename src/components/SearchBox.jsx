@@ -2,6 +2,7 @@ import { useState } from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
+import '../css/index.css';
 
 export default function SearchBox() {
   const [value, setValue] = useState('');
@@ -17,6 +18,10 @@ export default function SearchBox() {
         onChange={(e) => setValue(e.target.value)}
         value={value}
         InputProps={{
+          style: {
+            height: '38px',
+            backgroundColor: 'white'
+          },
           endAdornment: (
             <InputAdornment position="start">
               <SearchIcon />

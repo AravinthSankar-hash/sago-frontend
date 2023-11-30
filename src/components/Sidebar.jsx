@@ -66,7 +66,7 @@ const SideBarItems = styled.div`
   color: #ffffff;
   padding: 0px 28px;
   text-align: center;
-  transition: all 0.25s ease-in-out;
+  transition: all 0.05s ease-in-out;
   margin: 0px 0;
   font: 14px;
   border-radius: 4px;
