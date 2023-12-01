@@ -2,8 +2,9 @@ import React, { useMemo, useRef } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
+import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
-const CatalogNewStaff = () => {
+const CatalogNewStaff = (props) => {
   // const [focusedInput, setFocusedInput] = useState(null);
 
   const {
@@ -27,7 +28,9 @@ const CatalogNewStaff = () => {
     []
   );
   const headingStyle = {
-    color: '#62728D'
+    color: '#62728D',
+    display: 'flex',
+    justifyContent: 'space-between'
   };
   const buttonStyle = {
     backgroundColor: '#00B7FF',
@@ -56,8 +59,13 @@ const CatalogNewStaff = () => {
       <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
         <Row className="mb-3 mt-3">
           <Form.Group controlId="NewStaffFormProfilePic">
-            <Form.Label>
+            <Form.Label style={{ display: 'flex', justifyContent: 'space-between' }}>
               Profile Picture <span style={{ color: 'red' }}>*</span>
+              <CloseSharpIcon
+                style={{ cursor: 'pointer' }}
+                onClick={() => props.showForm(false)}
+                fontSize="medium"
+              />
             </Form.Label>
             <Form.Control type="file" />
             {/* <Form.File
@@ -94,22 +102,6 @@ const CatalogNewStaff = () => {
             )}
           </Form.Group>
 
-          {/* <Form.Group as={Col} xs={3} controlId="NewStaffFormType">
-            <Form.Label>
-              Customer Type <span style={{ color: 'red' }}>*</span>
-            </Form.Label>
-            <Form.Select
-              aria-label="Default select example"
-              // defaultValue=""
-              style={inputStyle}
-              // type="select"
-              {...register('type', { required: 'This field is required' })}>
-              <option value="">Choose Something</option>
-              <option>...</option>
-            </Form.Select>
-            {errors.type && <Form.Text className="text-danger">{errors.type.message}</Form.Text>}
-          </Form.Group> */}
-
           <Form.Group as={Col} xs={3} controlId="NewStaffFormPhone">
             <Form.Label>
               Phone No. <span style={{ color: 'red' }}>*</span>
@@ -136,22 +128,8 @@ const CatalogNewStaff = () => {
 
         <Row className="mb-3">
           <Form.Group as={Col} xs={3} controlId="NewStaffformEmail">
-            <Form.Label>
-              E-mail
-              {/* <span style={{ color: 'red' }}>*</span> */}
-            </Form.Label>
-            <Form.Control
-              style={inputStyle}
-              type="email"
-              {...register('email', {
-                // required: 'This field is required',
-                // pattern: {
-                //   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                //   message: 'Enter a valid email address'
-                // }
-              })}
-            />
-            {/* {errors.email && <Form.Text className="text-danger">{errors.email.message}</Form.Text>} */}
+            <Form.Label>E-mail</Form.Label>
+            <Form.Control style={inputStyle} type="email" {...register('email', {})} />
           </Form.Group>
 
           <Form.Group as={Col} xs={3} controlId="NewStaffFormDesignation">
