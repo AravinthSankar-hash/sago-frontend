@@ -2,24 +2,16 @@ import React, { useMemo, useRef } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
-const CatalogNewBrokerForm = () => {
+import CloseSharpIcon from '@mui/icons-material/CloseSharp';
+
+const CatalogNewBrokerForm = (props) => {
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
   const onSubmit = (data) => console.log(data);
-  // const [scrollable, setScrollable] = useState(true);
   const containerRef = useRef();
-
-  // useEffect(() => {
-  //   const container = containerRef.current;
-  //   if (container.scrollHeight > container.clientHeight) {
-  //     setScrollable(true);
-  //   } else {
-  //     setScrollable(false);
-  //   }
-  // }, []);
 
   const gridStyle = useMemo(
     () => ({
@@ -34,7 +26,9 @@ const CatalogNewBrokerForm = () => {
     []
   );
   const headingStyle = {
-    color: '#62728D'
+    color: '#62728D',
+    display: 'flex',
+    justifyContent: 'space-between'
   };
   const buttonStyle = {
     backgroundColor: '#00B7FF',
@@ -50,8 +44,13 @@ const CatalogNewBrokerForm = () => {
       <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
         <Form.Label className="mt-4" style={headingStyle}>
           1. Supplier details
+          <CloseSharpIcon
+            style={{ cursor: 'pointer' }}
+            onClick={() => props.showForm(false)}
+            fontSize="medium"
+          />
         </Form.Label>
-        <Row className="mb-3 mt-3">
+        <Row className="mb-3 mt-2">
           <Form.Group as={Col} xs={3} controlId="NewBroformName">
             <Form.Label>
               Name <span style={{ color: 'red' }}>*</span>
@@ -108,7 +107,7 @@ const CatalogNewBrokerForm = () => {
           </Form.Group>
         </Row>
 
-        <Form.Label className="mt-4" style={headingStyle}>
+        <Form.Label className="mt-5" style={headingStyle}>
           2. Address details
         </Form.Label>
         <Row className="mb-3 mt-3">
@@ -176,7 +175,7 @@ const CatalogNewBrokerForm = () => {
           </Form.Group>
         </Row>
 
-        <Form.Label className="mt-4" style={headingStyle}>
+        <Form.Label className="mt-5" style={headingStyle}>
           3. Bank details
         </Form.Label>
         <Row className="mb-3 mt-3">
@@ -233,11 +232,11 @@ const CatalogNewBrokerForm = () => {
           </Form.Group>
         </Row>
 
-        <Form.Label className="mt-4" style={headingStyle}>
+        <Form.Label className="mt-5" style={headingStyle}>
           4. Other details
         </Form.Label>
 
-        <Row className="mb-3 mt-2">
+        <Row className="mb-3 mt-3">
           <Form.Group as={Col} xs={3} controlId="NewBroFormcom">
             <Form.Label>Commission Percentage(%)</Form.Label>
             <Form.Control style={inputStyle} type="text" {...register('commission')} />

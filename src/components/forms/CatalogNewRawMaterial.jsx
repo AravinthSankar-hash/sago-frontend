@@ -2,8 +2,9 @@ import React, { useMemo } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
+import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
-const CatalogNewRawMaterialForm = () => {
+const CatalogNewRawMaterialForm = (props) => {
   const {
     register,
     handleSubmit,
@@ -24,7 +25,9 @@ const CatalogNewRawMaterialForm = () => {
   );
 
   const headingStyle = {
-    color: '#62728D'
+    color: '#62728D',
+    display: 'flex',
+    justifyContent: 'space-between'
   };
   const buttonStyle = {
     backgroundColor: '#00B7FF',
@@ -43,6 +46,11 @@ const CatalogNewRawMaterialForm = () => {
       <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
         <Form.Label className="mt-4" style={headingStyle}>
           1. Topioca Type
+          <CloseSharpIcon
+            style={{ cursor: 'pointer' }}
+            onClick={() => props.showForm(false)}
+            fontSize="medium"
+          />
         </Form.Label>
         <Row className="mb-3 mt-3">
           <Form.Group as={Col} xs={3} controlId="NewRawformName">

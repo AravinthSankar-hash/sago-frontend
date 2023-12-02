@@ -1,33 +1,33 @@
 import React, { useState } from 'react';
 import CatalogTab from '../components/CatalogTab';
-import { Container, Row, Col } from 'react-bootstrap';
-import CatalogNewCustForm from '../components/forms/CatalogNewCust.jsx';
-import CatalogNewBrokerForm from '../components/forms/CatalogNewBroker.jsx';
-import CatalogNewSupplierForm from '../components/forms/CatalogNewSupplier.jsx';
-import CatalogNewRawMaterialForm from '../components/forms/CatalogNewRawMaterial.jsx';
-import CatalogNewVehicle from '../components/forms/CatalogNewVehicle.jsx';
-import CatalogNewStaff from '../components/forms/CatalogNewStaff.jsx';
-import CatalogNewProduct from '../components/forms/CatalogNewProduct.jsx';
+import { Container, Row } from 'react-bootstrap';
+import Customer from '../components/catalogTabs/Customer.jsx';
+import Broker from '../components/catalogTabs/Broker.jsx';
+import RawMaterial from '../components/catalogTabs/RawMaterial.jsx';
+import Supplier from '../components/catalogTabs/Supplier.jsx';
+import Product from '../components/catalogTabs/Product.jsx';
+import Vehicle from '../components/catalogTabs/Vehicle.jsx';
+import Staff from '../components/catalogTabs/Staff.jsx';
 
 const Catalog = () => {
-  const defaultTabComponent = <CatalogNewCustForm />;
+  const defaultTabComponent = <Customer />;
   const [activeTabComponent, setActiveTabComponent] = useState(defaultTabComponent);
   const renderTabComponent = (tabName) => {
     switch (tabName) {
       case 'customers':
-        return <CatalogNewCustForm />;
+        return <Customer />;
       case 'brokers':
-        return <CatalogNewBrokerForm />;
+        return <Broker />;
       case 'rawmaterials':
-        return <CatalogNewRawMaterialForm />;
+        return <RawMaterial />;
       case 'suppliers':
-        return <CatalogNewSupplierForm />;
+        return <Supplier />;
       case 'products':
-        return <CatalogNewProduct />;
+        return <Product />;
       case 'vehicles':
-        return <CatalogNewVehicle />;
+        return <Vehicle />;
       case 'staffs':
-        return <CatalogNewStaff />;
+        return <Staff />;
       default:
         return <div>Coming soon...</div>;
     }
@@ -42,9 +42,7 @@ const Catalog = () => {
       <Row style={{ background: '#ffffff', height: '56px' }}>
         <CatalogTab handleTabSwitch={handleTabSwitch} />
       </Row>
-      <Row>
-        <Col className="d-flex flex-column justify-content-center">{activeTabComponent}</Col>
-      </Row>
+      <Row>{activeTabComponent}</Row>
     </Container>
   );
 };

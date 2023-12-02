@@ -2,32 +2,22 @@ import React, { useMemo, useRef } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
+import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
-const CatalogNewSupplierForm = () => {
+const CatalogNewSupplierForm = (props) => {
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
   const onSubmit = (data) => console.log(data);
-  //   const [scrollable, setScrollable] = useState(true);
   const containerRef = useRef();
-
-  //   useEffect(() => {
-  //     const container = containerRef.current;
-  //     if (container.scrollHeight > container.clientHeight) {
-  //       setScrollable(true);
-  //     } else {
-  //       setScrollable(false);
-  //     }
-  //   }, []);
 
   const gridStyle = useMemo(
     () => ({
       width: '100%',
       borderRadius: '10px',
-      //   overflowY: scrollable ? 'auto' : 'hidden',
-      //   maxHeight: '750px',
+
       overflowY: 'auto',
       maxHeight: '750px',
       backgroundColor: 'white',
@@ -37,7 +27,9 @@ const CatalogNewSupplierForm = () => {
     []
   );
   const headingStyle = {
-    color: '#62728D'
+    color: '#62728D',
+    display: 'flex',
+    justifyContent: 'space-between'
   };
   const buttonStyle = {
     backgroundColor: '#00B7FF',
@@ -53,6 +45,11 @@ const CatalogNewSupplierForm = () => {
       <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
         <Form.Label className="mt-4" style={headingStyle}>
           1. Supplier details
+          <CloseSharpIcon
+            style={{ cursor: 'pointer' }}
+            onClick={() => props.showForm(false)}
+            fontSize="medium"
+          />
         </Form.Label>
         <Row className="mb-3 mt-3">
           <Form.Group as={Col} xs={3} controlId="NewSuppformName">
