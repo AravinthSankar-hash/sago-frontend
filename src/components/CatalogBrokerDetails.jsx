@@ -4,11 +4,9 @@ import { Row, Col, Container } from 'react-bootstrap';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import '../css/catalogNewCust.css';
 
-const CatalogCustomerDetails = (props) => {
+const CatalogBrokerDetails = (props) => {
   const boxWrapper = {
     boxShadow: '#EBEEF0 0px 0px 0px 3px'
-    // fontSize: '12px'
-    // overflowY: 'auto'
   };
   const containerWrapper = {
     font: 'Roboto',
@@ -25,7 +23,7 @@ const CatalogCustomerDetails = (props) => {
   return (
     <Container className="p-4 pt-2 bg-white h-100" style={containerWrapper}>
       <div className="d-flex justify-content-between">
-        <div style={{ fontSize: '18px' }}>Customer Details</div>
+        <div style={{ fontSize: '18px' }}>Broker Details</div>
         <div>
           <MoreVertOutlinedIcon
             fontSize="small"
@@ -52,37 +50,27 @@ const CatalogCustomerDetails = (props) => {
               Total Paid
             </p>
             <p className="p-0 m-0 text-center" style={{ color: '#00875A' }}>
-              ₹ 10,00,000
-            </p>
-          </Col>
-        </Row>
-        <Row className="p-4 m-2 mt-4" style={boxWrapper}>
-          <Col>
-            <p className="p-0 m-0 text-center" style={paraFontStyle}>
-              Total Amount
-            </p>
-            <p className="p-0 m-0 text-center" style={{ color: '#00875A' }}>
-              ₹ 10,10,000
+              ₹ 1,00,000
             </p>
           </Col>
         </Row>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
-            Customer Name
+            Broker Name
           </p>
-          <span className="m-0 w-400">Sago Serve</span>
+          <span className="m-0 w-400">ABC Broker</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
-            Customer Type
+            Broker commision
           </p>
-          <span className="m-0 w-400">Delivery Challan</span>
+          <span className="m-0 w-400">25%</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             E-mail
           </p>
-          <span className="m-0 w-400">sago.serve@gmail.com</span>
+          <span className="m-0 w-400">sugunachickens@gmail.com</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
@@ -99,12 +87,6 @@ const CatalogCustomerDetails = (props) => {
         <hr style={{ color: '#62728D' }}></hr>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
-            Aadhar no.
-          </p>
-          <span className="m-0 w-400">GASTFDIU56465</span>
-        </div>
-        <div className="m-2 mt-4">
-          <p className="m-0" style={paraFontStyle}>
             GST no.
           </p>
           <span className="m-0 w-400">54165416HBJU</span>
@@ -114,6 +96,31 @@ const CatalogCustomerDetails = (props) => {
             PAN No.
           </p>
           <span className="m-0 w-400">54165416HBJU</span>
+        </div>
+        <hr style={{ color: '#62728D' }}></hr>
+        <div className="m-2 mt-4">
+          <p className="m-0" style={paraFontStyle}>
+            Bank Name
+          </p>
+          <span className="m-0 w-400">Karur Vysya Bank</span>
+        </div>
+        <div className="m-2 mt-4">
+          <p className="m-0" style={paraFontStyle}>
+            A/c. No.
+          </p>
+          <span className="m-0 w-400">54165416HBJU</span>
+        </div>
+        <div className="m-2 mt-4">
+          <p className="m-0" style={paraFontStyle}>
+            IFSC Code
+          </p>
+          <span className="m-0 w-400">54165416HBJU</span>
+        </div>
+        <div className="m-2 mt-4">
+          <p className="m-0" style={paraFontStyle}>
+            Branch Name
+          </p>
+          <span className="m-0 w-400">Kodambakkam</span>
         </div>
         <hr style={{ color: '#62728D' }}></hr>
         <div className="m-2 mt-4">
@@ -129,4 +136,4 @@ const CatalogCustomerDetails = (props) => {
   );
 };
 
-export default CatalogCustomerDetails;
+export default CatalogBrokerDetails;

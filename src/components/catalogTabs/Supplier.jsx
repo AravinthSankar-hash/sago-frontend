@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import '../../css/index.css';
-import CatalogCustomerDetails from '../CatalogCustomerDetails.jsx';
 import CatalogSupplierTable from '../CatalogSupplierTable.jsx';
 import CatalogNewSupplierForm from '../forms/CatalogNewSupplier.jsx';
+import CatalogSupplierDetails from '../CatalogSupplierDetails.jsx';
 
 const Supplier = () => {
   const [showNewForm, setShowNewForm] = useState(false);
@@ -36,7 +36,7 @@ const Supplier = () => {
                 <CatalogSupplierTable showForm={showForm} openDetails={openDetails} />
               </Col>
               <Col lg="3" style={{ paddingRight: '0px' }}>
-                <CatalogCustomerDetails closeDetails={closeDetails} />
+                <CatalogSupplierDetails closeDetails={closeDetails} />
               </Col>
             </Row>
           ) : (
