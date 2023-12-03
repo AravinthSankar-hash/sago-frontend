@@ -1,6 +1,6 @@
 import { Row, Col, Image, Container } from 'react-bootstrap';
 import React from 'react';
-import sago_logo from '../../assets/images/penguin.jpeg';
+import dp_icon from '../../assets/images/penguin.jpeg';
 
 function StaffItem() {
   const fontHeader = { font: 'Roboto', color: '#62728D', fontSize: '12px' };
@@ -10,7 +10,7 @@ function StaffItem() {
       <div style={{ padding: '20px', background: 'white', borderRadius: '7px' }}>
         <Row>
           <Col style={{ paddingBottom: '20px' }}>
-            <Image style={{ height: '100px', width: '100px' }} src={sago_logo} roundedCircle />
+            <Image style={{ height: '100px', width: '100px' }} src={dp_icon} roundedCircle />
           </Col>
         </Row>
         <Row>

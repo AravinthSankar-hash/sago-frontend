@@ -1,7 +1,10 @@
 import React, { useMemo, useRef } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
+import Avatar from '@mui/material/Avatar';
 import { useForm } from 'react-hook-form';
+import CameraIcon from '@mui/icons-material/Camera';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
 const CatalogNewStaff = (props) => {
   // const [focusedInput, setFocusedInput] = useState(null);
@@ -58,10 +61,15 @@ const CatalogNewStaff = (props) => {
       <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
         <Row className="mb-3 mt-3">
           <Form.Group controlId="NewStaffFormProfilePic">
-            <Form.Label style={{ display: 'flex', justifyContent: 'space-between' }}>
+            {/* <Form.Label style={{ display: 'flex', justifyContent: 'space-between' }}>
               Profile Picture <span style={{ color: 'red' }}>*</span>
             </Form.Label>
-            <Form.Control type="file" />
+            <Form.Control type="file" /> */}
+            <Avatar
+              alt="Upload"
+              sx={{ width: 100, height: 100, cursor: 'pointer', border: '2px solid #DFE1E6' }}>
+              <AddAPhotoIcon />
+            </Avatar>
             {/* <Form.File
             {...register('profilePic', { required: 'Please upload a profile picture' })}
             /> */}
