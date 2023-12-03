@@ -59,10 +59,9 @@ const CatalogCustomerTable = (props) => {
     }
   };
 
-  const hideChanges = () => {
+  const gridRowClicked = () => {
     setShowFields(false);
     props.openDetails();
-    // alert(showFields);
   };
 
   return (
@@ -125,18 +124,17 @@ const CatalogCustomerTable = (props) => {
       </div>
       <Row>
         <Col className="d-flex flex-column justify-content-center">
-          <div onClick={() => hideChanges()}>
-            <AgGridTable
-              columnDefs={[
-                { field: 'make' },
-                { field: 'model' },
-                { field: 'price' },
-                { field: 'location' },
-                { field: 'pincode' }
-              ]}
-              rowData={tableColumns}
-            />
-          </div>
+          <AgGridTable
+            propFromParent={gridRowClicked}
+            columnDefs={[
+              { field: 'make' },
+              { field: 'model' },
+              { field: 'price' },
+              { field: 'location' },
+              { field: 'pincode' }
+            ]}
+            rowData={tableColumns}
+          />
         </Col>
       </Row>
     </div>

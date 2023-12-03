@@ -43,11 +43,8 @@ function Procurements() {
             style={{ cursor: 'pointer' }}
             onClick={() => showForm(false)}
             fontSize="medium"
-          />
-          <text>
-            {' '}
-            <span>&nbsp;&nbsp;</span>Back
-          </text>
+          />{' '}
+          <span>&nbsp;&nbsp;</span>Back
         </Col>
       </Row>
       <Row>

@@ -99,15 +99,15 @@ const Sidebar = () => {
         </Container>
       </SidebarHead>
       {sideBarItems.map((itemSection, parentIdx) => (
-        <>
-          <SidebarHeader key={parentIdx}>{itemSection.itemHeader}</SidebarHeader>
+        <div key={parentIdx}>
+          <SidebarHeader>{itemSection.itemHeader}</SidebarHeader>
           {itemSection.items.map((items, idx) => (
             <div key={idx} style={itemWrapper} onClick={() => navigate(items?.route || '/')}>
               <SideBarItemIcon src={items.src}></SideBarItemIcon>
               <SideBarItems>{items.name}</SideBarItems>
             </div>
           ))}
-        </>
+        </div>
       ))}
       <SidebarFooter>Version 0.1</SidebarFooter>
     </SidebarParent>

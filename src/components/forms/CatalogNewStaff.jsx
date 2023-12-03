@@ -2,7 +2,6 @@ import React, { useMemo, useRef } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
 const CatalogNewStaff = (props) => {
   // const [focusedInput, setFocusedInput] = useState(null);
@@ -61,11 +60,6 @@ const CatalogNewStaff = (props) => {
           <Form.Group controlId="NewStaffFormProfilePic">
             <Form.Label style={{ display: 'flex', justifyContent: 'space-between' }}>
               Profile Picture <span style={{ color: 'red' }}>*</span>
-              <CloseSharpIcon
-                style={{ cursor: 'pointer' }}
-                onClick={() => props.showForm(false)}
-                fontSize="medium"
-              />
             </Form.Label>
             <Form.Control type="file" />
             {/* <Form.File

@@ -2,16 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import AgGridTable from '../components/AgGridTable.jsx';
 import SearchBox from '../components/SearchBox.jsx';
-import DateSelector from '../components/DateSelector';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
-import Chip from '@mui/material/Chip';
-import Stack from '@mui/material/Stack';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+
 import '../css/index.css';
+import {
+  useUpdateCatalogTabIndex,
+  useUpdateShowCatalogBackBtn,
+  useUpdateShowCatalogTabHomePage
+} from '../store/tableDataStore.js';
 
 const CatalogStaffTable = (props) => {
+  const updateShowBackBtn = useUpdateShowCatalogBackBtn();
+  const updateCatalogTabIndex = useUpdateCatalogTabIndex();
+  const updateShowCatalogTabHomePage = useUpdateShowCatalogTabHomePage();
   const [tableColumns, setTableColuns] = useState([]);
   const [selectedChips, setSelectedChips] = useState([]);
   const [showFields, setShowFields] = useState(true);
@@ -59,9 +69,16 @@ const CatalogStaffTable = (props) => {
     }
   };
 
-  const hideChanges = () => {
-    setShowFields(false);
-    props.openDetails();
+  const addNewStaff = () => {
+    props.showForm(true);
+    updateShowBackBtn(true);
+    updateCatalogTabIndex(6);
+    updateShowCatalogTabHomePage(false);
+  };
+
+  const gridRowClicked = () => {
+    updateShowBackBtn(true);
+    updateCatalogTabIndex(6);
   };
 
   return (
@@ -71,17 +88,21 @@ const CatalogStaffTable = (props) => {
           <Col lg="3">
             <SearchBox></SearchBox>
           </Col>
-          {!showFields && (
-            <>
-              <Col lg="2">
-                <DateSelector size="smaller" customLabel="From"></DateSelector>
-              </Col>
-              <Col lg="2">
-                <DateSelector customLabel="To"></DateSelector>
-              </Col>
-            </>
-          )}
-          <Col lg="2" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <>
+            <Col lg="4">
+              <FormControl
+                sx={{ m: 1, minWidth: 140, marginTop: '0px', backgroundColor: 'white' }}
+                size="small">
+                <InputLabel id="demo-select-small-label">Select Work</InputLabel>
+                <Select labelId="demo-select-small-label" label="Select Work">
+                  <MenuItem value={10}>Wage</MenuItem>
+                  <MenuItem value={20}>Cleaning</MenuItem>
+                  <MenuItem value={30}>Manager</MenuItem>
+                </Select>
+              </FormControl>
+            </Col>
+          </>
+          <Col lg="2" style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '10px' }}>
             <IconButton size="small">
               <IosShareIcon
                 fontSize="small"
@@ -89,53 +110,30 @@ const CatalogStaffTable = (props) => {
                   wordSpacing: 1
                 }}
               />
-              {showFields && 'Export Data'}
+              Export Data
             </IconButton>
           </Col>
-          {showFields && (
-            <Col lg="3">
-              <Button sx={buttonStyle} variant="outlined" onClick={() => props.showForm(true)}>
-                <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
-                New Staff
-              </Button>
-            </Col>
-          )}
-        </Row>
-        <Row className="mt-3">
-          <Stack direction="row" spacing={1}>
-            <p style={{ color: '#6B778C' }}>Filter by : </p>
-            <Chip
-              label="All"
-              sx={chipStyle(selectedChips.includes('All'))}
-              onClick={() => handleChipSelect('All')}
-            />
-            <Chip
-              label="Paid"
-              sx={chipStyle(selectedChips.includes('Paid'))}
-              onClick={() => handleChipSelect('Paid')}
-            />
-            <Chip
-              label="Unpaid"
-              sx={chipStyle(selectedChips.includes('Unpaid'))}
-              onClick={() => handleChipSelect('Unpaid')}
-            />
-          </Stack>
+          <Col lg="3">
+            <Button sx={buttonStyle} variant="outlined" onClick={addNewStaff}>
+              <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
+              New Staff
+            </Button>
+          </Col>
         </Row>
       </div>
       <Row>
         <Col className="d-flex flex-column justify-content-center">
-          <div onClick={() => hideChanges()}>
-            <AgGridTable
-              columnDefs={[
-                { field: 'make' },
-                { field: 'model' },
-                { field: 'price' },
-                { field: 'location' },
-                { field: 'pincode' }
-              ]}
-              rowData={tableColumns}
-            />
-          </div>
+          <AgGridTable
+            propFromParent={gridRowClicked}
+            columnDefs={[
+              { field: 'make' },
+              { field: 'model' },
+              { field: 'price' },
+              { field: 'location' },
+              { field: 'pincode' }
+            ]}
+            rowData={tableColumns}
+          />
         </Col>
       </Row>
     </div>

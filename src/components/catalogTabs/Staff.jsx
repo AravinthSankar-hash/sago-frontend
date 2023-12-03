@@ -1,28 +1,23 @@
 import React, { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 import '../../css/index.css';
-import CatalogCustomerDetails from '../CatalogCustomerDetails.jsx';
 import CatalogStaffTable from '../CatalogStaffTable.jsx';
+import StaffItem from '../catalogItems/staffItem.jsx';
 import CatalogNewStaff from '../forms/CatalogNewStaff.jsx';
+import { useCurrentSelectedRowData, useShowCatalogTabHomePage } from '../../store/tableDataStore';
 
 const Staff = () => {
+  const currentRowData = useCurrentSelectedRowData();
+  const showCatalogTabHomePage = useShowCatalogTabHomePage();
   const [showNewForm, setShowNewForm] = useState(false);
-  const [showDetails, setShowDetails] = useState(false);
 
   const showForm = (shouldShow) => {
     setShowNewForm(shouldShow);
   };
 
-  const openDetails = () => {
-    setShowDetails(true);
-  };
-
-  const closeDetails = () => {
-    setShowDetails(false);
-  };
   return (
     <>
-      {showNewForm ? (
+      {showNewForm && !showCatalogTabHomePage ? (
         <>
           <Col className="d-flex flex-column justify-content-center">
             <CatalogNewStaff showForm={showForm} />
@@ -30,18 +25,11 @@ const Staff = () => {
         </>
       ) : (
         <div>
-          {showDetails ? (
-            <Row>
-              <Col lg="9">
-                <CatalogStaffTable showForm={showForm} openDetails={openDetails} />
-              </Col>
-              <Col lg="3" style={{ paddingRight: '0px' }}>
-                <CatalogCustomerDetails closeDetails={closeDetails} />
-              </Col>
-            </Row>
+          {Object.keys(currentRowData).length ? (
+            <StaffItem />
           ) : (
             <>
-              <CatalogStaffTable showForm={showForm} openDetails={openDetails} />
+              <CatalogStaffTable showForm={showForm} />
             </>
           )}
         </div>
