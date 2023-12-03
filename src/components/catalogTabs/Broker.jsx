@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import '../../css/index.css';
-import CatalogCustomerDetails from '../CatalogCustomerDetails.jsx';
 import CatalogBrokerTable from '../CatalogBrokerTable.jsx';
 import CatalogNewBrokerForm from '../forms/CatalogNewBroker.jsx';
+import CatalogBrokerDetails from '../CatalogBrokerDetails.jsx';
 
 const Broker = () => {
   const [showNewForm, setShowNewForm] = useState(false);
@@ -36,7 +36,7 @@ const Broker = () => {
                 <CatalogBrokerTable showForm={showForm} openDetails={openDetails} />
               </Col>
               <Col lg="3" style={{ paddingRight: '0px' }}>
-                <CatalogCustomerDetails closeDetails={closeDetails} />
+                <CatalogBrokerDetails closeDetails={closeDetails} />
               </Col>
             </Row>
           ) : (
