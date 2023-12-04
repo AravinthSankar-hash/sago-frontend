@@ -86,7 +86,7 @@ const CatalogStaffTable = (props) => {
       <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
         <Row style={{ display: 'flex', justifyContent: 'flex-start' }}>
           <Col lg="3">
-            <SearchBox></SearchBox>
+            <SearchBox placeHolder={'Search Name / Phone no.'}></SearchBox>
           </Col>
           <>
             <Col lg="4">

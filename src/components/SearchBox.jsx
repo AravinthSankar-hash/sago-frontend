@@ -4,13 +4,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import '../css/index.css';
 
-export default function SearchBox() {
+export default function SearchBox(props) {
   const [value, setValue] = useState('');
 
   return (
     <div>
       <TextField
-        placeholder="Search"
+        placeholder={props.placeHolder}
         fullWidth
         type="text"
         variant="outlined"

@@ -12,21 +12,18 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
-import ProcurementTable from '../components/ProcurementTable.jsx';
 
-function Procurements() {
+function Invoices() {
   const [tableColumns, setTableColuns] = useState([]);
   const [showNewForm, setShowNewForm] = useState(false);
-  const [selectedChips, setSelectedChips] = useState([]);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [page, setPage] = useState(0);
+  const [chipsSelected, setChipsSelected] = useState(false);
 
   useEffect(() => {
-    fetch('http://localhost:3001/procurement')
+    console.log(1);
+    fetch('http://localhost:3001/columns')
       .then((rawResponse) => rawResponse.json())
       .then((response) => {
-       setTableColuns(response.data);
-        console.log(response.data);
+        setTableColuns(response.data);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
@@ -35,44 +32,19 @@ function Procurements() {
   const showForm = (shouldShow) => {
     setShowNewForm(shouldShow);
   };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const chipStyle = (isSelected) => ({
-    border: '2px solid #00b7ff',
-    borderRadius: '8px',
-    backgroundColor: isSelected ? '#00b7ff' : 'white',
-    color: isSelected ? 'white' : '#00b7ff',
-    ':hover': {
-      background: '#00b7ff',
-      color: 'white',
-      boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)',
-    },
-    cursor: 'pointer',
-  });
-  const handleChipSelect = (label) => {
-    setSelectedChips([]);
-      setSelectedChips([label]);
-  };
-  
-
-  // Function to handle rows per page change
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to the first page when changing rows per page
+  const handleChipsSelect = () => {
+    setChipsSelected(!chipsSelected);
   };
   return (
     <Container style={{ background: '#EBEEF0' }}>
-      <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
+      <Row style={{ background: '#ffffff', height: '56px' }}>
         <Col>
-         {showNewForm ? <ArrowBackIcon
+          <ArrowBackIcon
             style={{ cursor: 'pointer' }}
             onClick={() => showForm(false)}
             fontSize="medium"
-          /> : ''}
-          <span>&nbsp;&nbsp;</span> { showNewForm? 'New Procurements' : 'Procurements'}
+          />{' '}
+          <span>&nbsp;&nbsp;</span>Invoice Back
         </Col>
       </Row>
       <Row>
@@ -84,7 +56,7 @@ function Procurements() {
               <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
                 <Row>
                   <Col lg="3">
-                    <SearchBox placeHolder={'Search here'}></SearchBox>
+                    <SearchBox placeHolder={'Search'}></SearchBox>
                   </Col>
                   <Col lg="2">
                     <DateSelector size="smaller" customLabel="From"></DateSelector>
@@ -127,45 +99,55 @@ function Procurements() {
                     <p style={{ color: '#6B778C' }}>Filter by : </p>
                     <Chip
                       label="All"
-                      color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                      onClick={() => handleChipSelect("All")}
-                      sx={chipStyle(selectedChips.includes('All'))}
+                      color="primary"
+                      sx={{
+                        border: '2px solid #00b7ff',
+                        borderRadius: '8px',
+                        backgroundColor: 'white',
+                        color: '#00b7ff'
+                      }}
                     />
                     <Chip
                       label="Paid"
-                      color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                      onClick={() => handleChipSelect("Paid")}
-                      sx={chipStyle(selectedChips.includes('Paid'))}
+                      color="primary"
+                      sx={{
+                        border: '2px solid #00b7ff',
+                        borderRadius: '8px',
+                        backgroundColor: 'white',
+                        color: '#00b7ff'
+                      }}
+                      q
                     />
                     <Chip
                       label="Unpaid"
-                      color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                      onClick={() => handleChipSelect("UnPaid")}
-                      sx={chipStyle(selectedChips.includes('UnPaid'))}
+                      sx={{
+                        border: '2px solid #00b7ff',
+                        borderRadius: '8px',
+                        backgroundColor: chipsSelected ? '#00b7ff' : 'white',
+                        color: chipsSelected ? 'white' : '#00b7ff',
+                        ':hover': {
+                          background: '#00b7ff',
+                          color: 'white',
+                          boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)'
+                        },
+                        cursor: 'pointer'
+                      }}
+                      onClick={handleChipsSelect}
                     />
-
-
                   </Stack>
                 </Row>
               </div>
               <div>
-                <ProcurementTable 
-                tableColumns={tableColumns}  
-                rowsPerPage={rowsPerPage}
-                page={page}
-                handleChangePage={handleChangePage}
-                handleChangeRowsPerPage={handleChangeRowsPerPage}/>
-                {/* <AgGridTable
+                <AgGridTable
                   columnDefs={[
-                    { field: 'Purchase date' },
-                    { field: 'Purchase No' },
-                    { field: 'Supplier Name' },
-                    { field: 'Outstandings' },
-                    { field: 'Last payment date' },
-                    { field: 'Approval Status' }
+                    { field: 'make' },
+                    { field: 'model' },
+                    { field: 'price' },
+                    { field: 'location' },
+                    { field: 'pincode' }
                   ]}
                   rowData={tableColumns}
-                /> */}
+                />
               </div>
             </div>
           )}
@@ -175,4 +157,4 @@ function Procurements() {
   );
 }
 
-export default Procurements;
+export default Invoices;
