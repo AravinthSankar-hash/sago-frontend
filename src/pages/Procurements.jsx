@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import AgGridTable from '../components/AgGridTable';
 import SearchBox from '../components/SearchBox.jsx';
-import DateSelector from '../components/DateSelector';
+import DateSelector from '../components/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CatalogNewCustForm from '../components/forms/CatalogNewCust.jsx';
 import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
-import ProcurementTable from '../components/ProcurementTable.jsx';
+import ProcurementTable from '../components/MuiTable.jsx';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import NewProcurement from '../components/forms/NewProcurement.jsx';
 
 function Procurements() {
   const [tableColumns, setTableColuns] = useState([]);
@@ -25,7 +26,7 @@ function Procurements() {
     fetch('http://localhost:3001/procurement')
       .then((rawResponse) => rawResponse.json())
       .then((response) => {
-       setTableColuns(response.data);
+        setTableColuns(response.data);
         console.log(response.data);
       })
       .catch((error) => {
@@ -48,15 +49,14 @@ function Procurements() {
     ':hover': {
       background: '#00b7ff',
       color: 'white',
-      boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)',
+      boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)'
     },
-    cursor: 'pointer',
+    cursor: 'pointer'
   });
   const handleChipSelect = (label) => {
     setSelectedChips([]);
-      setSelectedChips([label]);
+    setSelectedChips([label]);
   };
-  
 
   // Function to handle rows per page change
   const handleChangeRowsPerPage = (event) => {
@@ -67,18 +67,22 @@ function Procurements() {
     <Container style={{ background: '#EBEEF0' }}>
       <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
         <Col>
-         {showNewForm ? <ArrowBackIcon
-            style={{ cursor: 'pointer' }}
-            onClick={() => showForm(false)}
-            fontSize="medium"
-          /> : ''}
-          <span>&nbsp;&nbsp;</span> { showNewForm? 'New Procurements' : 'Procurements'}
+          {showNewForm ? (
+            <ArrowBackIcon
+              style={{ cursor: 'pointer' }}
+              onClick={() => showForm(false)}
+              fontSize="medium"
+            />
+          ) : (
+            ''
+          )}
+          <span>&nbsp;&nbsp;</span> {showNewForm ? 'New Procurements' : 'Procurements'}
         </Col>
       </Row>
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showNewForm ? (
-            <CatalogNewCustForm />
+            <NewProcurement showForm={showForm} />
           ) : (
             <div>
               <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
@@ -128,33 +132,38 @@ function Procurements() {
                     <Chip
                       label="All"
                       color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                      onClick={() => handleChipSelect("All")}
+                      onClick={() => handleChipSelect('All')}
                       sx={chipStyle(selectedChips.includes('All'))}
                     />
                     <Chip
                       label="Paid"
                       color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                      onClick={() => handleChipSelect("Paid")}
+                      onClick={() => handleChipSelect('Paid')}
                       sx={chipStyle(selectedChips.includes('Paid'))}
                     />
                     <Chip
                       label="Unpaid"
                       color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                      onClick={() => handleChipSelect("UnPaid")}
+                      onClick={() => handleChipSelect('UnPaid')}
                       sx={chipStyle(selectedChips.includes('UnPaid'))}
                     />
-
-
                   </Stack>
                 </Row>
               </div>
               <div>
-                <ProcurementTable 
-                tableColumns={tableColumns}  
-                rowsPerPage={rowsPerPage}
-                page={page}
-                handleChangePage={handleChangePage}
-                handleChangeRowsPerPage={handleChangeRowsPerPage}/>
+                {tableColumns.length > 0 ? (
+                  <ProcurementTable
+                    tableColumns={tableColumns}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    handleChangePage={handleChangePage}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                  />
+                ) : (
+                  <Box sx={{ display: 'flex' }}>
+                    <CircularProgress />
+                  </Box>
+                )}
                 {/* <AgGridTable
                   columnDefs={[
                     { field: 'Purchase date' },

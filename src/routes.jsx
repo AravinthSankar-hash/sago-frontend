@@ -1,9 +1,9 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import NotFound from './pages/NotFound.jsx';
-import Procurements from './pages/Procurements.jsx';
 import Catalog from './pages/Catalog.jsx';
 import Invoices from './pages/Invoices.jsx';
+import Procurements from './pages/Procurements.jsx';
 
 function AppRoutes() {
   return (
