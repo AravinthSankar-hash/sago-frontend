@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col, Container } from 'react-bootstrap';
-// import CloseSharpIcon from '@mui/icons-material/CloseSharp';
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import CloseSharpIcon from '@mui/icons-material/CloseSharp';
+// import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import '../css/catalogNewCust.css';
 
 const CatalogBrokerDetails = (props) => {
@@ -25,7 +25,7 @@ const CatalogBrokerDetails = (props) => {
       <div className="d-flex justify-content-between">
         <div style={{ fontSize: '18px' }}>Broker Details</div>
         <div>
-          <MoreVertOutlinedIcon
+          <CloseSharpIcon
             fontSize="small"
             style={{ cursor: 'pointer', color: '#B2B3B7' }}
             onClick={() => props.closeDetails(false)}
