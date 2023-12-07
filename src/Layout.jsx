@@ -7,7 +7,7 @@ import AppRoutes from './routes.jsx';
 
 const headerStyle = {
   height: '56px',
-  borderBottom: '3px solid #EBEEF0'
+  borderBottom: '1px solid #EBEEF0'
 };
 
 const zeroPaddings = {

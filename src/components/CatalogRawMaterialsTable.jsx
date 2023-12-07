@@ -69,7 +69,7 @@ const CatalogRawMaterialsTable = (props) => {
       <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
         <Row style={{ display: 'flex', justifyContent: 'flex-start' }}>
           <Col lg="3">
-            <SearchBox></SearchBox>
+            <SearchBox placeHolder={'Search Here'}></SearchBox>
           </Col>
           {!showFields && (
             <>

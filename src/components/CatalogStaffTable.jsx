@@ -23,8 +23,6 @@ const CatalogStaffTable = (props) => {
   const updateCatalogTabIndex = useUpdateCatalogTabIndex();
   const updateShowCatalogTabHomePage = useUpdateShowCatalogTabHomePage();
   const [tableColumns, setTableColuns] = useState([]);
-  const [selectedChips, setSelectedChips] = useState([]);
-  const [showFields, setShowFields] = useState(true);
 
   useEffect(() => {
     fetch('http://localhost:3001/columns')
@@ -48,27 +46,6 @@ const CatalogStaffTable = (props) => {
     fontWeight: 'bold'
   };
 
-  const chipStyle = (isSelected) => ({
-    border: '2px solid #00b7ff',
-    borderRadius: '8px',
-    backgroundColor: isSelected ? '#00b7ff' : 'white',
-    color: isSelected ? 'white' : '#00b7ff',
-    ':hover': {
-      background: '#00b7ff',
-      color: 'white',
-      boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)'
-    },
-    cursor: 'pointer'
-  });
-
-  const handleChipSelect = (label) => {
-    if (selectedChips.includes(label)) {
-      setSelectedChips((prevSelectedChips) => prevSelectedChips.filter((chip) => chip !== label));
-    } else {
-      setSelectedChips((prevSelectedChips) => [prevSelectedChips, label]);
-    }
-  };
-
   const addNewStaff = () => {
     props.showForm(true);
     updateShowBackBtn(true);
@@ -86,7 +63,7 @@ const CatalogStaffTable = (props) => {
       <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
         <Row style={{ display: 'flex', justifyContent: 'flex-start' }}>
           <Col lg="3">
-            <SearchBox></SearchBox>
+            <SearchBox placeHolder={'Search Name / Phone no.'}></SearchBox>
           </Col>
           <>
             <Col lg="4">
