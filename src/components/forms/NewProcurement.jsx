@@ -14,6 +14,7 @@ import FormControl from '@mui/material/FormControl';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import '../../css/index.css';
 
 const NewProcurement = () => {
   const {
@@ -103,7 +104,8 @@ const NewProcurement = () => {
               <Form.Label>Phone no.</Form.Label>
               <Form.Control
                 style={{ background: '#F4F5F7', color: '#A5ADBA', border: 'none' }}
-                placeholder="8941555367"
+                // placeholder="8941555367"
+                defaultValue="8941555367"
                 type="tel"
                 disabled
                 // {...register('phone', {
@@ -119,9 +121,9 @@ const NewProcurement = () => {
                 <Form.Text className="text-danger">{errors.phone.message}</Form.Text> */}
             </Form.Group>
 
-            <Form.Group as={Col} controlId="NewCustformEmail">
+            <Form.Group as={Col} controlId="NewCustformEmail" style={{height: '40px'}}>
               <Form.Label>Purchase Date</Form.Label>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <LocalizationProvider dateAdapter={AdapterDayjs} >
                 <DatePicker disableFuture />
               </LocalizationProvider>
             </Form.Group>
@@ -141,23 +143,25 @@ const NewProcurement = () => {
           </Row>
         </Form>
       </Container>
-
       <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
         <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
-          <Row
-            className="mb-4 mt-5 pb-3"
-            style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}>
-            <Col lg="2">Purchase Name</Col>
-            <Col lg="2">Product Type</Col>
-            <Col lg="1">Rate</Col>
-            <Col lg="2">Quantity</Col>
-            <Col lg="1">Units</Col>
-            <Col lg="3">Amount</Col>
-            <Col lg="1">Action</Col>
-          </Row>
+          {/* <div className='table-responsive'> */}
+        <table style={{ width: '100%', marginTop: '20px', marginBottom: '20px' }}>
+          <thead style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C'}}>
+            <tr>
+              <th style={{ paddingBottom: '10px', padding: '10px'}}>Purchase Name</th>
+              <th style={{ paddingBottom: '10px', padding: '10px'}}>Product Type</th>
+              <th style={{ paddingBottom: '10px', padding: '10px'}}>Rate</th>
+              <th style={{ paddingBottom: '10px', padding: '10px'}}>Quantity</th>
+              <th style={{ paddingBottom: '10px', padding: '10px'}}>Units</th>
+              <th style={{ paddingBottom: '10px', padding: '10px'}}>Amount</th>
+              <th style={{ paddingBottom: '10px', padding: '10px'}}>Action</th>
+            </tr>
+          </thead>
 
-          <Row className="mb-4">
-            <Col lg="2">
+          <tbody style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C', padding: '20px' }}>
+            <tr>
+              <td style={{ padding: '10px'}}>
               <FormControl
                 sx={{
                   minWidth: 150,
@@ -167,16 +171,15 @@ const NewProcurement = () => {
                   border: '2px solid #FAFBFC'
                 }}
                 size="small">
-                <InputLabel id="demo-select-small-label">Lorem ipsum</InputLabel>
+                <InputLabel id="demo-select-small-label" style={{ color: '#7A869A'}}>Lorem ipsum</InputLabel>
                 <Select labelId="demo-select-small-label" label="Select Work">
                   <MenuItem value={10}>Select</MenuItem>
                   <MenuItem value={20}>Lorem</MenuItem>
                   <MenuItem value={30}>Ipsum</MenuItem>
                 </Select>
               </FormControl>
-            </Col>
-            <Col lg="2">
-              <Form.Group as={Col}>
+              </td>
+              <td style={{ padding: '10px'}}><Form.Group as={Col}>
                 <Form.Control
                   style={{
                     background: '#F4F5F7',
@@ -184,33 +187,27 @@ const NewProcurement = () => {
                     border: 'none',
                     padding: '9px 12px'
                   }}
-                  placeholder="Machinery"
+                  placehdefaultValueolder="Machinery"
                   disabled
                 />
-              </Form.Group>
-            </Col>
-            <Col lg="1">
-              <Form.Group as={Col}>
+              </Form.Group></td>
+              <td style={{ padding: '10px'}}><Form.Group as={Col}>
                 <Form.Control
                   style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
-                  placeholder={10}
+                  defaultValue={10}
                   type="text"
                   //   disabled
                 />
-              </Form.Group>
-            </Col>
-            <Col lg="2">
-              <Form.Group as={Col}>
+              </Form.Group></td>
+              <td style={{ padding: '10px'}}> <Form.Group as={Col}>
                 <Form.Control
                   style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
-                  placeholder={30000}
+                  defaultValue="30,000"
                   type="text"
                   //   disabled
                 />
-              </Form.Group>
-            </Col>
-            <Col lg="1">
-              <Form.Group as={Col}>
+              </Form.Group></td>
+              <td style={{ padding: '10px'}}> <Form.Group as={Col}>
                 <Form.Control
                   style={{
                     background: '#F4F5F7',
@@ -218,13 +215,11 @@ const NewProcurement = () => {
                     border: 'none',
                     padding: '9px 12px'
                   }}
-                  placeholder="Snacks"
+                  defaultValue="Snacks"
                   disabled
                 />
-              </Form.Group>
-            </Col>
-            <Col lg="3">
-              <Form.Group as={Col}>
+              </Form.Group></td>
+              <td style={{ padding: '10px'}}> <Form.Group as={Col}>
                 <Form.Control
                   style={{
                     background: '#F4F5F7',
@@ -232,29 +227,25 @@ const NewProcurement = () => {
                     border: 'none',
                     padding: '9px 12px'
                   }}
-                  placeholder="₹ 3,00,00,000"
+                  defaultValue="₹ 3,00,00,000"
                   disabled
                 />
-              </Form.Group>
-            </Col>
-            <Col lg="1">
-              <div
+              </Form.Group></td>
+              <td style={{ padding: '10px'}}> <div
                 style={{
                   height: '40px',
                   width: '40px',
                   background: '#BF2600',
-                  color: 'white'
+                  color: 'white',
+                  display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
                 }}>
                 <DeleteOutlineOutlinedIcon />
-              </div>
-            </Col>
-          </Row>
-
-          <Row
-            className="mb-3 pb-4"
-            style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}>
-            <Col lg="2">
-              <FormControl
+              </div> </td>
+            </tr>
+            <tr>
+<td style={{ padding: '10px'}}><FormControl
                 sx={{
                   minWidth: 150,
                   marginTop: '0px',
@@ -264,16 +255,14 @@ const NewProcurement = () => {
                   //   width: '184px'
                 }}
                 size="small">
-                <InputLabel id="demo-select-small-label">Lorem ipsum</InputLabel>
+                <InputLabel id="demo-select-small-label"  style={{ color: '#7A869A'}}>Lorem ipsum</InputLabel>
                 <Select labelId="demo-select-small-label" label="Select Work">
                   <MenuItem value={10}>Select</MenuItem>
                   <MenuItem value={20}>Lorem</MenuItem>
                   <MenuItem value={30}>Ipsum</MenuItem>
                 </Select>
-              </FormControl>
-            </Col>
-            <Col lg="2">
-              <Form.Group as={Col}>
+              </FormControl></td>
+              <td style={{ padding: '10px'}}><Form.Group as={Col}>
                 <Form.Control
                   style={{
                     background: '#F4F5F7',
@@ -281,31 +270,25 @@ const NewProcurement = () => {
                     border: 'none',
                     padding: '9px 12px'
                   }}
-                  placeholder="None"
+                  defaultValue="None"
                   disabled
                 />
-              </Form.Group>
-            </Col>
-            <Col lg="1">
-              <Form.Group as={Col}>
+              </Form.Group></td>
+              <td style={{ padding: '10px'}}><Form.Group as={Col}>
                 <Form.Control
                   style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
                   type="text"
                   //   disabled
                 />
-              </Form.Group>
-            </Col>
-            <Col lg="2">
-              <Form.Group as={Col}>
+              </Form.Group></td>
+              <td style={{ padding: '10px'}}><Form.Group as={Col}>
                 <Form.Control
                   style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
                   type="text"
                   //   disabled
                 />
-              </Form.Group>
-            </Col>
-            <Col lg="1">
-              <Form.Group as={Col}>
+              </Form.Group></td>
+              <td style={{ padding: '10px'}}> <Form.Group as={Col}>
                 <Form.Control
                   style={{
                     background: '#F4F5F7',
@@ -313,13 +296,11 @@ const NewProcurement = () => {
                     border: 'none',
                     padding: '9px 12px'
                   }}
-                  placeholder="Unit"
+                  defaultValue="Unit"
                   disabled
                 />
-              </Form.Group>
-            </Col>
-            <Col lg="3">
-              <Form.Group as={Col}>
+              </Form.Group></td>
+              <td style={{ padding: '10px'}}> <Form.Group as={Col}>
                 <Form.Control
                   style={{
                     background: '#F4F5F7',
@@ -327,49 +308,49 @@ const NewProcurement = () => {
                     border: 'none',
                     padding: '9px 12px'
                   }}
-                  placeholder="₹ 0"
+                  defaultValue="₹ 0"
                   disabled
                 />
-              </Form.Group>
-            </Col>
-            <Col lg="1">
-              <div
+              </Form.Group></td>
+              <td style={{ padding: '10px'}}> <div
                 style={{
                   height: '40px',
                   width: '40px',
                   background: '#00B7FF',
                   color: 'white',
-                  alignItems: 'center'
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                 }}>
                 <AddSharpIcon />
-              </div>
-            </Col>
-          </Row>
-          <Row style={{ marginRight: '100px' }}>
-            <Col lg="9"></Col>
-            <Col>
-              <div className="d-flex justify-content-evenly mt-3">
-                <p
+              </div></td>
+            </tr>
+          </tbody>
+          </table>
+{/* <div  className='float-end'> */}
+          <table style={{display: 'flex', justifyContent: 'flex-end', width: '100%', marginTop: '20px', marginBottom: '20px', paddingRight: '50px'}}>
+            <tbody>
+              <tr>
+                <td style={{ padding: '10px', textAlign: 'right',  color: '#5C9EB8'}}>Sub Total:</td>
+                <td>₹ 8,944</td>
+              </tr>
+              <tr>
+                <td  style={{ padding: '10px', textAlign: 'right',  color: '#5C9EB8'}}>Discount:</td>
+                <td><Form.Control
                   style={{
-                    color: '#5C9EB8'
-                  }}>
-                  Sub Total:
-                </p>
-                <p>₹ 8,944</p>
-              </div>
-            </Col>
-          </Row>
-          <Row style={{ marginRight: '80px' }}>
-            <Col lg="9"></Col>
-            <Col>
-              <div className="d-flex justify-content-evenly">
-                <p
-                  style={{
-                    color: '#5C9EB8'
-                  }}>
-                  Discount:
-                </p>
-                <Form.Control
+                    background: '#F4F5F7',
+                    color: '#A5ADBA',
+                    border: 'none',
+                    width: '100px',
+                    height: '40px'
+                  }}
+                  defaultValue=""
+                  disabled
+                /></td>
+              </tr>
+              <tr>
+                <td  style={{ padding: '10px', textAlign: 'right',  color: '#5C9EB8'}}>Tax Rate:</td>
+                <td> <Form.Control
                   style={{
                     background: '#F4F5F7',
                     color: '#A5ADBA',
@@ -379,98 +360,37 @@ const NewProcurement = () => {
                   }}
                   placeholder=""
                   disabled
-                />
-              </div>
-            </Col>
-          </Row>
-          <Row style={{ marginRight: '80px' }}>
-            <Col lg="9"></Col>
-            <Col>
-              <div className="d-flex justify-content-evenly mt-2">
-                <p
-                  style={{
-                    color: '#5C9EB8'
-                  }}>
-                  Tax Rate:
-                </p>
-                <Form.Control
-                  style={{
-                    background: '#F4F5F7',
-                    color: '#A5ADBA',
-                    border: 'none',
-                    width: '100px',
-                    height: '40px'
-                  }}
-                  placeholder=""
-                  disabled
-                />
-              </div>
-            </Col>
-          </Row>
-          <Row style={{ marginRight: '100px' }}>
-            <Col lg="9"></Col>
-            <Col>
-              <div className="d-flex justify-content-evenly mt-2">
-                <p
-                  style={{
-                    color: '#5C9EB8'
-                  }}>
-                  Tax:
-                </p>
-                <p>₹ 0</p>
-              </div>
-            </Col>
-          </Row>
-          <Row style={{ marginRight: '80px' }}>
-            <Col lg="9"></Col>
-            <Col>
-              <hr></hr>
-            </Col>
-          </Row>
-          <Row style={{ marginRight: '100px' }}>
-            <Col lg="9"></Col>
-            <Col>
-              <div className="d-flex justify-content-evenly mt-3">
-                <p
-                  style={{
-                    color: '#5C9EB8'
-                  }}>
-                  purchase Total :
-                </p>
-                <p>₹ 2,58,456.00/-</p>
-              </div>
-            </Col>
-          </Row>
-          <Row style={{ marginRight: '80px' }}>
-            <Col lg="9"></Col>
-            <Col>
-              <hr></hr>
-            </Col>
-          </Row>
-          <Row style={{ marginRight: '20px' }}>
-            <Col lg="8"></Col>
-            <Col>
-              <div className="d-flex justify-content-evenly mb-4 mt-3">
-                <p
-                  style={{
-                    color: '#5C9EB8'
-                  }}>
-                  Initial Payment Paid :
-                </p>
-                <Form.Control
+                /></td>
+              </tr>
+              <tr>
+                <td style={{ padding: '10px', textAlign: 'right',  color: '#5C9EB8'}}>Tax:</td>
+                <td>₹ 0</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C'}}>
+              </tr>
+              <tr>
+                <td style={{ padding: '10px', textAlign: 'right',  color: '#5C9EB8'}}>purchase Total :</td>
+                <td>₹ 2,58,456.00/-</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C'}}>
+              </tr>
+              <tr>
+                <td style={{ padding: '10px', paddingBottom: '30px',  color: '#5C9EB8'}}>Initial Payment Paid :</td>
+                <td><Form.Control
                   style={{
                     background: '#F4F5F7',
                     color: '#A5ADBA',
                     border: 'none',
                     width: '150px',
-                    height: '40px'
+                    height: '40px',
                   }}
-                  placeholder="₹ 0"
+                  defaultValue="₹ 0"
                   disabled
-                />
-              </div>
-            </Col>
-          </Row>
+                /></td>
+              </tr>
+            </tbody>
+          </table>
+          {/* </div> */}
           <Row>
             <div style={{ color: '#62728D', textDecoration: 'Underline', marginTop: '0' }}>
               <LocalPrintshopOutlinedIcon />{' '}
@@ -480,6 +400,7 @@ const NewProcurement = () => {
               </Button>
             </div>
           </Row>
+          {/* </div> */}
         </Form>
       </Container>
     </>
