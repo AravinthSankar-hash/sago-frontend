@@ -10,13 +10,13 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
-import ProcurementTable from '../components/MuiTable.jsx';
+import MuiTable from '../components/MuiTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import NewProcurement from '../components/forms/NewProcurement.jsx';
 
 function Procurements() {
-  const [tableColumns, setTableColuns] = useState([]);
+  const [procurementData, setProcurementData] = useState([]);
   const [showNewForm, setShowNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -26,7 +26,7 @@ function Procurements() {
     fetch('http://localhost:3001/procurement')
       .then((rawResponse) => rawResponse.json())
       .then((response) => {
-        setTableColuns(response.data);
+        setProcurementData(response.data);
         console.log(response.data);
       })
       .catch((error) => {
@@ -151,9 +151,9 @@ function Procurements() {
                 </Row>
               </div>
               <div>
-                {tableColumns.length > 0 ? (
-                  <ProcurementTable
-                    tableColumns={tableColumns}
+                {procurementData.length > 0 ? (
+                  <MuiTable
+                    tableData={procurementData}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     handleChangePage={handleChangePage}
@@ -173,7 +173,7 @@ function Procurements() {
                     { field: 'Last payment date' },
                     { field: 'Approval Status' }
                   ]}
-                  rowData={tableColumns}
+                  rowData={procurementData}
                 /> */}
               </div>
             </div>
