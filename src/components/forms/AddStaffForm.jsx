@@ -3,12 +3,9 @@ import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import Avatar from '@mui/material/Avatar';
 import { useForm } from 'react-hook-form';
-import CameraIcon from '@mui/icons-material/Camera';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
-const CatalogNewStaff = (props) => {
-  // const [focusedInput, setFocusedInput] = useState(null);
-
+const StaffForm = () => {
   const {
     register,
     handleSubmit,
@@ -273,4 +270,4 @@ const CatalogNewStaff = (props) => {
   );
 };
 
-export default CatalogNewStaff;
+export default StaffForm;

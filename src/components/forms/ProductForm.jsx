@@ -4,7 +4,7 @@ import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
-const CatalogNewProduct = (props) => {
+const CatalogForm = (props) => {
   const {
     register,
     handleSubmit,
@@ -149,4 +149,4 @@ const CatalogNewProduct = (props) => {
   );
 };
 
-export default CatalogNewProduct;
+export default CatalogForm;

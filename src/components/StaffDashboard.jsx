@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import AgGridTable from '../components/AgGridTable.jsx';
-import SearchBox from '../components/SearchBox.jsx';
+import AgGridTable from './AgGridTable.jsx';
+import SearchBox from './SearchBox.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -12,16 +12,8 @@ import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 
 import '../css/index.css';
-import {
-  useUpdateCatalogTabIndex,
-  useUpdateShowCatalogBackBtn,
-  useUpdateShowCatalogTabHomePage
-} from '../store/tableDataStore.js';
 
-const CatalogStaffTable = (props) => {
-  const updateShowBackBtn = useUpdateShowCatalogBackBtn();
-  const updateCatalogTabIndex = useUpdateCatalogTabIndex();
-  const updateShowCatalogTabHomePage = useUpdateShowCatalogTabHomePage();
+const StaffDashboard = (props) => {
   const [tableColumns, setTableColuns] = useState([]);
 
   useEffect(() => {
@@ -47,15 +39,11 @@ const CatalogStaffTable = (props) => {
   };
 
   const addNewStaff = () => {
-    props.showForm(true);
-    updateShowBackBtn(true);
-    updateCatalogTabIndex(6);
-    updateShowCatalogTabHomePage(false);
+    props.addFormBtnClick();
   };
 
   const gridRowClicked = () => {
-    updateShowBackBtn(true);
-    updateCatalogTabIndex(6);
+    props.showDetailsSection();
   };
 
   return (
@@ -117,4 +105,4 @@ const CatalogStaffTable = (props) => {
   );
 };
 
-export default CatalogStaffTable;
+export default StaffDashboard;
