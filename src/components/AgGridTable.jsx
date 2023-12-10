@@ -2,8 +2,6 @@ import React, { useRef, useMemo, useState, useCallback } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import Dropdown from 'react-bootstrap/Dropdown';
 
-import { useUpdateCurrentSelectedRowData } from '../store/tableDataStore';
-
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import '../css/index.css';
@@ -13,7 +11,6 @@ const AgGridTable = (props) => {
   const gridRef = useRef();
   const pageSize = 10;
   // Store
-  const updateCurrentSelectedRowDataInStore = useUpdateCurrentSelectedRowData();
 
   const [pageCount, setPageCount] = useState(10);
   const gridStyle = useMemo(() => ({ width: '100%', borderRadius: '30px' }), []);
@@ -30,7 +27,6 @@ const AgGridTable = (props) => {
   }, []);
 
   const tableRowClicked = (e) => {
-    updateCurrentSelectedRowDataInStore(e.data);
     if (propFromParent) {
       propFromParent();
     }

@@ -1,47 +1,57 @@
-import React, { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import React from 'react';
+import { Col } from 'react-bootstrap';
 import '../../css/index.css';
-import CatalogCustomerDetails from '../CatalogCustomerDetails.jsx';
-import CatalogVehicleTable from '../CatalogVehicleTable.jsx';
-import CatalogNewVehicle from '../forms/CatalogNewVehicle.jsx';
+import VehicleDashboard from '../VehicleDashboard.jsx';
+import VehicleItem from '../catalogItems/VehicleItem.jsx';
+import VehicleForm from '../forms/VehicleForm.jsx';
+import {
+  useUpdateShowCatalogBackBtn,
+  useShowVehicleNewForm,
+  useShowVehicleDetailsSection,
+  useUpdateShowVehicleNewForm,
+  useUpdateShowVehicleDetailsSection
+} from '../../store/store.js';
 
 const Vehicle = () => {
-  const [showNewForm, setShowNewForm] = useState(false);
-  const [showDetails, setShowDetails] = useState(false);
+  // Store
+  const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
+  const showVehicleNewForm = useShowVehicleNewForm(); // Show Add Vehicle form
+  const showVehicleDetailsSection = useShowVehicleDetailsSection(); // Show Vehicle Dashboard
+  const updateShowVehicleNewForm = useUpdateShowVehicleNewForm(); // Show Vehicle Dashboard
+  const updateShowVehicleDetailsSection = useUpdateShowVehicleDetailsSection(); // Show Vehicle Dashboard
 
-  const showForm = (shouldShow) => {
-    setShowNewForm(shouldShow);
+  const showForm = () => {
+    console.log('Vehicle table SHOW FORM CLICKED');
+
+    // Show Add Vehicle form - Store
+    updateShowVehicleNewForm(true);
+    // Show back btn - Store
+    updateShowCatalogBackBtn(true);
   };
 
-  const openDetails = () => {
-    setShowDetails(true);
-  };
+  const onTableRowClick = () => {
+    console.log('Vehicle table row clicked');
 
-  const closeDetails = () => {
-    setShowDetails(false);
+    // Show details section - Store
+    updateShowVehicleDetailsSection(true);
+    // Show back btn - Store
+    updateShowCatalogBackBtn(true);
   };
   return (
     <>
-      {showNewForm ? (
+      {showVehicleNewForm ? (
         <>
           <Col className="d-flex flex-column justify-content-center">
-            <CatalogNewVehicle showForm={showForm} />
+            <VehicleForm />
           </Col>
         </>
       ) : (
         <div>
-          {showDetails ? (
-            <Row>
-              <Col lg="9">
-                <CatalogVehicleTable showForm={showForm} openDetails={openDetails} />
-              </Col>
-              <Col lg="3" style={{ paddingRight: '0px' }}>
-                <CatalogCustomerDetails closeDetails={closeDetails} />
-              </Col>
-            </Row>
+          {showVehicleDetailsSection ? (
+            <VehicleItem />
           ) : (
             <>
-              <CatalogVehicleTable showForm={showForm} openDetails={openDetails} />
+              <VehicleDashboard addFormBtnClick={showForm} showDetailsSection={onTableRowClick} />
             </>
           )}
         </div>

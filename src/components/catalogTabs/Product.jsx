@@ -1,47 +1,59 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import '../../css/index.css';
-import CatalogCustomerDetails from '../CatalogCustomerDetails.jsx';
-import CatalogProductTable from '../CatalogProductTable.jsx';
-import CatalogNewProduct from '../forms/CatalogNewProduct.jsx';
+import ProductItem from '../catalogItems/ProductItem.jsx';
+import ProductDashboard from '../ProductDashboard.jsx';
+import ProductForm from '../forms/ProductForm.jsx';
+
+// Store & Dtos & Custom Css
+import '../../css/index.css';
+import {
+  useUpdateShowCatalogBackBtn,
+  useShowProductNewForm,
+  useShowProductDetailsSection,
+  useUpdateShowProductNewForm,
+  useUpdateShowProductDetailsSection
+} from '../../store/store.js';
 
 const Product = () => {
-  const [showNewForm, setShowNewForm] = useState(false);
-  const [showDetails, setShowDetails] = useState(false);
+  // Store
+  const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
+  const showProductNewForm = useShowProductNewForm(); // Show Add Product form
+  const showProductDetailsSection = useShowProductDetailsSection(); // Show Product Dashboard
+  const updateShowProductNewForm = useUpdateShowProductNewForm(); // Show Product Dashboard
+  const updateShowProductDetailsSection = useUpdateShowProductDetailsSection(); // Show Product Dashboard
 
-  const showForm = (shouldShow) => {
-    setShowNewForm(shouldShow);
+  const showForm = () => {
+    console.log('Product table SHOW FORM CLICKED');
+
+    // Show Add Product form - Store
+    updateShowProductNewForm(true);
+    // Show back btn - Store
+    updateShowCatalogBackBtn(true);
   };
 
-  const openDetails = () => {
-    setShowDetails(true);
-  };
-
-  const closeDetails = () => {
-    setShowDetails(false);
+  const onTableRowClick = () => {
+    console.log('Product table row clicked');
+    // Show details section - Store
+    updateShowProductDetailsSection(true);
+    // Show back btn - Store
+    updateShowCatalogBackBtn(true);
   };
   return (
     <>
-      {showNewForm ? (
+      {showProductNewForm ? (
         <>
           <Col className="d-flex flex-column justify-content-center">
-            <CatalogNewProduct showForm={showForm} />
+            <ProductForm />
           </Col>
         </>
       ) : (
         <div>
-          {showDetails ? (
-            <Row>
-              <Col lg="9">
-                <CatalogProductTable showForm={showForm} openDetails={openDetails} />
-              </Col>
-              <Col lg="3" style={{ paddingRight: '0px' }}>
-                <CatalogCustomerDetails closeDetails={closeDetails} />
-              </Col>
-            </Row>
+          {showProductDetailsSection ? (
+            <ProductItem />
           ) : (
             <>
-              <CatalogProductTable showForm={showForm} openDetails={openDetails} />
+              <ProductDashboard addFormBtnClick={showForm} showDetailsSection={onTableRowClick} />
             </>
           )}
         </div>

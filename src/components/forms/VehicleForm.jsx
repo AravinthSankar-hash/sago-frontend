@@ -4,7 +4,7 @@ import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
-const CatalogNewVehicle = (props) => {
+const VehicleForm = (props) => {
   const {
     register,
     handleSubmit,
@@ -214,4 +214,4 @@ const CatalogNewVehicle = (props) => {
   );
 };
 
-export default CatalogNewVehicle;
+export default VehicleForm;

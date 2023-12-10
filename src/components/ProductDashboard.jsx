@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import AgGridTable from '../components/AgGridTable.jsx';
-import SearchBox from '../components/SearchBox.jsx';
-import DateSelector from '../components/DateSelector';
+import AgGridTable from './AgGridTable.jsx';
+import SearchBox from './SearchBox.jsx';
+import DateSelector from './DateSelector';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -11,7 +11,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
 
-const CatalogVehicleTable = (props) => {
+const ProductDashboard = (props) => {
   const [tableColumns, setTableColuns] = useState([]);
   const [selectedChips, setSelectedChips] = useState([]);
   const [showFields, setShowFields] = useState(true);
@@ -59,9 +59,12 @@ const CatalogVehicleTable = (props) => {
     }
   };
 
-  const hideChanges = () => {
-    setShowFields(false);
-    props.openDetails();
+  const addNewStaff = () => {
+    props.addFormBtnClick();
+  };
+
+  const gridRowClicked = () => {
+    props.showDetailsSection();
   };
 
   return (
@@ -94,9 +97,9 @@ const CatalogVehicleTable = (props) => {
           </Col>
           {showFields && (
             <Col lg="3">
-              <Button sx={buttonStyle} variant="outlined" onClick={() => props.showForm(true)}>
+              <Button sx={buttonStyle} variant="outlined" onClick={addNewStaff}>
                 <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
-                New Vehicle
+                New Product
               </Button>
             </Col>
           )}
@@ -124,22 +127,21 @@ const CatalogVehicleTable = (props) => {
       </div>
       <Row>
         <Col className="d-flex flex-column justify-content-center">
-          <div onClick={() => hideChanges()}>
-            <AgGridTable
-              columnDefs={[
-                { field: 'make' },
-                { field: 'model' },
-                { field: 'price' },
-                { field: 'location' },
-                { field: 'pincode' }
-              ]}
-              rowData={tableColumns}
-            />
-          </div>
+          <AgGridTable
+            propFromParent={gridRowClicked}
+            columnDefs={[
+              { field: 'make' },
+              { field: 'model' },
+              { field: 'price' },
+              { field: 'location' },
+              { field: 'pincode' }
+            ]}
+            rowData={tableColumns}
+          />
         </Col>
       </Row>
     </div>
   );
 };
 
-export default CatalogVehicleTable;
+export default ProductDashboard;
