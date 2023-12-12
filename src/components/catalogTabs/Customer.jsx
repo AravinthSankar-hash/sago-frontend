@@ -43,20 +43,18 @@ const Customer = () => {
         </>
       ) : (
         <div>
-          {showStaffDetailsSection ? (
-            <Row>
-              <Col lg="9">
-                <CustomerDashboard addFormBtnClick={showForm} openDetails={openDetails} />
-              </Col>
+          <Row>
+            <Col lg={showStaffDetailsSection ? 9 : 12}>
+              <CustomerDashboard addFormBtnClick={showForm} openDetails={openDetails} />
+            </Col>
+            {showStaffDetailsSection ? (
               <Col lg="3" style={{ paddingRight: '0px' }}>
                 <CatalogCustomerDetails closeDetails={closeDetails} />
               </Col>
-            </Row>
-          ) : (
-            <>
-              <CustomerDashboard addFormBtnClick={showForm} openDetails={openDetails} />
-            </>
-          )}
+            ) : (
+              <> </>
+            )}
+          </Row>
         </div>
       )}
     </>
