@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import AgGridTable from '../components/AgGridTable.jsx';
-import SearchBox from '../components/SearchBox.jsx';
-import DateSelector from '../components/DateSelector';
+import AgGridTable from './AgGridTable.jsx';
+import SearchBox from './SearchBox.jsx';
+import DateSelector from './DateSelector';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -11,7 +11,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
 
-const CatalogCustomerTable = (props) => {
+const CustomerDashboard = (props) => {
   const [tableColumns, setTableColuns] = useState([]);
   const [selectedChips, setSelectedChips] = useState([]);
   const [showFields, setShowFields] = useState(true);
@@ -64,6 +64,10 @@ const CatalogCustomerTable = (props) => {
     props.openDetails();
   };
 
+  const addNewCustomer = () => {
+    props.addFormBtnClick();
+  };
+
   return (
     <div>
       <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
@@ -94,7 +98,7 @@ const CatalogCustomerTable = (props) => {
           </Col>
           {showFields && (
             <Col lg="3">
-              <Button sx={buttonStyle} variant="outlined" onClick={() => props.showForm(true)}>
+              <Button sx={buttonStyle} variant="outlined" onClick={addNewCustomer}>
                 <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
                 New Customer
               </Button>
@@ -141,4 +145,4 @@ const CatalogCustomerTable = (props) => {
   );
 };
 
-export default CatalogCustomerTable;
+export default CustomerDashboard;

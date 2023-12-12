@@ -6,12 +6,12 @@ import DateSelector from '../components/DateSelector';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CatalogNewCustForm from '../components/forms/CatalogNewCust.jsx';
 import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
+// import CustomerForm from '../components/forms/CustomerForm.jsx';
 
 function Invoices() {
   const [tableColumns, setTableColuns] = useState([]);
@@ -50,7 +50,7 @@ function Invoices() {
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showNewForm ? (
-            <CatalogNewCustForm />
+            <div />
           ) : (
             <div>
               <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
