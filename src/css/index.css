@@ -84,3 +84,11 @@ body {
 .css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
   padding: 7px 7px 7px px !important;
 }
+
+.MuiTablePagination-displayedRows {
+  margin-bottom: 0px !important;
+}
+
+.MuiTablePagination-selectLabel {
+  margin-bottom: 0px !important;
+}

@@ -1,49 +1,60 @@
+import {
+  useShowCustomerNewForm,
+  useUpdateShowCustomerNewForm,
+  useUpdateShowCatalogBackBtn
+} from '../../store/store.js';
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import CatalogNewCustForm from '../forms/CatalogNewCust.jsx';
+import CatalogNewCustForm from '../forms/CustomerForm.jsx';
 import '../../css/index.css';
 import CatalogCustomerDetails from '../CatalogCustomerDetails.jsx';
-import CatalogCustomerTable from '../CatalogCustomerTable.jsx';
+import CustomerDashboard from '../CustomerDashboard.jsx';
 
 const Customer = () => {
-  const [showNewForm, setShowNewForm] = useState(false);
-  const [showDetails, setShowDetails] = useState(false);
+  // Store
+  const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
+  const showCustomerNewForm = useShowCustomerNewForm(); // Show Customer Add form
+  const updateShowCustomerNewForm = useUpdateShowCustomerNewForm(); // Show staff Dashboard
+  const [showStaffDetailsSection, setShowStaffDetailsSection] = useState(false);
 
-  const showForm = (shouldShow) => {
-    setShowNewForm(shouldShow);
+  const showForm = () => {
+    console.log('Customer table SHOW FORM CLICKED');
+
+    // Show Add staff form - Store
+    updateShowCustomerNewForm(true);
+    // Show back btn - Store
+    updateShowCatalogBackBtn(true);
   };
 
   const openDetails = () => {
-    setShowDetails(true);
+    setShowStaffDetailsSection(true);
   };
 
   const closeDetails = () => {
-    setShowDetails(false);
+    setShowStaffDetailsSection(false);
   };
   return (
     <>
-      {showNewForm ? (
+      {showCustomerNewForm ? (
         <>
           <Col className="d-flex flex-column justify-content-center">
-            <CatalogNewCustForm showForm={showForm} />
+            <CatalogNewCustForm />
           </Col>
         </>
       ) : (
         <div>
-          {showDetails ? (
-            <Row>
-              <Col lg="9">
-                <CatalogCustomerTable showForm={showForm} openDetails={openDetails} />
-              </Col>
+          <Row>
+            <Col lg={showStaffDetailsSection ? 9 : 12}>
+              <CustomerDashboard addFormBtnClick={showForm} openDetails={openDetails} />
+            </Col>
+            {showStaffDetailsSection ? (
               <Col lg="3" style={{ paddingRight: '0px' }}>
                 <CatalogCustomerDetails closeDetails={closeDetails} />
               </Col>
-            </Row>
-          ) : (
-            <>
-              <CatalogCustomerTable showForm={showForm} openDetails={openDetails} />
-            </>
-          )}
+            ) : (
+              <> </>
+            )}
+          </Row>
         </div>
       )}
     </>

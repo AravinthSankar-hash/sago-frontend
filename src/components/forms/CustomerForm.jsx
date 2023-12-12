@@ -2,9 +2,8 @@ import React, { useMemo, useRef } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
-function CatalogNewCustForm(props) {
+function CustomerForm(props) {
   const {
     register,
     handleSubmit,
@@ -48,11 +47,6 @@ function CatalogNewCustForm(props) {
       <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
         <Form.Label className="mt-4" style={headingStyle}>
           1. Customer details
-          <CloseSharpIcon
-            style={{ cursor: 'pointer' }}
-            onClick={() => props.showForm(false)}
-            fontSize="medium"
-          />
         </Form.Label>
 
         <Row className="mb-3 mt-3">
@@ -240,4 +234,4 @@ function CatalogNewCustForm(props) {
   );
 }
 
-export default CatalogNewCustForm;
+export default CustomerForm;
