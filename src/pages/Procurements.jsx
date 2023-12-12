@@ -14,6 +14,7 @@ import MuiTable from '../components/MuiTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import NewProcurement from '../components/forms/NewProcurement.jsx';
+import ProcurementDetails from '../components/ProcurementDetails.jsx';
 
 function Procurements() {
   const [procurementData, setProcurementData] = useState([]);
@@ -21,6 +22,8 @@ function Procurements() {
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
+  const [showDetails, setShowDetails] = useState(false);
+  const [rowData, setRowData] = useState({});
 
   useEffect(() => {
     fetch('http://localhost:3001/procurement')
@@ -39,6 +42,11 @@ function Procurements() {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const handleShowDetails = (shouldShow, rowData) => {
+    setRowData(rowData);
+    setShowDetails(shouldShow);
   };
 
   const chipStyle = (isSelected) => ({
@@ -67,16 +75,20 @@ function Procurements() {
     <Container style={{ background: '#EBEEF0' }}>
       <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
         <Col>
-          {showNewForm ? (
+          {showNewForm || showDetails ? (
             <ArrowBackIcon
               style={{ cursor: 'pointer' }}
-              onClick={() => showForm(false)}
+              onClick={() => {
+                showForm(false);
+                handleShowDetails(false);
+              }}
               fontSize="medium"
             />
           ) : (
             ''
           )}
-          <span>&nbsp;&nbsp;</span> {showNewForm ? 'New Procurements' : 'Procurements'}
+          <span>&nbsp;&nbsp;</span>{' '}
+          {showNewForm ? 'New Procurements' : <> {showDetails ? 'Purchase' : 'Procurement'}</>}
         </Col>
       </Row>
       <Row>
@@ -84,99 +96,108 @@ function Procurements() {
           {showNewForm ? (
             <NewProcurement showForm={showForm} />
           ) : (
-            <div>
-              <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
-                <Row>
-                  <Col lg="3">
-                    <SearchBox placeHolder={'Search here'}></SearchBox>
-                  </Col>
-                  <Col lg="2">
-                    <DateSelector size="smaller" customLabel="From"></DateSelector>
-                  </Col>
-                  <Col lg="2">
-                    <DateSelector customLabel="To"></DateSelector>
-                  </Col>
-                  <Col lg="2" style={{ display: 'flex', justifyContent: 'space-around' }}>
-                    <IconButton size="small">
-                      <IosShareIcon
-                        fontSize="small"
-                        style={{
-                          wordSpacing: 1
-                        }}
+            <>
+              {' '}
+              {showDetails ? (
+                <ProcurementDetails rowData={rowData} />
+              ) : (
+                <div>
+                  <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
+                    <Row>
+                      <Col lg="3">
+                        <SearchBox placeHolder={'Search here'}></SearchBox>
+                      </Col>
+                      <Col lg="2">
+                        <DateSelector size="smaller" customLabel="From"></DateSelector>
+                      </Col>
+                      <Col lg="2">
+                        <DateSelector customLabel="To"></DateSelector>
+                      </Col>
+                      <Col lg="2" style={{ display: 'flex', justifyContent: 'space-around' }}>
+                        <IconButton size="small">
+                          <IosShareIcon
+                            fontSize="small"
+                            style={{
+                              wordSpacing: 1
+                            }}
+                          />
+                          Export Data
+                        </IconButton>
+                      </Col>
+                      <Col lg="3">
+                        <Button
+                          sx={{
+                            borderColor: '#00B7FF',
+                            backgroundColor: 'white',
+                            borderRadius: '8px',
+                            border: '2px solid',
+                            color: '#00B7FF',
+                            font: '14px',
+                            textTransform: 'none',
+                            fontWeight: 'bold'
+                          }}
+                          variant="outlined"
+                          onClick={() => showForm(true)}>
+                          <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
+                          New Procurement
+                        </Button>
+                      </Col>
+                    </Row>
+                    <Row className="mt-3">
+                      <Stack direction="row" spacing={1}>
+                        <p style={{ color: '#6B778C' }}>Filter by : </p>
+                        <Chip
+                          label="All"
+                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
+                          onClick={() => handleChipSelect('All')}
+                          sx={chipStyle(selectedChips.includes('All'))}
+                        />
+                        <Chip
+                          label="Paid"
+                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
+                          onClick={() => handleChipSelect('Paid')}
+                          sx={chipStyle(selectedChips.includes('Paid'))}
+                        />
+                        <Chip
+                          label="Unpaid"
+                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
+                          onClick={() => handleChipSelect('UnPaid')}
+                          sx={chipStyle(selectedChips.includes('UnPaid'))}
+                        />
+                      </Stack>
+                    </Row>
+                  </div>
+                  <div>
+                    {procurementData.length > 0 ? (
+                      <MuiTable
+                        tableData={procurementData}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        handleChangePage={handleChangePage}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        handleShowDetails={handleShowDetails}
                       />
-                      Export Data
-                    </IconButton>
-                  </Col>
-                  <Col lg="3">
-                    <Button
-                      sx={{
-                        borderColor: '#00B7FF',
-                        backgroundColor: 'white',
-                        borderRadius: '8px',
-                        border: '2px solid',
-                        color: '#00B7FF',
-                        font: '14px',
-                        textTransform: 'none',
-                        fontWeight: 'bold'
-                      }}
-                      variant="outlined"
-                      onClick={() => showForm(true)}>
-                      <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
-                      New Procurement
-                    </Button>
-                  </Col>
-                </Row>
-                <Row className="mt-3">
-                  <Stack direction="row" spacing={1}>
-                    <p style={{ color: '#6B778C' }}>Filter by : </p>
-                    <Chip
-                      label="All"
-                      color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                      onClick={() => handleChipSelect('All')}
-                      sx={chipStyle(selectedChips.includes('All'))}
-                    />
-                    <Chip
-                      label="Paid"
-                      color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                      onClick={() => handleChipSelect('Paid')}
-                      sx={chipStyle(selectedChips.includes('Paid'))}
-                    />
-                    <Chip
-                      label="Unpaid"
-                      color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                      onClick={() => handleChipSelect('UnPaid')}
-                      sx={chipStyle(selectedChips.includes('UnPaid'))}
-                    />
-                  </Stack>
-                </Row>
-              </div>
-              <div>
-                {procurementData.length > 0 ? (
-                  <MuiTable
-                    tableData={procurementData}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    handleChangePage={handleChangePage}
-                    handleChangeRowsPerPage={handleChangeRowsPerPage}
-                  />
-                ) : (
-                  <Box sx={{ display: 'flex' }}>
-                    <CircularProgress />
-                  </Box>
-                )}
-                {/* <AgGridTable
-                  columnDefs={[
-                    { field: 'Purchase date' },
-                    { field: 'Purchase No' },
-                    { field: 'Supplier Name' },
-                    { field: 'Outstandings' },
-                    { field: 'Last payment date' },
-                    { field: 'Approval Status' }
-                  ]}
-                  rowData={procurementData}
-                /> */}
-              </div>
-            </div>
+                    ) : (
+                      <Box sx={{ display: 'flex' }}>
+                        <CircularProgress />
+                      </Box>
+                    )}
+
+                    {/* <AgGridTable
+                columnDefs={[
+                  { field: 'Purchase date' },
+                  { field: 'Purchase No' },
+                  { field: 'Supplier Name' },
+                  { field: 'Outstandings' },
+                  { field: 'Last payment date' },
+                  { field: 'Approval Status' }
+                ]}
+                rowData={procurementData}
+              /> */}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </Col>
       </Row>
