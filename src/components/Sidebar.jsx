@@ -1,11 +1,12 @@
 import React from 'react';
-import { sideBarItems } from '../data/sidebar-items.const';
 import styled from 'styled-components';
-import sago_logo from '../assets/images/sago_logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 import { Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+
+import sago_logo from '../assets/images/sago_logo.svg';
+import { sideBarItems } from '../data/sidebar-items.const';
 
 // Inline styles
 const itemWrapper = {

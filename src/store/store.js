@@ -16,11 +16,19 @@ const useStore = create((set) => ({
 
     showCustomerNewForm: false,
 
+    activeTPTabComponent: <div />,
+
+    // Catalog Tabs
     updateShowCatalogBackBtn: (value) => {
         set({ showCatalogBackBtn: value });
     },
     updateActiveCatalogTabComponent: (value) => {
         set({ activeCatalogTabComponent: value });
+    },
+
+    // TP Tabs
+    updateActiveTPTabComponent: (value) => {
+        set({ activeTPTabComponent: value });
     },
 
     // Staff
@@ -78,3 +86,7 @@ export const useUpdateShowProductDetailsSection = () => useStore((state) => stat
 
 export const useShowCustomerNewForm = () => useStore((state) => state.showCustomerNewForm);
 export const useUpdateShowCustomerNewForm = () => useStore((state) => state.updateShowCustomerNewForm);
+
+// TP
+export const useActiveTPTabComponent = () => useStore((state) => state.activeTPTabComponent);
+export const useUpdateActiveTPTabComponent = () => useStore((state) => state.updateActiveTPTabComponent);
