@@ -14,12 +14,15 @@ const useStore = create((set) => ({
     showProductNewForm: false,
     showProductDetailsSection: false,
 
+    showCustomerNewForm: false,
+
     updateShowCatalogBackBtn: (value) => {
         set({ showCatalogBackBtn: value });
     },
     updateActiveCatalogTabComponent: (value) => {
         set({ activeCatalogTabComponent: value });
     },
+
     // Staff
     updateShowStaffNewForm: (value) => {
         set({ showStaffNewForm: value });
@@ -41,6 +44,11 @@ const useStore = create((set) => ({
     },
     updateShowProductDetailsSection: (value) => {
         set({ showProductDetailsSection: value });
+    },
+
+    // Customer
+    updateShowCustomerNewForm: (value) => {
+        set({ showCustomerNewForm: value });
     },
 }))
 
@@ -67,3 +75,6 @@ export const useUpdateShowProductNewForm = () => useStore((state) => state.updat
 
 export const useShowProductDetailsSection = () => useStore((state) => state.showProductDetailsSection);
 export const useUpdateShowProductDetailsSection = () => useStore((state) => state.updateShowProductDetailsSection);
+
+export const useShowCustomerNewForm = () => useStore((state) => state.showCustomerNewForm);
+export const useUpdateShowCustomerNewForm = () => useStore((state) => state.updateShowCustomerNewForm);

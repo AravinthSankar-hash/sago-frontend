@@ -11,8 +11,9 @@ import {
   TablePagination,
   tableCellClasses
 } from '@mui/material';
+import '../css/index.css';
 
-const MuiTable = (props) => {
+const ProcurementTable = (props) => {
   const { tableData, rowsPerPage, page, handleChangePage, handleChangeRowsPerPage } = props;
 
   const Wrapper = styled('div')({
@@ -82,21 +83,14 @@ const MuiTable = (props) => {
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead style={{ position: 'sticky', top: 0, zIndex: 2 }}>
             <TableRow>
-              {Object.keys(props.tableData[0]).map((key, index) => (
+              {Object.keys(tableData[0]).map((key, index) => (
                 <StyledTableCell key={index}>{key}</StyledTableCell>
               ))}{' '}
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.tableData.map((row, index) => (
-              <StyledTableRow key={index}>
-                {/* {
-                  Object.keys(row).map(cell => {
-                    console.log(row[cell]);
-                    <StyledTableCell align="left">{row[cell]}</StyledTableCell>
-
-                  })
-                } */}
+            {tableData.map((row, index) => (
+              <StyledTableRow key={index} onClick={() => props.handleShowDetails(true, row)}>
                 <StyledTableCell align="left">{row['Purchase date']}</StyledTableCell>
                 <StyledTableCell align="left" style={{ color: 'black' }}>
                   {row['Purchase No']}
@@ -124,7 +118,7 @@ const MuiTable = (props) => {
           <TableBody>
             {' '}
             <StyledTablePaginationRow>
-              <TableCell colSpan={Object.keys(props.tableData[0]).length}>
+              <TableCell colSpan={Object.keys(tableData[0]).length}>
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
@@ -143,4 +137,4 @@ const MuiTable = (props) => {
   );
 };
 
-export default MuiTable;
+export default ProcurementTable;

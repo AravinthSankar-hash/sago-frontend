@@ -10,7 +10,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
-import MuiTable from '../components/MuiTable.jsx';
+import MuiTable from '../components/ProcurementTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import NewProcurement from '../components/forms/NewProcurement.jsx';

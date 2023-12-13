@@ -2,16 +2,6 @@ import React, { useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-// Custom components & services
-import CatalogTab from '../components/CatalogTab';
-import Customer from '../components/catalogTabs/Customer.jsx';
-import Broker from '../components/catalogTabs/Broker.jsx';
-import RawMaterial from '../components/catalogTabs/RawMaterial.jsx';
-import Supplier from '../components/catalogTabs/Supplier.jsx';
-import Product from '../components/catalogTabs/Product.jsx';
-import Vehicle from '../components/catalogTabs/Vehicle.jsx';
-import Staff from '../components/catalogTabs/Staff.jsx';
-
 // Store & const
 import {
   useShowCatalogBackBtn,
@@ -23,8 +13,19 @@ import {
   useUpdateShowVehicleNewForm,
   useUpdateShowVehicleDetailsSection,
   useUpdateShowProductDetailsSection,
-  useUpdateShowProductNewForm
+  useUpdateShowProductNewForm,
+  useUpdateShowCustomerNewForm
 } from '../store/store.js';
+
+// Custom components & services
+import CatalogTab from '../components/CatalogTab';
+import Customer from '../components/catalogTabs/Customer.jsx';
+import Broker from '../components/catalogTabs/Broker.jsx';
+import RawMaterial from '../components/catalogTabs/RawMaterial.jsx';
+import Supplier from '../components/catalogTabs/Supplier.jsx';
+import Product from '../components/catalogTabs/Product.jsx';
+import Vehicle from '../components/catalogTabs/Vehicle.jsx';
+import Staff from '../components/catalogTabs/Staff.jsx';
 
 const Catalog = () => {
   // Internal state
@@ -41,6 +42,7 @@ const Catalog = () => {
   const updateShowVehicleNewForm = useUpdateShowVehicleNewForm(); // Vehicle form should not be visible when back is clicked, actually whole dashboard of staff should be visible
   const updateShowProductDetailsSection = useUpdateShowProductDetailsSection(); // Product details should not be visible when back is clicked, actually whole dashboard of staff should be visible
   const updateShowProductNewForm = useUpdateShowProductNewForm(); // Product form should not be visible when back is clicked, actually whole dashboard of staff should be visible
+  const updateShowCustomerNewForm = useUpdateShowCustomerNewForm(); // Customer form should not be visible when back is clicked, actually whole dashboard of customer should be visible
 
   const renderTabComponent = (tabName) => {
     switch (tabName) {
@@ -78,6 +80,7 @@ const Catalog = () => {
     updateShowVehicleDetailsSection(false);
     updateShowProductNewForm(false);
     updateShowProductDetailsSection(false);
+    updateShowCustomerNewForm(false);
   };
 
   return (
