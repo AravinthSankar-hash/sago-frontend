@@ -90,7 +90,7 @@ const ProcurementTable = (props) => {
           </TableHead>
           <TableBody>
             {tableData.map((row, index) => (
-              <StyledTableRow key={index}>
+              <StyledTableRow key={index} onClick={() => props.handleShowDetails(true, row)}>
                 <StyledTableCell align="left">{row['Purchase date']}</StyledTableCell>
                 <StyledTableCell align="left" style={{ color: 'black' }}>
                   {row['Purchase No']}
