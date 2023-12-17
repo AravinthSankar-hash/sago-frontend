@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import Customer from '../components/catalogTabs/Customer.jsx';
+import Purchases from '../components/tapicoPurchase/PurchasesTab.jsx';
 
 const useStore = create((set) => ({
     showCatalogBackBtn: false,
@@ -16,7 +17,7 @@ const useStore = create((set) => ({
 
     showCustomerNewForm: false,
 
-    activeTPTabComponent: <div />,
+    activeTPTabComponent: <Purchases />,
 
     // Catalog Tabs
     updateShowCatalogBackBtn: (value) => {

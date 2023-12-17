@@ -1,24 +1,28 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 import TapicoPurchaseTab from './TapicoPurchaseTab.jsx';
-import { useUpdateActiveTPTabComponent } from '../../store/store.js';
+import { useUpdateActiveTPTabComponent, useActiveTPTabComponent } from '../../store/store.js';
+import Purchases from './PurchasesTab.jsx';
+import BrokerReports from './BrokerReportsTab.jsx';
+import Reports from './ReportsTab.jsx';
 
 function TapicoPurchase() {
   // Store
+  const activeTPTabComponent = useActiveTPTabComponent(); // Method to get the active tapico tab comp
   const updateActiveTPTabComponent = useUpdateActiveTPTabComponent(); // Method to update the active component, whenver the tab is clicked
   const showBackButton = false;
   const onBackBtnClick = () => {};
-  const activeCatalogTabComponent = <></>;
 
   const renderTabComponent = (tabName) => {
     switch (tabName) {
       case 'purcases':
-        return <div>Purchases</div>;
+        return <Purchases />;
       case 'brokerreports':
-        return <div>Broker reports</div>;
+        return <BrokerReports />;
       case 'reports':
-        return <div>Reports</div>;
+        return <Reports />;
       default:
         return <div>Coming soon...</div>;
     }
@@ -45,7 +49,7 @@ function TapicoPurchase() {
           <TapicoPurchaseTab handleTabSwitch={handleTabSwitch} />
         )}
       </Row>
-      <Row>{activeCatalogTabComponent}</Row>
+      <Row>{activeTPTabComponent}</Row>
     </Container>
   );
 }
