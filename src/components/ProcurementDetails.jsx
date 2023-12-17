@@ -2,7 +2,6 @@ import React, { useMemo, useRef, useEffect, useState } from 'react';
 import { Container, Form, Col } from 'react-bootstrap';
 import '../css/catalogNewCust.css';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
-import { styled, TableCell, TableRow, tableCellClasses } from '@mui/material';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
@@ -60,37 +59,6 @@ const ProcurementDetails = (props) => {
     // alert(shouldShow);
     setShowPurchase(shouldShow);
   };
-
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.white,
-      color: '#6B778C'
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14
-    }
-  }));
-
-  const StyledTableRow = styled(TableRow)(() => ({
-    '&:nth-of-type(even)': {
-      backgroundColor: '#F8F8F8'
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-      border: 0
-    },
-    '& td, & th': {
-      border: 0
-    }
-  }));
-
-  const Wrapper = styled('div')({
-    display: 'flex',
-    flexDirection: 'column',
-    height: 'auto',
-    margin: '24px 12px',
-    borderBottom: '2px solid #EBEEF0'
-  });
 
   const disabledInput = {
     background: '#F4F5F7',
