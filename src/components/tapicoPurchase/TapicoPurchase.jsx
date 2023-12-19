@@ -1,23 +1,36 @@
-import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import TapicoPurchaseTab from './TapicoPurchaseTab.jsx';
-import { useUpdateActiveTPTabComponent, useActiveTPTabComponent } from '../../store/store.js';
+import {
+  useUpdateActiveTPTabComponent,
+  useActiveTPTabComponent,
+  useShowTPBackBtn,
+  useUpdateShowTPBackBtn,
+  useUpdateShowPurhcaseDetails,
+  useUpdateShowTPPurchaseNewForm
+} from '../../store/store.js';
 import Purchases from './PurchasesTab.jsx';
 import BrokerReports from './BrokerReportsTab.jsx';
 import Reports from './ReportsTab.jsx';
 
 function TapicoPurchase() {
   // Store
+  const showBackButton = useShowTPBackBtn(); // Bool to show/hide the back btn
+  const updateShowTPBackBtn = useUpdateShowTPBackBtn(); // Bool to show/hide the back TP btn
   const activeTPTabComponent = useActiveTPTabComponent(); // Method to get the active tapico tab comp
   const updateActiveTPTabComponent = useUpdateActiveTPTabComponent(); // Method to update the active component, whenver the tab is clicked
-  const showBackButton = false;
-  const onBackBtnClick = () => {};
+  const updateShowPurhcaseDetails = useUpdateShowPurhcaseDetails();
+  const updateShowTPPurchaseNewForm = useUpdateShowTPPurchaseNewForm();
+  const onBackBtnClick = () => {
+    updateShowTPBackBtn(false);
+    updateShowTPPurchaseNewForm(false);
+    updateShowPurhcaseDetails(false);
+  };
 
   const renderTabComponent = (tabName) => {
     switch (tabName) {
-      case 'purcases':
+      case 'purchases':
         return <Purchases />;
       case 'brokerreports':
         return <BrokerReports />;

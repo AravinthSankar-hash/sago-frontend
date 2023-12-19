@@ -13,7 +13,7 @@ import MuiTable from '../../components/ProcurementTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
-function TPDashboard({ showAddPurchaseForm }) {
+function TPDashboard({ showAddPurchaseForm, showDetailsSection }) {
   const [tPData, setTPData] = useState([]);
   const buttonStyle = {
     borderColor: '#00B7FF',
@@ -28,6 +28,10 @@ function TPDashboard({ showAddPurchaseForm }) {
 
   const addNewPurchase = () => {
     showAddPurchaseForm(true);
+  };
+
+  const onTableRowClick = () => {
+    showDetailsSection();
   };
 
   useEffect(() => {
@@ -98,7 +102,7 @@ function TPDashboard({ showAddPurchaseForm }) {
             </div>
             <div>
               {tPData.length > 0 ? (
-                <MuiTable tableData={tPData} />
+                <MuiTable tableData={tPData} hanleTableRowClick={onTableRowClick} />
               ) : (
                 <Box sx={{ display: 'flex' }}>
                   <CircularProgress />

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import Customer from '../components/catalogTabs/Customer.jsx';
-import Purchases from '../components/tapicoPurchase/PurchasesTab.jsx';
+import Purchases from '../components/tapicoPurchase/PurchasesTab';
 
 const useStore = create((set) => ({
     showCatalogBackBtn: false,
@@ -17,6 +17,10 @@ const useStore = create((set) => ({
 
     showCustomerNewForm: false,
 
+    // TP
+    showTPPurchaseNewForm: false,
+    showTPPurchaseDetails: false,
+    showTPBackBtn: false,
     activeTPTabComponent: <Purchases />,
 
     // Catalog Tabs
@@ -25,11 +29,6 @@ const useStore = create((set) => ({
     },
     updateActiveCatalogTabComponent: (value) => {
         set({ activeCatalogTabComponent: value });
-    },
-
-    // TP Tabs
-    updateActiveTPTabComponent: (value) => {
-        set({ activeTPTabComponent: value });
     },
 
     // Staff
@@ -59,6 +58,22 @@ const useStore = create((set) => ({
     updateShowCustomerNewForm: (value) => {
         set({ showCustomerNewForm: value });
     },
+
+
+    // TP Tabs
+    updateActiveTPTabComponent: (value) => {
+        set({ activeTPTabComponent: value });
+    },
+    updateShowTPPurchaseNewForm: (value) => {
+        set({ showTPPurchaseNewForm: value });
+    },
+    updateShowTPPurchaseDetails: (value) => {
+        set({ showTPPurchaseDetails: value });
+    },
+    updateShowTPBackBtn: (value) => {
+        set({ showTPBackBtn: value });
+    },
+
 }))
 
 export const useShowCatalogBackBtn = () => useStore((state) => state.showCatalogBackBtn);
@@ -88,6 +103,17 @@ export const useUpdateShowProductDetailsSection = () => useStore((state) => stat
 export const useShowCustomerNewForm = () => useStore((state) => state.showCustomerNewForm);
 export const useUpdateShowCustomerNewForm = () => useStore((state) => state.updateShowCustomerNewForm);
 
+
+
 // TP
 export const useActiveTPTabComponent = () => useStore((state) => state.activeTPTabComponent);
 export const useUpdateActiveTPTabComponent = () => useStore((state) => state.updateActiveTPTabComponent);
+// bacB button
+export const useShowTPBackBtn = () => useStore((state) => state.showTPBackBtn);
+export const useUpdateShowTPBackBtn = () => useStore((state) => state.updateShowTPBackBtn);
+
+export const useShowTPPurchaseNewForm = () => useStore((state) => state.showTPPurchaseNewForm);
+export const useUpdateShowTPPurchaseNewForm = () => useStore((state) => state.updateShowTPPurchaseNewForm);
+
+export const useShowPurhcaseDetails = () => useStore((state) => state.showTPPurchaseDetails);
+export const useUpdateShowPurhcaseDetails = () => useStore((state) => state.updateShowTPPurchaseDetails);
