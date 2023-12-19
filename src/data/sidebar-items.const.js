@@ -21,7 +21,7 @@ export const sideBarItems = [
   {
     itemHeader: 'PURCHASE',
     items: [
-      { name: 'Tapico Purchase', src: topioIcon },
+      { name: 'Tapico Purchase', src: topioIcon, route: '/purchase' },
       { name: 'Procurements', src: procureIcon, route: '/procurement' },
       { name: 'Expenses', src: expenseIcon, route: '/expense' }
     ]
