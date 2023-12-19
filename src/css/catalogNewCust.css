@@ -1,0 +1,17 @@
+/* Add this CSS in your global styles or a component-specific stylesheet */
+.ag-theme-alpine.agrid-custom-height {
+  overflow-y: auto;
+}
+
+.ag-theme-alpine.agrid-custom-height::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ag-theme-alpine.agrid-custom-height::-webkit-scrollbar-thumb {
+  background-color: #b1b9c7;
+  border-radius: 4px;
+}
+
+.ag-theme-alpine.agrid-custom-height::-webkit-scrollbar-track {
+  background-color: #fafbfc;
+}

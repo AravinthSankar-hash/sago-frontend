@@ -1,0 +1,94 @@
+/* AG Grid Custom CSS */
+
+body {
+  font-family: 'Roboto', sans-serif;
+  /* font: 'Roboto' */
+}
+.ag-center-cols-container {
+  width: 100% !important;
+}
+
+.ag-theme-alpine {
+  --ag-header-foreground-color: #6b778c;
+  --ag-header-background-color: #ffffff;
+}
+
+.ag-theme-alpine .ag-header {
+  border-bottom: solid 3px #ebeef0 !important;
+}
+.ag-paging-panel {
+  border-top: 0px #ebeef0 !important;
+}
+
+.ag-row {
+  border-bottom: 0px !important;
+}
+
+.ag-row-odd {
+  background-color: #f8f8f8;
+}
+
+.ag-theme-alpine .ag-row-even {
+  background-color: #ffffff !important;
+}
+
+.ag-root-wrapper.ag-ltr.ag-layout-normal {
+  border: 2px solid #ebeef0;
+  border-radius: 8px;
+}
+
+/* Made the even row to be not white as the header is already white */
+.ag-theme-alpine .ag-row-even {
+  background-color: #f8f8f8;
+}
+
+.btn-secondary {
+  --bs-btn-color: 'white' !important;
+  --bs-btn-bg: 'white' !important;
+  --bs-btn-hover-bg: rgb(235, 238, 240) !important;
+  --bs-btn-hover-color: black !important;
+  --bs-btn-active-color: black !important;
+  --bs-btn-active-bg: rgb(235, 238, 240) !important;
+  --bs-btn-active-border-color: 'white' !important;
+  border: 0px;
+}
+
+.agrid-custom-height {
+  height: 600px; /* Default height */
+
+  @media (max-height: 875px) {
+    height: 500px; /* Set a different height for screens shorter than 300px */
+  }
+}
+
+.css-o9k5xi-MuiInputBase-root-MuiOutlinedInput-root {
+  font-size: 0.9rem !important;
+}
+
+.css-1aquho2-MuiTabs-indicator {
+  background-color: #00b7ff !important;
+  height: 5px !important;
+  border-top-left-radius: 14px !important;
+  border-top-right-radius: 14px !important;
+}
+
+.css-hg18dx-MuiButtonBase-root-MuiTab-root.Mui-selected {
+  color: #00b7ff !important;
+}
+
+/* On focused primary color for all input border in procurements */
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #00b7ff !important;
+}
+
+.css-nxo287-MuiInputBase-input-MuiOutlinedInput-input {
+  padding: 7px 7px 7px px !important;
+}
+
+.MuiTablePagination-displayedRows {
+  margin-bottom: 0px !important;
+}
+
+.MuiTablePagination-selectLabel {
+  margin-bottom: 0px !important;
+}
