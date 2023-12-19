@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import '../css/catalogNewCust.css';
+import '../../css/catalogNewCust.css';
 import {
   styled,
   TableCell,
@@ -10,7 +10,7 @@ import {
   tableCellClasses
 } from '@mui/material';
 
-const ProcurementPayment = () => {
+const ExpensePayment = () => {
   const [tableData, setTableData] = useState([]);
   const [tableHeading, setTableHeading] = useState([]);
   useEffect(() => {
@@ -105,11 +105,11 @@ const ProcurementPayment = () => {
                   ₹ {row['Amount']}
                 </StyledTableCell>
                 {/* {
-              tableHeading.map((heading, index) => {
-                {console.log(row[heading],'heding')}
-                <StyledTableCell key={index}>{row.heading}</StyledTableCell>
-              })
-            } */}
+          tableHeading.map((heading, index) => {
+            {console.log(row[heading],'heding')}
+            <StyledTableCell key={index}>{row.heading}</StyledTableCell>
+          })
+        } */}
               </StyledTableRow>
             ))}{' '}
           </TableBody>
@@ -132,7 +132,7 @@ const ProcurementPayment = () => {
       </table>
       <div style={approvalStatus}>
         <div className="m-3">
-          <span style={{ marginRight: '50px', color: '#62728D' }}>Approval Status:</span>
+          <span style={{ marginRight: '50px', color: '#62728D' }}>Expense Status:</span>
           <span style={{ color: '#00B7FF' }}>Pending</span>
         </div>
       </div>
@@ -140,4 +140,4 @@ const ProcurementPayment = () => {
   );
 };
 
-export default ProcurementPayment;
+export default ExpensePayment;
