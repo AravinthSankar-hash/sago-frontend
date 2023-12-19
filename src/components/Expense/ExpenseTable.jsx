@@ -11,7 +11,7 @@ import {
   TablePagination,
   tableCellClasses
 } from '@mui/material';
-import '../css/index.css';
+// import '../css/index.css';
 
 const ExpenseTable = (props) => {
   const { tableData, rowsPerPage, page, handleChangePage, handleChangeRowsPerPage } = props;

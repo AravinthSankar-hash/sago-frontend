@@ -23,7 +23,7 @@ export const sideBarItems = [
     items: [
       { name: 'Tapico Purchase', src: topioIcon },
       { name: 'Procurements', src: procureIcon, route: '/procurement' },
-      { name: 'Expenses', src: expenseIcon }
+      { name: 'Expenses', src: expenseIcon, route: '/expense' }
     ]
   },
   {

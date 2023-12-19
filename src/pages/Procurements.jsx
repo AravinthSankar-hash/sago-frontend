@@ -10,7 +10,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
-import MuiTable from '../components/ProcurementTable.jsx';
+import ProcurementTable from '../components/ProcurementTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import NewProcurement from '../components/forms/NewProcurement.jsx';
@@ -169,7 +169,7 @@ function Procurements() {
                   </div>
                   <div>
                     {procurementData.length > 0 ? (
-                      <MuiTable
+                      <ProcurementTable
                         tableData={procurementData}
                         rowsPerPage={rowsPerPage}
                         page={page}

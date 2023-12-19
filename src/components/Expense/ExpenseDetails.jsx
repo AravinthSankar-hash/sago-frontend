@@ -1,16 +1,18 @@
 import React, { useMemo, useRef, useEffect, useState } from 'react';
 import { Container, Form, Col } from 'react-bootstrap';
-import '../css/catalogNewCust.css';
+import '../../css/catalogNewCust.css';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
-import TabComponent from './TabComponent';
-import ProcurementPurchase from './ProcurementPurchase';
-import ProcurementPayment from './ProcurementPayment';
+import TabComponent from '../TabComponent';
+import ProcurementPurchase from '../ProcurementPurchase';
+import ProcurementPayment from '../ProcurementPayment';
+import ExpenseTab from './ExpenseTab';
+import ExpensePayment from './ExpensePayment';
 // import '../css/index.css';
 
-const ProcurementDetails = (props) => {
+const ExpenseDetails = (props) => {
   const [tableData, setTableData] = useState([]);
   const [tableHeading, setTableHeading] = useState([]);
   const [showPurchase, setShowPurchase] = useState(true);
@@ -80,25 +82,25 @@ const ProcurementDetails = (props) => {
           style={{ borderBottom: '1px solid #EBEEF0' }}>
           <div className="p-2">
             <p className="mb-1" style={{ color: '#62728D' }}>
-              Purchase No.
+              Expense No.
             </p>
             <p style={{ fontSize: '12px' }}>{props.rowData['Purchase No']}</p>
           </div>
           <div className="p-2">
             <p className="mb-1" style={{ color: '#62728D' }}>
-              Purchase Date
+              Expense Date
             </p>
             <p style={{ fontSize: '12px' }}>{props.rowData['Purchase date']}</p>
           </div>
           <div className="p-2">
             <p className="mb-1" style={{ color: '#62728D' }}>
-              Payment due date :
+              Expense due date :
             </p>
             <p style={{ fontSize: '12px' }}>26 Oct 2022</p>
           </div>
           <div className="p-2">
             <p className="mb-1" style={{ color: '#62728D' }}>
-              Purchase Status :
+              Expense Status :
             </p>
             <p
               style={{
@@ -134,20 +136,20 @@ const ProcurementDetails = (props) => {
           <div>
             <div className="m-3 d-flex">
               <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '60%' }}>
-                <Form.Label>Supplier Name</Form.Label>
+                <Form.Label>Party Name</Form.Label>
                 <Form.Control
                   style={disabledInput}
-                  defaultValue={props.rowData['Supplier Name']}
-                  disabled
+                  defaultValue={'Party Name'}
+                  //   disabled
                 />
               </Form.Group>
-              <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '30%' }}>
+              <Form.Group as={Col} style={{ marginRight: '20px', width: '100%' }}>
                 <Form.Label>Phone no.</Form.Label>
                 <Form.Control style={disabledInput} defaultValue="8941555367" disabled />
               </Form.Group>
             </div>
             <div className="m-3 d-flex">
-              <div style={{ marginRight: '20px', width: '60%' }}>
+              <div style={{ marginRight: '20px', width: '100%' }}>
                 <p className="mb-1" style={{ color: '#62728D' }}>
                   Address
                 </p>
@@ -158,6 +160,12 @@ const ProcurementDetails = (props) => {
                   Phone No.
                 </p>
                 <p>1234567890</p>
+              </div>
+              <div style={{ marginRight: '20px', width: '30%' }}>
+                <p className="mb-1" style={{ color: '#62728D' }}>
+                  Expense Type
+                </p>
+                <p>Infrastructure</p>
               </div>
             </div>
           </div>
@@ -193,12 +201,12 @@ const ProcurementDetails = (props) => {
 
       {tableData.length > 0 && tableHeading.length > 0 ? (
         <Container ref={containerRef} className="ag-theme-alpine mt-5" style={tableContainer}>
-          <TabComponent showTab={showTab} showPurchase={showPurchase} tabName={'Purchase'} />
+          <TabComponent showTab={showTab} showPurchase={showPurchase} tabName={'Expense'} />
           <Container style={gridStyle}>
             {showPurchase ? (
-              <ProcurementPurchase tableHeading={tableHeading} tableData={tableData} />
+              <ExpenseTab tableHeading={tableHeading} tableData={tableData} />
             ) : (
-              <ProcurementPayment />
+              <ExpensePayment />
             )}
           </Container>
         </Container>
@@ -209,4 +217,4 @@ const ProcurementDetails = (props) => {
   );
 };
 
-export default ProcurementDetails;
+export default ExpenseDetails;

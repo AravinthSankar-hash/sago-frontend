@@ -10,11 +10,12 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
-import ExpenseTable from '../components/ExpenseTable.jsx';
+import ExpenseTable from '../components/Expense/ExpenseTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import ExpenseForm from '../components/forms/ExpenseForm.jsx';
+import ExpenseForm from '../components/Expense/ExpenseForm.jsx';
 import ProcurementDetails from '../components/ProcurementDetails.jsx';
+import ExpenseDetails from '../components/Expense/ExpenseDetails.jsx';
 
 const Expenses = () => {
   const [expenseData, setExpenseData] = useState([]);
@@ -99,7 +100,7 @@ const Expenses = () => {
             <>
               {' '}
               {showDetails ? (
-                <ProcurementDetails rowData={rowData} />
+                <ExpenseDetails rowData={rowData} />
               ) : (
                 <div>
                   <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>

@@ -155,7 +155,7 @@ const NewProcurement = () => {
                 <th style={{ paddingBottom: '10px', padding: '10px' }}>Quantity</th>
                 <th style={{ paddingBottom: '10px', padding: '10px' }}>Units</th>
                 <th style={{ paddingBottom: '10px', padding: '10px' }}>Amount</th>
-                <th style={{ paddingBottom: '10px', padding: '10px' }}>Action</th>
+                <th style={{ paddingBottom: '10px', padding: '10px' }}></th>
               </tr>
             </thead>
 

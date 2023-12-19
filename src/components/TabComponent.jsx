@@ -23,7 +23,7 @@ const TabComponent = (props) => {
             value="purchase"
             sx={{ textTransform: 'none' }}
             tabIndex={0}
-            label="Purchase"
+            label={props.tabName}
             style={purchaseTab}
             onClick={() => props.showTab(true)}
           />
