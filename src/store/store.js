@@ -3,102 +3,112 @@ import Customer from '../components/catalogTabs/Customer.jsx';
 import Purchases from '../components/tapicoPurchase/PurchasesTab';
 
 const useStore = create((set) => ({
-    showCatalogBackBtn: false,
-    activeCatalogTabComponent: <Customer />,
+  showCatalogBackBtn: false,
+  activeCatalogTabComponent: <Customer />,
 
-    showStaffNewForm: false,
-    showStaffDetailsSection: false,
+  showStaffNewForm: false,
+  showStaffDetailsSection: false,
 
-    showVehicleNewForm: false,
-    showVehicleDetailsSection: false,
+  showVehicleNewForm: false,
+  showVehicleDetailsSection: false,
 
-    showProductNewForm: false,
-    showProductDetailsSection: false,
+  showProductNewForm: false,
+  showProductDetailsSection: false,
 
-    showCustomerNewForm: false,
+  showCustomerNewForm: false,
 
-    // TP
-    showTPPurchaseNewForm: false,
-    showTPPurchaseDetails: false,
-    showTPBackBtn: false,
-    activeTPTabComponent: <Purchases />,
+  // TP
+  showTPPurchaseNewForm: false,
+  showTPPurchaseDetails: false,
+  showTPBackBtn: false,
+  activeTPTabComponent: <Purchases />,
 
-    // Catalog Tabs
-    updateShowCatalogBackBtn: (value) => {
-        set({ showCatalogBackBtn: value });
-    },
-    updateActiveCatalogTabComponent: (value) => {
-        set({ activeCatalogTabComponent: value });
-    },
+  // Catalog Tabs
+  updateShowCatalogBackBtn: (value) => {
+    set({ showCatalogBackBtn: value });
+  },
+  updateActiveCatalogTabComponent: (value) => {
+    set({ activeCatalogTabComponent: value });
+  },
 
-    // Staff
-    updateShowStaffNewForm: (value) => {
-        set({ showStaffNewForm: value });
-    },
-    updateShowStaffDetailsSection: (value) => {
-        set({ showStaffDetailsSection: value });
-    },
-    // Vehicle
-    updateShowVehicleNewForm: (value) => {
-        set({ showVehicleNewForm: value });
-    },
-    updateShowVehicleDetailsSection: (value) => {
-        set({ showVehicleDetailsSection: value });
-    },
+  // Staff
+  updateShowStaffNewForm: (value) => {
+    set({ showStaffNewForm: value });
+  },
+  updateShowStaffDetailsSection: (value) => {
+    set({ showStaffDetailsSection: value });
+  },
+  // Vehicle
+  updateShowVehicleNewForm: (value) => {
+    set({ showVehicleNewForm: value });
+  },
+  updateShowVehicleDetailsSection: (value) => {
+    set({ showVehicleDetailsSection: value });
+  },
 
-    // Product
-    updateShowProductNewForm: (value) => {
-        set({ showProductNewForm: value });
-    },
-    updateShowProductDetailsSection: (value) => {
-        set({ showProductDetailsSection: value });
-    },
+  // Product
+  updateShowProductNewForm: (value) => {
+    set({ showProductNewForm: value });
+  },
+  updateShowProductDetailsSection: (value) => {
+    set({ showProductDetailsSection: value });
+  },
 
-    // Customer
-    updateShowCustomerNewForm: (value) => {
-        set({ showCustomerNewForm: value });
-    },
+  // Customer
+  updateShowCustomerNewForm: (value) => {
+    set({ showCustomerNewForm: value });
+  },
 
 
-    // TP Tabs
-    updateActiveTPTabComponent: (value) => {
-        set({ activeTPTabComponent: value });
-    },
-    updateShowTPPurchaseNewForm: (value) => {
-        set({ showTPPurchaseNewForm: value });
-    },
-    updateShowTPPurchaseDetails: (value) => {
-        set({ showTPPurchaseDetails: value });
-    },
-    updateShowTPBackBtn: (value) => {
-        set({ showTPBackBtn: value });
-    },
+  // TP Tabs
+  updateActiveTPTabComponent: (value) => {
+    set({ activeTPTabComponent: value });
+  },
+  updateShowTPPurchaseNewForm: (value) => {
+    set({ showTPPurchaseNewForm: value });
+  },
+  updateShowTPPurchaseDetails: (value) => {
+    set({ showTPPurchaseDetails: value });
+  },
+  updateShowTPBackBtn: (value) => {
+    set({ showTPBackBtn: value });
+  },
 
 }))
 
 export const useShowCatalogBackBtn = () => useStore((state) => state.showCatalogBackBtn);
-export const useUpdateShowCatalogBackBtn = () => useStore((state) => state.updateShowCatalogBackBtn);
+export const useUpdateShowCatalogBackBtn = () =>
+  useStore((state) => state.updateShowCatalogBackBtn);
 
-export const useActiveCatalogTabComponent = () => useStore((state) => state.activeCatalogTabComponent);
-export const useUpdateActiveCatalogTabComponent = () => useStore((state) => state.updateActiveCatalogTabComponent);
+export const useActiveCatalogTabComponent = () =>
+  useStore((state) => state.activeCatalogTabComponent);
+export const useUpdateActiveCatalogTabComponent = () =>
+  useStore((state) => state.updateActiveCatalogTabComponent);
 
 export const useShowStaffNewForm = () => useStore((state) => state.showStaffNewForm);
 export const useUpdateShowStaffNewForm = () => useStore((state) => state.updateShowStaffNewForm);
 
 export const useShowStaffDetailsSection = () => useStore((state) => state.showStaffDetailsSection);
-export const useUpdateShowStaffDetailsSection = () => useStore((state) => state.updateShowStaffDetailsSection);
+export const useUpdateShowStaffDetailsSection = () =>
+  useStore((state) => state.updateShowStaffDetailsSection);
 
 export const useShowVehicleNewForm = () => useStore((state) => state.showVehicleNewForm);
-export const useUpdateShowVehicleNewForm = () => useStore((state) => state.updateShowVehicleNewForm);
+export const useUpdateShowVehicleNewForm = () =>
+  useStore((state) => state.updateShowVehicleNewForm);
 
-export const useShowVehicleDetailsSection = () => useStore((state) => state.showVehicleDetailsSection);
-export const useUpdateShowVehicleDetailsSection = () => useStore((state) => state.updateShowVehicleDetailsSection);
+export const useShowVehicleDetailsSection = () =>
+  useStore((state) => state.showVehicleDetailsSection);
+export const useUpdateShowVehicleDetailsSection = () =>
+  useStore((state) => state.updateShowVehicleDetailsSection);
 
 export const useShowProductNewForm = () => useStore((state) => state.showProductNewForm);
-export const useUpdateShowProductNewForm = () => useStore((state) => state.updateShowProductNewForm);
+export const useUpdateShowProductNewForm = () =>
+  useStore((state) => state.updateShowProductNewForm);
 
-export const useShowProductDetailsSection = () => useStore((state) => state.showProductDetailsSection);
-export const useUpdateShowProductDetailsSection = () => useStore((state) => state.updateShowProductDetailsSection);
+export const useShowProductDetailsSection = () =>
+  useStore((state) => state.showProductDetailsSection);
+export const useUpdateShowProductDetailsSection = () =>
+  useStore((state) => state.updateShowProductDetailsSection);
 
 export const useShowCustomerNewForm = () => useStore((state) => state.showCustomerNewForm);
 export const useUpdateShowCustomerNewForm = () => useStore((state) => state.updateShowCustomerNewForm);

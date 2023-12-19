@@ -3,7 +3,7 @@ import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
 
-function CustomerForm(props) {
+function CustomerForm() {
   const {
     register,
     handleSubmit,

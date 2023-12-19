@@ -10,14 +10,15 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
-import ProcurementTable from '../components/ProcurementTable.jsx';
+import ExpenseTable from '../components/Expense/ExpenseTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import NewProcurement from '../components/forms/NewProcurement.jsx';
+import ExpenseForm from '../components/Expense/ExpenseForm.jsx';
 import ProcurementDetails from '../components/ProcurementDetails.jsx';
+import ExpenseDetails from '../components/Expense/ExpenseDetails.jsx';
 
-function Procurements() {
-  const [procurementData, setProcurementData] = useState([]);
+const Expenses = () => {
+  const [expenseData, setExpenseData] = useState([]);
   const [showNewForm, setShowNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -29,7 +30,7 @@ function Procurements() {
     fetch('http://localhost:3001/procurement')
       .then((rawResponse) => rawResponse.json())
       .then((response) => {
-        setProcurementData(response.data);
+        setExpenseData(response.data);
         console.log(response.data);
       })
       .catch((error) => {
@@ -88,18 +89,18 @@ function Procurements() {
             ''
           )}
           <span>&nbsp;&nbsp;</span>{' '}
-          {showNewForm ? 'New Procurements' : <> {showDetails ? 'Purchase' : 'Procurement'}</>}
+          {showNewForm ? 'New Expense' : <> {showDetails ? 'Expense' : 'Expenses'}</>}
         </Col>
       </Row>
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showNewForm ? (
-            <NewProcurement showForm={showForm} />
+            <ExpenseForm />
           ) : (
             <>
               {' '}
               {showDetails ? (
-                <ProcurementDetails rowData={rowData} />
+                <ExpenseDetails rowData={rowData} />
               ) : (
                 <div>
                   <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
@@ -139,7 +140,7 @@ function Procurements() {
                           variant="outlined"
                           onClick={() => showForm(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
-                          New Procurement
+                          New Expense
                         </Button>
                       </Col>
                     </Row>
@@ -168,9 +169,9 @@ function Procurements() {
                     </Row>
                   </div>
                   <div>
-                    {procurementData.length > 0 ? (
-                      <ProcurementTable
-                        tableData={procurementData}
+                    {expenseData.length > 0 ? (
+                      <ExpenseTable
+                        tableData={expenseData}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         handleChangePage={handleChangePage}
@@ -182,18 +183,6 @@ function Procurements() {
                         <CircularProgress />
                       </Box>
                     )}
-
-                    {/* <AgGridTable
-                columnDefs={[
-                  { field: 'Purchase date' },
-                  { field: 'Purchase No' },
-                  { field: 'Supplier Name' },
-                  { field: 'Outstandings' },
-                  { field: 'Last payment date' },
-                  { field: 'Approval Status' }
-                ]}
-                rowData={procurementData}
-              /> */}
                   </div>
                 </div>
               )}
@@ -203,6 +192,6 @@ function Procurements() {
       </Row>
     </Container>
   );
-}
+};
 
-export default Procurements;
+export default Expenses;
