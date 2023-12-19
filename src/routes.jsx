@@ -6,6 +6,7 @@ import Invoices from './pages/Invoices.jsx';
 import Procurements from './pages/Procurements.jsx';
 import TapicoPurchase from './components/tapicoPurchase/TapicoPurchase.jsx';
 import Expenses from './pages/Expenses.jsx';
+import Payments from 'components/payments/Payments.jsx';
 
 function AppRoutes() {
   return (
@@ -15,6 +16,7 @@ function AppRoutes() {
       <Route path="/procurement" element={<Procurements />} />
       <Route path="/catalog" element={<Catalog />} />
       <Route path="/expense" element={<Expenses />} />
+      <Route path="/payments" element={<Payments />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
