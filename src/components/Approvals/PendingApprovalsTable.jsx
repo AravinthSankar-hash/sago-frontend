@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   styled,
   TableCell,
@@ -11,13 +10,13 @@ import {
   TablePagination,
   tableCellClasses
 } from '@mui/material';
-import '../css/index.css';
+import '../../css/index.css';
 
-const ProcurementTable = (props) => {
+const PendingApprovalsTable = (props) => {
   const {
     tableData,
-    rowsPerPage,
-    page,
+    tableHeaders,
+    tableColumns,
     handleChangePage,
     handleChangeRowsPerPage,
     hanleTableRowClick
@@ -83,48 +82,36 @@ const ProcurementTable = (props) => {
     bottom: 0,
     zIndex: 2
   }));
+
+  const onTableRowClick = () => {
+    hanleTableRowClick();
+  };
+
   return (
     <Wrapper>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} style={{ borderRadius: '15px' }}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead style={{ position: 'sticky', top: 0, zIndex: 2 }}>
             <TableRow>
-              {Object.keys(tableData[0]).map((key, index) => (
+              {tableHeaders.map((key, index) => (
                 <StyledTableCell key={index}>{key}</StyledTableCell>
               ))}{' '}
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData.map((row, index) => (
-              <StyledTableRow
-                key={index}
-                onClick={() => {
-                  // props?.handleShowDetails(true, row);
-                  hanleTableRowClick();
-                }}>
-                <StyledTableCell align="left">{row['Purchase date']}</StyledTableCell>
-                <StyledTableCell align="left" style={{ color: 'black' }}>
-                  {row['Purchase No']}
-                </StyledTableCell>
-                <StyledTableCell align="left" style={{ color: 'black' }}>
-                  {row['Supplier Name']}
-                </StyledTableCell>
-                <StyledTableCell align="left" style={{ color: 'black' }}>
-                  ₹ {row['amount']}
-                </StyledTableCell>
-                <StyledTableCell align="left" Outstandings={row['Outstandings']}>
-                  {' '}
-                  {row['Outstandings'] < 0 ? '₹ ' : ''}
-                  {row['Outstandings']}
-                </StyledTableCell>
-                <StyledTableCell align="left">{row['Last payment date']}</StyledTableCell>
-                <StyledTableCell
-                  align="left"
-                  className={`approval-status ${row['Approval Status'].toLowerCase()}`}>
-                  {row['Approval Status'].toUpperCase()}
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}{' '}
+            {tableData.map((tableRow, RowIdx) => {
+              return (
+                <StyledTableRow key={RowIdx} onClick={onTableRowClick}>
+                  {tableColumns.map((columnKey, colIdx) => {
+                    return (
+                      <StyledTableCell key={colIdx} align="left">
+                        {tableRow[columnKey]}
+                      </StyledTableCell>
+                    );
+                  })}
+                </StyledTableRow>
+              );
+            })}
           </TableBody>
           <TableBody>
             {' '}
@@ -133,9 +120,9 @@ const ProcurementTable = (props) => {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
-                  count={tableData.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
+                  count={100}
+                  rowsPerPage={5}
+                  page={0}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
@@ -148,4 +135,4 @@ const ProcurementTable = (props) => {
   );
 };
 
-export default ProcurementTable;
+export default PendingApprovalsTable;

@@ -6,7 +6,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import AppRoutes from './routes.jsx';
 
 const headerStyle = {
-  height: '56px',
+  height: '48px',
   borderBottom: '1px solid #EBEEF0'
 };
 
