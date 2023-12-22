@@ -24,7 +24,7 @@ function PaymentsTab({ handleTabSwitch, tabToSelect }) {
           tabIndex={0}
           label="Pending Payments"
         />
-        <Tab value="compeletedPayments" sx={{ textTransform: 'none' }} label="Completed Payments" />
+        <Tab value="completedPayments" sx={{ textTransform: 'none' }} label="Completed Payments" />
         <Tab value="txnHistory" sx={{ textTransform: 'none' }} label="Transaction history" />
       </Tabs>
     </Box>
