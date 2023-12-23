@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import NotFound from './pages/NotFound.jsx';
 import Catalog from './pages/Catalog.jsx';
@@ -7,11 +6,13 @@ import Procurements from './pages/Procurements.jsx';
 import TapicoPurchase from './components/tapicoPurchase/TapicoPurchase.jsx';
 import Expenses from './pages/Expenses.jsx';
 import Payments from 'components/payments/Payments.jsx';
+import Dashboard from 'components/dashboard/Dashboard.jsx';
 
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Invoices />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/purchase" element={<TapicoPurchase />} />
       <Route path="/procurement" element={<Procurements />} />
       <Route path="/catalog" element={<Catalog />} />
