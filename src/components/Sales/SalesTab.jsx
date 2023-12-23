@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import '../../css/index.css';
 
-function PaymentsTab({ handleTabSwitch, tabToSelect }) {
+const SalesTab = ({ handleTabSwitch, tabToSelect }) => {
   const [value, setValue] = useState(tabToSelect);
 
   const handleChange = (event, tabName) => {
@@ -18,15 +18,16 @@ function PaymentsTab({ handleTabSwitch, tabToSelect }) {
       sx={{ textTransform: 'none' }}
       indicatorColor="primary">
       <Tab
-        value="pendingPayments"
+        value="deliveryChallan"
         sx={{ textTransform: 'none' }}
         tabIndex={0}
-        label="Pending Payments"
+        label="Delivery Challan"
       />
-      <Tab value="completedPayments" sx={{ textTransform: 'none' }} label="Completed Payments" />
-      <Tab value="txnHistory" sx={{ textTransform: 'none' }} label="Transaction history" />
+      <Tab value="thippiSales" sx={{ textTransform: 'none' }} label="Thippi Sales" />
+      <Tab value="generalSales" sx={{ textTransform: 'none' }} label="General Sales" />
+      <Tab value="salesPerformance" sx={{ textTransform: 'none' }} label="Sales Performance" />
     </Tabs>
   );
-}
+};
 
-export default PaymentsTab;
+export default SalesTab;

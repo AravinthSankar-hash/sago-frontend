@@ -29,9 +29,9 @@ export const sideBarItems = [
   {
     itemHeader: 'CREDIT/DEBIT',
     items: [
-      { name: 'Sales', src: saleIcon },
+      { name: 'Sales', src: saleIcon, route: '/sales' },
       { name: 'Payment', src: paymentIcon, route: '/payments' },
-      { name: 'Invoices', src: invIcon }
+      { name: 'Invoices', src: invIcon, route: '/invoice' }
     ]
   },
   {
