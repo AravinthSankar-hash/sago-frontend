@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Container, Row } from 'react-bootstrap';
-import CompletedPayments from './CompletedPayments';
-import PaymentsTab from './PaymentsTab';
-import PendingPayments from './PendingPayments';
-import Transactions from './Transactions';
+import CompletedPayments from '../components/payments/CompletedPayments';
+import PaymentsTab from '../components/payments/PaymentsTab';
+import PendingPayments from '../components/payments/PendingPayments';
+import Transactions from '../components/payments/Transactions';
 
 const Payments = () => {
   const [activeCatalogTabComponent, setActiveCatalogTabComponent] = useState(<PendingPayments />);
