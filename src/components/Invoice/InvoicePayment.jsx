@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import '../css/catalogNewCust.css';
+import '../../css/catalogNewCust.css';
 import {
   styled,
   TableCell,
@@ -10,7 +10,7 @@ import {
   tableCellClasses
 } from '@mui/material';
 
-const ProcurementPayment = () => {
+const InvoicePayment = () => {
   const [tableData, setTableData] = useState([]);
   const [tableHeading, setTableHeading] = useState([]);
   useEffect(() => {
@@ -79,7 +79,6 @@ const ProcurementPayment = () => {
     color: '#6B778C',
     textAlign: 'right'
   };
-
   return (
     <>
       <Wrapper>
@@ -105,11 +104,11 @@ const ProcurementPayment = () => {
                   ₹ {row['Amount']}
                 </StyledTableCell>
                 {/* {
-              tableHeading.map((heading, index) => {
-                {console.log(row[heading],'heding')}
-                <StyledTableCell key={index}>{row.heading}</StyledTableCell>
-              })
-            } */}
+          tableHeading.map((heading, index) => {
+            {console.log(row[heading],'heding')}
+            <StyledTableCell key={index}>{row.heading}</StyledTableCell>
+          })
+        } */}
               </StyledTableRow>
             ))}{' '}
           </TableBody>
@@ -140,4 +139,4 @@ const ProcurementPayment = () => {
   );
 };
 
-export default ProcurementPayment;
+export default InvoicePayment;

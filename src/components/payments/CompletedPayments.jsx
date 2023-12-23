@@ -79,20 +79,6 @@ const CompletedPayments = () => {
             </IconButton>
           </Col>
         </Row>
-        {/* <Row className="mt-3">
-          <Stack direction="row" spacing={1}>
-            <p style={{ color: '#6B778C' }}>Filter by : </p>
-            {filterOptions.map((filterOption, index) => (
-              <Chip
-                key={index}
-                label={filterOption}
-                color={selectedChips.includes(filterOption) ? 'primary' : 'default'}
-                onClick={() => handleChipSelect(filterOption)}
-                sx={chipStyle(selectedChips.includes(filterOption))}
-              />
-            ))}
-          </Stack>
-        </Row> */}
       </div>
       <div>
         {expenseData.length > 0 ? (
