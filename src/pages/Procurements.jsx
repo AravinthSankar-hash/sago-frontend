@@ -94,7 +94,7 @@ function Procurements() {
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showNewForm ? (
-            <NewProcurement showForm={showForm} />
+            <NewProcurement />
           ) : (
             <>
               {' '}

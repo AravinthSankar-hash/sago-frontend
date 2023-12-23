@@ -13,17 +13,15 @@ function TapicoPurchaseTab({ handleTabSwitch }) {
   };
 
   return (
-    <Box sx={{ width: '100%', textTransform: 'none' }}>
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        sx={{ textTransform: 'none' }}
-        indicatorColor="primary">
-        <Tab value="purchases" sx={{ textTransform: 'none' }} tabIndex={0} label="Purchases" />
-        <Tab value="brokerreports" sx={{ textTransform: 'none' }} label="Broker Reports" />
-        <Tab value="reports" sx={{ textTransform: 'none' }} label="Reports" />
-      </Tabs>
-    </Box>
+    <Tabs
+      value={value}
+      onChange={handleChange}
+      sx={{ textTransform: 'none' }}
+      indicatorColor="primary">
+      <Tab value="purchases" sx={{ textTransform: 'none' }} tabIndex={0} label="Purchases" />
+      <Tab value="brokerreports" sx={{ textTransform: 'none' }} label="Broker Reports" />
+      <Tab value="reports" sx={{ textTransform: 'none' }} label="Reports" />
+    </Tabs>
   );
 }
 
