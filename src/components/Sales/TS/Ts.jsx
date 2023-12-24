@@ -15,15 +15,28 @@ import Box from '@mui/material/Box';
 import TsTable from './TsTable.jsx';
 import NewTsForm from './NewTsForm.jsx';
 import TsDetails from './TsDetails.jsx';
+import {
+  useShowTSSalesNewForm,
+  useUpdateShowTSSalesNewForm,
+  useUpdateShowSalesBackBtn,
+  useShowTSDetails,
+  useUpdateShowTSDetails
+} from '../../../store/store.js';
 
 const TpSales = () => {
+  // Internal State
   const [procurementData, setProcurementData] = useState([]);
-  const [showNewForm, setShowNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
-  const [showDetails, setShowDetails] = useState(false);
   const [rowData, setRowData] = useState({});
+
+  // Store
+  const updateShowSalesBackBtn = useUpdateShowSalesBackBtn(); // Method to update bool, if back btn is clicked
+  const showTSSalesNewForm = useShowTSSalesNewForm(); // Show Sales Add form
+  const updateShowTSSalesNewForm = useUpdateShowTSSalesNewForm(); // Show Sales Dashboard
+  const showTSDetails = useShowTSDetails(); // Show DC Details Dashboard
+  const updateShowTSDetails = useUpdateShowTSDetails(); // Show DC Details Dashboard
 
   useEffect(() => {
     fetch('http://localhost:3001/procurement')
@@ -37,7 +50,11 @@ const TpSales = () => {
       });
   }, []);
   const showForm = (shouldShow) => {
-    setShowNewForm(shouldShow);
+    // Show back btn - Store
+    updateShowSalesBackBtn(true);
+
+    // Show Add TS Sales form - Store
+    updateShowTSSalesNewForm(true);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -46,7 +63,11 @@ const TpSales = () => {
 
   const handleShowDetails = (shouldShow, rowData) => {
     setRowData(rowData);
-    setShowDetails(shouldShow);
+
+    // Show back btn - Store
+    updateShowSalesBackBtn(true);
+    // Store update
+    updateShowTSDetails(true);
   };
 
   const chipStyle = (isSelected) => ({
@@ -73,55 +94,14 @@ const TpSales = () => {
   };
   return (
     <Container style={{ background: '#EBEEF0' }}>
-      {/* <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
-        <Col>
-          {showNewForm || showDetails ? (
-            <ArrowBackIcon
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                showForm(false);
-                handleShowDetails(false);
-              }}
-              fontSize="medium"
-            />
-          ) : (
-            ''
-          )}
-          <span>&nbsp;&nbsp;</span>{' '}
-          {showNewForm ? 'New Delivery Challan' : <> {showDetails ? 'Invoice' : ''}</>}
-        </Col>
-      </Row> */}
-      {showNewForm || showDetails ? (
-        <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
-          {' '}
-          <Col>
-            {showNewForm || showDetails ? (
-              <ArrowBackIcon
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  showForm(false);
-                  handleShowDetails(false);
-                }}
-                fontSize="medium"
-              />
-            ) : (
-              ''
-            )}
-            <span>&nbsp;&nbsp;</span>{' '}
-            {showNewForm ? 'New Delivery Challan' : <> {showDetails ? 'Invoice' : ''}</>}
-          </Col>
-        </Row>
-      ) : (
-        ''
-      )}
       <Row>
         <Col className="d-flex flex-column justify-content-center">
-          {showNewForm ? (
+          {showTSSalesNewForm ? (
             <NewTsForm />
           ) : (
             <>
               {' '}
-              {showDetails ? (
+              {showTSDetails ? (
                 <TsDetails rowData={rowData} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
@@ -162,7 +142,7 @@ const TpSales = () => {
                           variant="outlined"
                           onClick={() => showForm(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
-                          New Sales
+                          New TP Sales
                         </Button>
                       </Col>
                     </Row>

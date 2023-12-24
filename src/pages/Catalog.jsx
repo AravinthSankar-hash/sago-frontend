@@ -66,6 +66,7 @@ const Catalog = () => {
   };
   useEffect(() => {
     updateActiveCatalogTabComponent(<Customer />);
+    updateShowCatalogBackBtn(false);
   }, []);
 
   const handleTabSwitch = (tabName) => {

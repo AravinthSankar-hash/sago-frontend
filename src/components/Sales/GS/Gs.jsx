@@ -15,8 +15,16 @@ import Box from '@mui/material/Box';
 import NewGsForm from './NewGsForm.jsx';
 import GsDetails from './GsDetails.jsx';
 import GsTable from './GsTable.jsx';
+import {
+  useUpdateShowSalesBackBtn,
+  useShowGSSalesNewForm,
+  useUpdateShowGSSalesNewForm,
+  useShowGSDetails,
+  useUpdateShowGSDetails
+} from '../../../store/store.js';
 
 const Gs = () => {
+  // Internal Store
   const [procurementData, setProcurementData] = useState([]);
   const [showNewForm, setShowNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState([]);
@@ -24,6 +32,13 @@ const Gs = () => {
   const [page, setPage] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [rowData, setRowData] = useState({});
+
+  // Store
+  const updateShowSalesBackBtn = useUpdateShowSalesBackBtn(); // Method to update bool, if back btn is clicked
+  const showGSSalesNewForm = useShowGSSalesNewForm(); // Show Sales Add form
+  const updateShowGSSalesNewForm = useUpdateShowGSSalesNewForm(); // Show Sales Dashboard
+  const showGSDetails = useShowGSDetails(); // Show GS Details Dashboard
+  const updateShowGSDetails = useUpdateShowGSDetails(); // Show GS Details Dashboard
 
   useEffect(() => {
     fetch('http://localhost:3001/procurement')
@@ -37,7 +52,11 @@ const Gs = () => {
       });
   }, []);
   const showForm = (shouldShow) => {
-    setShowNewForm(shouldShow);
+    // Show back btn - Store
+    updateShowSalesBackBtn(true);
+
+    // Show Add Sales form - Store
+    updateShowGSSalesNewForm(true);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -46,7 +65,11 @@ const Gs = () => {
 
   const handleShowDetails = (shouldShow, rowData) => {
     setRowData(rowData);
-    setShowDetails(shouldShow);
+
+    // Show back btn - Store
+    updateShowSalesBackBtn(true);
+    // Store update
+    updateShowGSDetails(true);
   };
 
   const chipStyle = (isSelected) => ({
@@ -73,55 +96,14 @@ const Gs = () => {
   };
   return (
     <Container style={{ background: '#EBEEF0' }}>
-      {/* <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
-        <Col>
-          {showNewForm || showDetails ? (
-            <ArrowBackIcon
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                showForm(false);
-                handleShowDetails(false);
-              }}
-              fontSize="medium"
-            />
-          ) : (
-            ''
-          )}
-          <span>&nbsp;&nbsp;</span>{' '}
-          {showNewForm ? 'New Delivery Challan' : <> {showDetails ? 'Invoice' : ''}</>}
-        </Col>
-      </Row> */}
-      {showNewForm || showDetails ? (
-        <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
-          {' '}
-          <Col>
-            {showNewForm || showDetails ? (
-              <ArrowBackIcon
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  showForm(false);
-                  handleShowDetails(false);
-                }}
-                fontSize="medium"
-              />
-            ) : (
-              ''
-            )}
-            <span>&nbsp;&nbsp;</span>{' '}
-            {showNewForm ? 'New Delivery Challan' : <> {showDetails ? 'Invoice' : ''}</>}
-          </Col>
-        </Row>
-      ) : (
-        ''
-      )}
       <Row>
         <Col className="d-flex flex-column justify-content-center">
-          {showNewForm ? (
+          {showGSSalesNewForm ? (
             <NewGsForm />
           ) : (
             <>
               {' '}
-              {showDetails ? (
+              {showGSDetails ? (
                 <GsDetails rowData={rowData} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
@@ -162,7 +144,7 @@ const Gs = () => {
                           variant="outlined"
                           onClick={() => showForm(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
-                          New Sales
+                          New GS Sales
                         </Button>
                       </Col>
                     </Row>
