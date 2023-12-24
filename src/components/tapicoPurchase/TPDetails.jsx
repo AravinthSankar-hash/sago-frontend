@@ -27,7 +27,7 @@ function TPDetails() {
       width: '100%',
       borderRadius: '10px',
       overflowY: 'auto',
-      maxHeight: '400px',
+      maxHeight: '350px',
       backgroundColor: 'white',
       fontSize: '14px',
       fontFamily: 'Roboto',
@@ -36,6 +36,19 @@ function TPDetails() {
     }),
     []
   );
+
+  const tableContainer = useMemo(
+    () => ({
+      width: '100%',
+      borderRadius: '10px',
+      backgroundColor: 'white',
+      fontSize: '14px',
+      fontFamily: 'Roboto',
+      padding: '0'
+    }),
+    []
+  );
+
   const detailsSection = {
     backgroundColor: 'white',
     borderRadius: '10px',
@@ -170,11 +183,13 @@ function TPDetails() {
           </Row>
         </div>
       </Container>
-      <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
+      <Container ref={containerRef} className="ag-theme-alpine mt-4" style={tableContainer}>
         <div style={{ detailsSection }}>
           <TPPaymentsTab></TPPaymentsTab>
           {/* <TPPurchases tableHeading={tableHeading} tableData={tableData}></TPPurchases> */}
-          <TPPayments></TPPayments>
+          <div style={gridStyle}>
+            <TPPayments></TPPayments>
+          </div>
         </div>
       </Container>
     </>
