@@ -4,7 +4,6 @@ import SearchBox from '../../SearchBox.jsx';
 import DateSelector from '../../DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
@@ -15,15 +14,27 @@ import Box from '@mui/material/Box';
 import DcDetails from './DcDetails.jsx';
 import NewDcSalesForm from './NewDcSalesForm.jsx';
 import DcTable from './DcTable.jsx';
+import {
+  useUpdateShowSalesBackBtn,
+  useShowDCSalesNewForm,
+  useUpdateShowDCSalesNewForm,
+  useShowDCDetails,
+  useUpdateShowDCDetails
+} from '../../../store/store.js';
 
 const DcSales = () => {
   const [procurementData, setProcurementData] = useState([]);
-  const [showNewForm, setShowNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
-  const [showDetails, setShowDetails] = useState(false);
   const [rowData, setRowData] = useState({});
+
+  // Store
+  const updateShowSalesBackBtn = useUpdateShowSalesBackBtn(); // Method to update bool, if back btn is clicked
+  const showDCSalesNewForm = useShowDCSalesNewForm(); // Show Sales Add form
+  const updateShowDCSalesNewForm = useUpdateShowDCSalesNewForm(); // Show Sales Dashboard
+  const showDCDetails = useShowDCDetails(); // Show DC Details Dashboard
+  const updateShowDCDetails = useUpdateShowDCDetails(); // Show DC Details Dashboard
 
   useEffect(() => {
     fetch('http://localhost:3001/procurement')
@@ -37,7 +48,11 @@ const DcSales = () => {
       });
   }, []);
   const showForm = (shouldShow) => {
-    setShowNewForm(shouldShow);
+    // Show back btn - Store
+    updateShowSalesBackBtn(true);
+
+    // Show Add Sales form - Store
+    updateShowDCSalesNewForm(true);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -46,7 +61,11 @@ const DcSales = () => {
 
   const handleShowDetails = (shouldShow, rowData) => {
     setRowData(rowData);
-    setShowDetails(shouldShow);
+
+    // Show back btn - Store
+    updateShowSalesBackBtn(true);
+    // Store update
+    updateShowDCDetails(true);
   };
 
   const chipStyle = (isSelected) => ({
@@ -73,55 +92,14 @@ const DcSales = () => {
   };
   return (
     <Container style={{ background: '#EBEEF0' }}>
-      {/* <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
-        <Col>
-          {showNewForm || showDetails ? (
-            <ArrowBackIcon
-              style={{ cursor: 'pointer' }}
-              onClick={() => {
-                showForm(false);
-                handleShowDetails(false);
-              }}
-              fontSize="medium"
-            />
-          ) : (
-            ''
-          )}
-          <span>&nbsp;&nbsp;</span>{' '}
-          {showNewForm ? 'New Delivery Challan' : <> {showDetails ? 'Invoice' : ''}</>}
-        </Col>
-      </Row> */}
-      {showNewForm || showDetails ? (
-        <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
-          {' '}
-          <Col>
-            {showNewForm || showDetails ? (
-              <ArrowBackIcon
-                style={{ cursor: 'pointer' }}
-                onClick={() => {
-                  showForm(false);
-                  handleShowDetails(false);
-                }}
-                fontSize="medium"
-              />
-            ) : (
-              ''
-            )}
-            <span>&nbsp;&nbsp;</span>{' '}
-            {showNewForm ? 'New Delivery Challan' : <> {showDetails ? 'Invoice' : ''}</>}
-          </Col>
-        </Row>
-      ) : (
-        ''
-      )}
       <Row>
         <Col className="d-flex flex-column justify-content-center">
-          {showNewForm ? (
+          {showDCSalesNewForm ? (
             <NewDcSalesForm />
           ) : (
             <>
               {' '}
-              {showDetails ? (
+              {showDCDetails ? (
                 <DcDetails rowData={rowData} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
@@ -162,7 +140,7 @@ const DcSales = () => {
                           variant="outlined"
                           onClick={() => showForm(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
-                          New Sales
+                          New DC Sales
                         </Button>
                       </Col>
                     </Row>
