@@ -1,23 +1,25 @@
 import { useState } from 'react';
 import { Container, Row } from 'react-bootstrap';
 import SalesTab from 'components/Sales/SalesTab';
+import DcSales from 'components/Sales/DcSales/Dc';
+import TpSales from 'components/Sales/TS/Ts';
+import SalesPerformance from 'components/Sales/SalesPerformance/SalesPerformance';
+import GeneralSales from 'components/Sales/GS/Gs';
 
 const Sales = () => {
-  const [activeCatalogTabComponent, setActiveCatalogTabComponent] = useState(
-    <div>Coming soon...</div>
-  );
+  const [activeCatalogTabComponent, setActiveCatalogTabComponent] = useState(<DcSales />);
   const [currentTabName, setCurrentTabName] = useState('deliveryChallan');
 
   const renderTabComponent = (tabName) => {
     switch (tabName) {
       case 'deliveryChallan':
-        return <div>Coming soon...</div>;
+        return <DcSales />;
       case 'thippiSales':
-        return <div>Coming soon...</div>;
+        return <TpSales />;
       case 'generalSales':
-        return <div>Coming soon...</div>;
+        return <GeneralSales />;
       case 'salesPerformance':
-        return <div>Coming soon...</div>;
+        return <SalesPerformance />;
       default:
         return <div>Coming soon...</div>;
     }

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import SearchBox from '../components/SearchBox.jsx';
-import DateSelector from '../components/DateSelector.jsx';
+import SearchBox from '../../SearchBox.jsx';
+import DateSelector from '../../DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -9,16 +9,15 @@ import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import '../css/index.css';
-import ExpenseTable from '../components/Expense/ExpenseTable.jsx';
+import '../../../css/index.css';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import ExpenseForm from '../components/Expense/ExpenseForm.jsx';
-import ProcurementDetails from '../components/ProcurementDetails.jsx';
-import ExpenseDetails from '../components/Expense/ExpenseDetails.jsx';
+import NewGsForm from './NewGsForm.jsx';
+import GsDetails from './GsDetails.jsx';
+import GsTable from './GsTable.jsx';
 
-const Expenses = () => {
-  const [expenseData, setExpenseData] = useState([]);
+const Gs = () => {
+  const [procurementData, setProcurementData] = useState([]);
   const [showNewForm, setShowNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -30,7 +29,7 @@ const Expenses = () => {
     fetch('http://localhost:3001/procurement')
       .then((rawResponse) => rawResponse.json())
       .then((response) => {
-        setExpenseData(response.data);
+        setProcurementData(response.data);
         console.log(response.data);
       })
       .catch((error) => {
@@ -74,7 +73,7 @@ const Expenses = () => {
   };
   return (
     <Container style={{ background: '#EBEEF0' }}>
-      <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
+      {/* <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
         <Col>
           {showNewForm || showDetails ? (
             <ArrowBackIcon
@@ -89,18 +88,41 @@ const Expenses = () => {
             ''
           )}
           <span>&nbsp;&nbsp;</span>{' '}
-          {showNewForm ? 'New Expense' : <> {showDetails ? 'Expense' : 'Expenses'}</>}
+          {showNewForm ? 'New Delivery Challan' : <> {showDetails ? 'Invoice' : ''}</>}
         </Col>
-      </Row>
+      </Row> */}
+      {showNewForm || showDetails ? (
+        <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
+          {' '}
+          <Col>
+            {showNewForm || showDetails ? (
+              <ArrowBackIcon
+                style={{ cursor: 'pointer' }}
+                onClick={() => {
+                  showForm(false);
+                  handleShowDetails(false);
+                }}
+                fontSize="medium"
+              />
+            ) : (
+              ''
+            )}
+            <span>&nbsp;&nbsp;</span>{' '}
+            {showNewForm ? 'New Delivery Challan' : <> {showDetails ? 'Invoice' : ''}</>}
+          </Col>
+        </Row>
+      ) : (
+        ''
+      )}
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showNewForm ? (
-            <ExpenseForm />
+            <NewGsForm />
           ) : (
             <>
               {' '}
               {showDetails ? (
-                <ExpenseDetails rowData={rowData} />
+                <GsDetails rowData={rowData} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
@@ -140,7 +162,7 @@ const Expenses = () => {
                           variant="outlined"
                           onClick={() => showForm(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
-                          New Expense
+                          New Sales
                         </Button>
                       </Col>
                     </Row>
@@ -169,9 +191,9 @@ const Expenses = () => {
                     </Row>
                   </div>
                   <div>
-                    {expenseData.length > 0 ? (
-                      <ExpenseTable
-                        tableData={expenseData}
+                    {procurementData.length > 0 ? (
+                      <GsTable
+                        tableData={procurementData}
                         rowsPerPage={rowsPerPage}
                         page={page}
                         handleChangePage={handleChangePage}
@@ -183,6 +205,18 @@ const Expenses = () => {
                         <CircularProgress />
                       </Box>
                     )}
+
+                    {/* <AgGridTable
+            columnDefs={[
+              { field: 'Purchase date' },
+              { field: 'Purchase No' },
+              { field: 'Supplier Name' },
+              { field: 'Outstandings' },
+              { field: 'Last payment date' },
+              { field: 'Approval Status' }
+            ]}
+            rowData={procurementData}
+          /> */}
                   </div>
                 </div>
               )}
@@ -194,4 +228,4 @@ const Expenses = () => {
   );
 };
 
-export default Expenses;
+export default Gs;

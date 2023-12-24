@@ -46,7 +46,7 @@ const CompletedPayments = () => {
     setPage(0); // Reset to the first page when changing rows per page
   };
   return (
-    <div>
+    <div style={{ padding: '0 12px', margin: '0 28px' }}>
       <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
         <Row>
           <Col lg="2">
