@@ -54,12 +54,6 @@ const TsSales = (props) => {
     color: '#5C9EB8'
   };
 
-  const approvalStatus = {
-    borderTop: '2px solid #EBEEF0',
-    textAlign: 'right',
-    paddingRight: '50px'
-  };
-
   const tableWrapper = {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -118,7 +112,7 @@ const TsSales = (props) => {
       <table style={tableWrapper}>
         <tbody>
           <tr>
-            <td style={tableBody}>ts Total Rate:</td>
+            <td style={tableBody}>Total Rate:</td>
             <td>₹ 5,689.25</td>
           </tr>
           <tr>

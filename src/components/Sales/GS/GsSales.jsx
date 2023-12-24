@@ -1,4 +1,4 @@
-import '../../css/catalogNewCust.css';
+import '../../../css/catalogNewCust.css';
 import { Form } from 'react-bootstrap';
 import {
   styled,
@@ -58,7 +58,7 @@ const GsSales = (props) => {
     display: 'flex',
     justifyContent: 'flex-end',
     width: '100%',
-    marginTop: '20px',
+    marginTop: '10px',
     marginBottom: '10px',
     paddingRight: '50px'
   };
@@ -109,53 +109,71 @@ const GsSales = (props) => {
           </TableBody>
         </Table>
       </Wrapper>
-      <table style={tableWrapper}>
-        <tbody>
-          <tr>
-            <td style={tableBody}>Total Rate:</td>
-            <td>₹ 5,689.25</td>
-          </tr>
-          <tr>
-            <td style={tableBody}>Taxable Value:</td>
-            <td>₹ 600.25</td>
-          </tr>
-          <tr>
-            <td style={tableBody}>TCS Value:</td>
-            <td>₹ 600.25</td>
-          </tr>
-          <tr>
-            <td style={tableBody}>SGST (9%):</td>
-            <td>₹ 0</td>
-          </tr>
-          <tr>
-            <td style={tableBody}>CGST (9%) :</td>
-            <td>₹ 0</td>
-          </tr>
-          <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}></tr>
-          <tr>
-            <td style={tableBody}>Grand Total :</td>
-            <td style={{ fontWeight: 'bold' }}>₹ 2,58,456.00</td>
-          </tr>
-          <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}></tr>
-          <tr>
-            <td style={tableBody}>Initial Payment Paid :</td>
-            <td>
-              <Form.Control
-                style={{
-                  background: '#F4F5F7',
-                  color: '#A5ADBA',
-                  border: 'none',
-                  width: '150px',
-                  height: '40px',
-                  marginTop: '5px'
-                }}
-                defaultValue="₹ 0"
-                disabled
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div className="d-flex justify-content-between">
+        <div className="d-flex">
+          <div style={{ marginTop: '10px', padding: '0 40px 0 10px' }}>
+            <span style={{ color: '#5C9EB8' }}>Total Rate:</span>
+            <span> ₹ 5,689.25</span>
+          </div>
+          <div
+            style={{ borderRight: '1px solid #EBEEF0', marginTop: '10px', height: '20px' }}></div>
+          <div style={{ marginTop: '10px', padding: '0 40px 0 40px' }}>
+            <span style={{ color: '#5C9EB8' }}>GST(%) :</span>
+            <span> 18%</span>
+          </div>
+          <div
+            style={{ borderRight: '1px solid #EBEEF0', marginTop: '10px', height: '20px' }}></div>
+          <div style={{ marginTop: '10px', padding: '0 40px 0 40px' }}>
+            <span style={{ color: '#5C9EB8' }}>TCS Value (%) :</span>
+            <span> 1%</span>
+          </div>
+        </div>
+        <div>
+          <table style={tableWrapper}>
+            <tbody>
+              <tr>
+                <td style={tableBody}>Total Rate:</td>
+                <td>₹ 5,689.25</td>
+              </tr>
+              <tr>
+                <td style={tableBody}>Taxable Value:</td>
+                <td>₹ 600.25</td>
+              </tr>
+              <tr>
+                <td style={tableBody}>SGST (9%):</td>
+                <td>₹ 0</td>
+              </tr>
+              <tr>
+                <td style={tableBody}>CGST (9%) :</td>
+                <td>₹ 0</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}></tr>
+              <tr>
+                <td style={tableBody}>Grand Total :</td>
+                <td style={{ fontWeight: 'bold' }}>₹ 2,58,456.00</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}></tr>
+              <tr>
+                <td style={tableBody}>Initial Payment Paid :</td>
+                <td>
+                  <Form.Control
+                    style={{
+                      background: '#F4F5F7',
+                      color: '#A5ADBA',
+                      border: 'none',
+                      width: '150px',
+                      height: '40px',
+                      marginTop: '5px'
+                    }}
+                    defaultValue="₹ 0"
+                    disabled
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </>
   );
 };

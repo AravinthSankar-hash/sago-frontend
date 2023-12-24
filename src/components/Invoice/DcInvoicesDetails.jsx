@@ -180,7 +180,7 @@ const DcSalesInvoices = (props) => {
           </div>
           <div>
             <table
-              className="mt-5"
+              className="mt-3"
               style={{
                 display: 'flex',
                 justifyContent: 'flex-end',

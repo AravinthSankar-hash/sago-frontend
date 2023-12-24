@@ -62,10 +62,10 @@ function Transactions() {
     setPage(0); // Reset to the first page when changing rows per page
   };
   return (
-    <div>
+    <div style={{ padding: '0 12px', margin: '0 28px' }}>
       <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
         <Row>
-          <Col lg="2">
+          <Col lg="2" style={{ paddingLeft: '0px' }}>
             <DateSelector size="smaller" customLabel="From"></DateSelector>
           </Col>
           <Col lg="2">
@@ -83,8 +83,8 @@ function Transactions() {
             </IconButton>
           </Col>
         </Row>
-        <Row className="mt-3">
-          <Stack direction="row" spacing={1}>
+        <Row className="m-3">
+          <Stack direction="row" spacing={1} style={{ paddingLeft: '0px' }}>
             <p style={{ color: '#6B778C' }}>Filter by : </p>
             {filterOptions.map((filterOption, index) => (
               <Chip
