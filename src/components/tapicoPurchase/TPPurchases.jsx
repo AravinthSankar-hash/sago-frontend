@@ -62,7 +62,7 @@ function TPPurchases(props) {
     display: 'flex',
     justifyContent: 'flex-end',
     width: '100%',
-    marginTop: '20px',
+    marginTop: '10px',
     marginBottom: '10px',
     paddingRight: '50px'
   };
@@ -107,35 +107,64 @@ function TPPurchases(props) {
           </TableBody>
         </Table>
       </Wrapper>
-      <table style={tableWrapper}>
-        <tbody>
-          <tr>
-            <td style={tableBody}>Sub Total:</td>
-            <td>₹ 5,689.25</td>
-          </tr>
-          <tr>
-            <td style={tableBody}>Discount:</td>
-            <td>₹ 600.25</td>
-          </tr>
-          <tr>
-            <td style={tableBody}>Tax Rate:</td>
-            <td>18%</td>
-          </tr>
-          <tr>
-            <td style={tableBody}>Tax:</td>
-            <td>₹ 2,000</td>
-          </tr>
-          <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}></tr>
-          <tr>
-            <td style={tableBody}>purchase Total :</td>
-            <td style={{ fontWeight: 'bold' }}>₹ 2,58,456.00</td>
-          </tr>
-        </tbody>
-      </table>
-      <div style={approvalStatus}>
-        <div className="m-3">
-          <span style={{ marginRight: '50px', color: '#62728D' }}>Approval Status:</span>
-          <span style={{ marginRight: '20px', color: '#00B7FF' }}>Pending</span>
+      <div className="m-2 d-flex justify-content-between">
+        <div className="d-flex">
+          <div style={{ marginTop: '10px', padding: '0 40px 0 10px' }}>
+            <span style={{ color: '#5C9EB8' }}>Total Weight:</span>
+            <span> 500 kgs</span>
+          </div>
+          <div style={{ marginTop: '10px', padding: '0 40px 0 10px' }}>
+            <span style={{ color: '#5C9EB8' }}>Vehicle weight :</span>
+            <span> 100 kgs</span>
+          </div>
+          <div style={{ marginTop: '10px', padding: '0 40px 0 10px' }}>
+            <span style={{ color: '#5C9EB8' }}>Net weight :</span>
+            <span> 400 kgs</span>
+          </div>
+          <div
+            style={{ borderRight: '1px solid #EBEEF0', marginTop: '10px', height: '20px' }}></div>
+          <div style={{ marginTop: '10px', padding: '0 40px 0 40px' }}>
+            <span style={{ color: '#5C9EB8' }}>Sand Weight (5%) :</span>
+            <span> 1000</span>
+          </div>
+        </div>
+        <div>
+          <table style={tableWrapper}>
+            <tbody>
+              <tr>
+                <td style={tableBody}>Sub Total:</td>
+                <td>₹ 5,689.25</td>
+              </tr>
+              <tr>
+                <td style={tableBody}>Labour charge (3%) :</td>
+                <td>- ₹ 500.25</td>
+              </tr>
+              <tr>
+                <td style={tableBody}>Vehicle Rent :</td>
+                <td>- ₹ 500.25</td>
+              </tr>
+              <tr style={tableBody}></tr>
+              <tr>
+                <td style={tableBody}>purchase Total :</td>
+                <td>- ₹ 500.25</td>
+              </tr>
+              <tr>
+                <td style={tableBody}>Commision (10%)</td>
+                <td>+ ₹ 500.25</td>
+              </tr>
+              <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}></tr>
+              <tr>
+                <td style={tableBody}>Grand total :</td>
+                <td style={{ fontWeight: 'bold' }}>₹ 4,000</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style={approvalStatus}>
+            <div className="m-3">
+              <span style={{ marginRight: '50px', color: '#62728D' }}>Approval Status:</span>
+              <span style={{ marginRight: '0px', color: '#00B7FF' }}>Pending</span>
+            </div>
+          </div>
         </div>
       </div>
     </>

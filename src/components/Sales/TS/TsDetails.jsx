@@ -207,7 +207,6 @@ const TsDetails = (props) => {
             </table>
           </div>
         </div>
-        {/* </Form> */}
       </Container>
 
       {tableData.length > 0 && tableHeading.length > 0 ? (

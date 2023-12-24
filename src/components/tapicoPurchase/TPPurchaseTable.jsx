@@ -83,8 +83,8 @@ const TPPurchaseTable = (props) => {
     zIndex: 2
   }));
 
-  const rowClicked = () => {
-    hanleTableRowClick();
+  const rowClicked = (row) => {
+    hanleTableRowClick(row);
   };
 
   return (
@@ -100,7 +100,7 @@ const TPPurchaseTable = (props) => {
           </TableHead>
           <TableBody>
             {tableData.map((row, index) => (
-              <StyledTableRow key={index} onClick={rowClicked}>
+              <StyledTableRow key={index} onClick={() => rowClicked(row)}>
                 <StyledTableCell align="left">{row['Purchase date']}</StyledTableCell>
                 <StyledTableCell align="left" style={{ color: 'black' }}>
                   {row['Purchase No']}
