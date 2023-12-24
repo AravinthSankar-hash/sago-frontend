@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import SearchBox from '../../components/SearchBox.jsx';
 import DateSelector from '../../components/DateSelector.jsx';
@@ -9,7 +9,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../../css/index.css';
-import MuiTable from '../../components/ProcurementTable.jsx';
+import TPPurchaseTable from './TPPurchaseTable';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
@@ -102,7 +102,7 @@ function TPDashboard({ showAddPurchaseForm, showDetailsSection }) {
             </div>
             <div>
               {tPData.length > 0 ? (
-                <MuiTable tableData={tPData} hanleTableRowClick={onTableRowClick} />
+                <TPPurchaseTable tableData={tPData} hanleTableRowClick={onTableRowClick} />
               ) : (
                 <Box sx={{ display: 'flex' }}>
                   <CircularProgress />

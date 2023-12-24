@@ -40,73 +40,81 @@ function BrokerReports() {
     setSelectedChips([]);
     setSelectedChips([label]);
   };
+  const [showBrokerReportDetails, setShowBrokerReportDetails] = useState(false);
+  const handleTableClick = () => {
+    setShowBrokerReportDetails(true);
+  };
   const fontHeader = { font: 'Roboto', color: '#62728D', fontSize: '14px' };
   const fontValue = { font: 'Roboto', fontSize: '14px' };
   return (
     <Container style={{ background: '#EBEEF0' }}>
       <Row>
-        <Col lg={3} style={{ padding: '20px' }}>
-          <Row
-            style={{
-              backgroundColor: 'white',
-              borderRadius: '15px',
-              borderLeft: '5px solid #57D0FF'
-            }}>
-            <Col style={{ padding: '20px' }}>
-              <Row>
-                <label style={fontHeader}>Broker Name</label>
-                <p style={fontValue}>Aravinth Sankar</p>
-              </Row>
-              <Row>
-                <label style={fontHeader}>Last Purchase Date</label>
-                <p style={fontValue}>25 Oct 23</p>
-              </Row>
-              <Row>
-                <label style={fontHeader}>Avg Rate</label>
-                <p style={fontValue}>61,412</p>
-              </Row>
-            </Col>
-            <Col style={{ padding: '20px' }}>
-              <Row>
-                <label style={fontHeader}>AP</label>
-                <p style={fontValue}>8.3</p>
-              </Row>{' '}
-              <Row>
-                <label style={fontHeader}>TP</label>
-                <p style={fontValue}>28.10</p>
-              </Row>{' '}
-              <Row>
-                <label style={fontHeader}>Total Bags</label>
-                <p style={fontValue}>13,000</p>
-              </Row>
-            </Col>
-          </Row>
-          <Row
-            style={{
-              backgroundColor: 'white',
-              borderRadius: '15px',
-              borderLeft: '5px solid #00875A',
-              marginTop: '20px',
-              paddingLeft: '10px',
-              padding: '15px'
-            }}>
-            <label style={fontHeader}>Total Payment</label>
-            <p style={fontValue}>1,00,000</p>
-          </Row>
-          <Row
-            style={{
-              backgroundColor: 'white',
-              borderRadius: '15px',
-              borderLeft: '5px solid #BF2600',
-              padding: '15px',
-              paddingLeft: '10px',
-              marginTop: '20px'
-            }}>
-            <label style={fontHeader}>Pending Payment</label>
-            <p style={fontValue}>3000</p>
-          </Row>
-        </Col>
-        <Col lg={9} className="d-flex flex-column justify-content-center">
+        {showBrokerReportDetails && (
+          <Col lg={3} style={{ padding: '20px' }}>
+            <Row
+              style={{
+                backgroundColor: 'white',
+                borderRadius: '15px',
+                borderLeft: '5px solid #57D0FF'
+              }}>
+              <Col style={{ padding: '20px' }}>
+                <Row>
+                  <label style={fontHeader}>Broker Name</label>
+                  <p style={fontValue}>Aravinth Sankar</p>
+                </Row>
+                <Row>
+                  <label style={fontHeader}>Last Purchase Date</label>
+                  <p style={fontValue}>25 Oct 23</p>
+                </Row>
+                <Row>
+                  <label style={fontHeader}>Avg Rate</label>
+                  <p style={fontValue}>61,412</p>
+                </Row>
+              </Col>
+              <Col style={{ padding: '20px' }}>
+                <Row>
+                  <label style={fontHeader}>AP</label>
+                  <p style={fontValue}>8.3</p>
+                </Row>{' '}
+                <Row>
+                  <label style={fontHeader}>TP</label>
+                  <p style={fontValue}>28.10</p>
+                </Row>{' '}
+                <Row>
+                  <label style={fontHeader}>Total Bags</label>
+                  <p style={fontValue}>13,000</p>
+                </Row>
+              </Col>
+            </Row>
+            <Row
+              style={{
+                backgroundColor: 'white',
+                borderRadius: '15px',
+                borderLeft: '5px solid #00875A',
+                marginTop: '20px',
+                paddingLeft: '10px',
+                padding: '15px'
+              }}>
+              <label style={fontHeader}>Total Payment</label>
+              <p style={fontValue}>1,00,000</p>
+            </Row>
+            <Row
+              style={{
+                backgroundColor: 'white',
+                borderRadius: '15px',
+                borderLeft: '5px solid #BF2600',
+                padding: '15px',
+                paddingLeft: '10px',
+                marginTop: '20px'
+              }}>
+              <label style={fontHeader}>Pending Payment</label>
+              <p style={fontValue}>3000</p>
+            </Row>
+          </Col>
+        )}
+        <Col
+          lg={showBrokerReportDetails ? 9 : 12}
+          className="d-flex flex-column justify-content-center">
           {/* Filters */}
           <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
             <Row style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -150,7 +158,7 @@ function BrokerReports() {
             </Row>
           </div>
           {/* Table */}
-          <div>
+          <div onClick={handleTableClick}>
             {brokerReportsData.length > 0 ? (
               <BrokerReportsTable
                 tableData={brokerReportsData}

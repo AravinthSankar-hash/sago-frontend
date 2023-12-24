@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -40,6 +41,9 @@ function TapicoPurchase() {
         return <div>Coming soon...</div>;
     }
   };
+  useEffect(() => {
+    updateActiveTPTabComponent(<Purchases />);
+  }, []);
   const handleTabSwitch = (tabName) => {
     const currentTabComp = renderTabComponent(tabName);
     // On every tab switch update the active component
