@@ -1,24 +1,19 @@
 import TPDetails from 'components/tapicoPurchase/TPDetails';
-import { useRef, useMemo } from 'react';
-import { Button, Container, Row } from 'react-bootstrap';
+import { Button, Container, Row, Col } from 'react-bootstrap';
 function ApprovalDetails() {
-  const containerRef = useRef();
-  const gridStyle = useMemo(
-    () => ({
-      width: '100%',
-      borderRadius: '10px',
-      overflowY: 'auto',
-      maxHeight: '100%',
-      backgroundColor: 'white'
-    }),
-    []
-  );
   return (
-    <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
+    <Container style={{ marginLeft: '5px' }}>
       <Row>
         <TPDetails />
       </Row>
-      <Row></Row>
+      <Row style={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
+        <Col lg="1">
+          <Button variant="primary">Approve</Button>
+        </Col>
+        <Col lg="1">
+          <Button variant="danger">Reject</Button>
+        </Col>
+      </Row>
     </Container>
   );
 }
