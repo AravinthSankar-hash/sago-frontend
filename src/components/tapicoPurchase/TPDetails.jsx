@@ -1,15 +1,18 @@
-import { Container, Row, Col, Form } from 'react-bootstrap';
-import React, { useRef, useMemo, useEffect, useState } from 'react';
+import { Container, Col, Form } from 'react-bootstrap';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
-import TPPaymentsTab from './TPPaymentsTab.jsx';
 import TPPurchases from './TPPurchases.jsx';
 import TPPayments from './TPPayments.jsx';
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import TabComponent from 'components/TabComponent.jsx';
 
-function TPDetails() {
+function TPDetails(props) {
   const [tableData, setTableData] = useState([]);
   const [tableHeading, setTableHeading] = useState([]);
+  const [showPurchase, setShowPurchase] = useState(true);
+
   useEffect(() => {
     fetch('http://localhost:3001/proPurchase')
       .then((rawResponse) => rawResponse.json())
@@ -27,7 +30,7 @@ function TPDetails() {
       width: '100%',
       borderRadius: '10px',
       overflowY: 'auto',
-      maxHeight: '400px',
+      maxHeight: '350px',
       backgroundColor: 'white',
       fontSize: '14px',
       fontFamily: 'Roboto',
@@ -36,147 +39,198 @@ function TPDetails() {
     }),
     []
   );
-  const detailsSection = {
-    backgroundColor: 'white',
-    borderRadius: '10px',
-    paddingBottom: '30px',
-    margin: '3px',
-    marginBottom: '20px'
+
+  const tableContainer = useMemo(
+    () => ({
+      width: '100%',
+      borderRadius: '10px',
+      backgroundColor: 'white',
+      fontSize: '14px',
+      fontFamily: 'Roboto',
+      padding: '0'
+    }),
+    []
+  );
+
+  const showTab = (shouldShow) => {
+    // alert(shouldShow);
+    setShowPurchase(shouldShow);
   };
-  const summaztionFooterRows = {
+
+  const disabledInput = {
+    background: '#F4F5F7',
+    color: '#A5ADBA',
+    border: 'none'
+  };
+
+  const tableRow = {
     padding: '10px',
-    color: '#62728D'
+    textAlign: 'right',
+    color: '#5C9EB8'
   };
-  const fontHeader = { font: 'Roboto', color: '#62728D', fontSize: '13px', paddingBottom: '5px' };
-  const fontValue = { font: 'Roboto', fontSize: '12px', color: 'black' };
+  // const detailsSection = {
+  //   backgroundColor: 'white',
+  //   borderRadius: '10px',
+  //   paddingBottom: '30px',
+  //   margin: '3px',
+  //   marginBottom: '20px'
+  // };
+  // const summaztionFooterRows = {
+  //   padding: '10px',
+  //   color: '#62728D'
+  // };
+  // const fontHeader = { font: 'Roboto', color: '#62728D', fontSize: '13px', paddingBottom: '5px' };
+  // const fontValue = { font: 'Roboto', fontSize: '12px', color: 'black' };
   return (
     <>
       <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
-        <div style={{ detailsSection }}>
-          <Row style={{ padding: '15px', paddingBottom: '0px' }}>
-            <Col>
-              <div>
-                <div style={fontHeader}>Purchase No.</div>
-                <p style={{ fontValue }}>TP123</p>
-              </div>
-            </Col>
-            <Col>
-              <div>
-                <div style={fontHeader}>Purchase Date.</div>
-                <p style={fontValue}>12 Nov 2021</p>
-              </div>
-            </Col>
-            <Col>
-              <div>
-                <div style={fontHeader}>Payment Due Date</div>
-                <p style={fontValue}>26 Oct 2022</p>
-              </div>
-            </Col>
-            <Col>
-              <div>
-                <div style={fontHeader}>Purchase Status</div>
-                <p style={fontValue}>Paid</p>
-              </div>
-            </Col>
-            <Col>
-              <AttachFileOutlinedIcon
-                fontSize={'small'}
-                style={{ ...fontHeader, fontSize: '20px' }}
-              />
-              <text style={{ font: 'Roboto', color: '#62728D', fontSize: '16px' }}>
-                Attachments(0)
-              </text>
-            </Col>
-            <Col>
-              <IosShareOutlinedIcon
-                fontSize={'small'}
-                style={{ ...fontHeader, fontSize: '20px' }}
-              />
-              <text style={{ font: 'Roboto', color: '#62728D', fontSize: '16px' }}>
-                {' '}
-                Export PDF{' '}
-              </text>
-            </Col>
-            <Col>
-              <LocalPrintshopOutlinedIcon
-                fontSize={'small'}
-                style={{ ...fontHeader, fontSize: '20px' }}
-              />{' '}
-              <text style={{ font: 'Roboto', color: '#62728D', fontSize: '16px' }}> Print </text>
-            </Col>
-            <hr style={{ borderTopWidth: '0.75px', marginLeft: '10px' }} />
-          </Row>
-
-          <Row style={{ padding: '15px', paddingBottom: '0px' }}>
-            <Form.Group as={Col} xs={3}>
+        <div
+          className="m-3 d-flex justify-content-between align-items-center"
+          style={{ borderBottom: '1px solid #EBEEF0' }}>
+          <div className="d-flex w-100 ">
+            <div className="p-2" style={{ marginRight: '30px' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Purchase No.
+              </p>
+              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase No']}</p>
+            </div>
+            <div className="p-2" style={{ marginRight: '30px' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Purchase Date
+              </p>
+              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase date']}</p>
+            </div>
+            <div className="p-2" style={{ marginRight: '30px' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Payment due date :
+              </p>
+              <p style={{ fontSize: '12px' }}>26 Oct 2022</p>
+            </div>
+            <div className="p-2" style={{ marginRight: '30px' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Purchase Status :
+              </p>
+              <p
+                style={{
+                  fontSize: '12px',
+                  color: '#BF2600',
+                  backgroundColor: '#FFEBE6',
+                  width: 'fit-content',
+                  fontWeight: 'bold',
+                  padding: '0 4px'
+                }}>
+                UNPAID
+              </p>
+            </div>
+          </div>
+          <div className="d-flex justify-content-between w-50">
+            <div className="m-2 d-flex align-items-center" style={{ color: '#62728D' }}>
+              {' '}
+              <AttachFileOutlinedIcon fontSize={'small'} /> Attachments(0){' '}
+            </div>
+            <div
+              className="m-2 d-flex align-items-center"
+              style={{ color: '#62728D', marginRight: '50px' }}>
+              {' '}
+              <IosShareOutlinedIcon fontSize={'small'} /> Export PDF{' '}
+            </div>
+            <div
+              className="m-2 align-items-center"
+              style={{ color: '#62728D', marginRight: '50px' }}>
+              {' '}
+              <LocalPrintshopOutlinedIcon fontSize={'small'} /> Print{' '}
+            </div>
+            <div
+              className="m-2 d-flex align-items-center"
+              style={{ color: '#B2B3B7', marginLeft: '10px' }}>
+              <MoreVertOutlinedIcon />
+            </div>
+          </div>
+        </div>
+        <div style={{ borderBottom: '1px solid #EBEEF0' }}>
+          <div className="m-3 d-flex">
+            <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '20%' }}>
               <Form.Label>Broker Name</Form.Label>
-              <Form.Control disabled />
+              <Form.Control
+                style={disabledInput}
+                defaultValue={props.rowData['Supplier Name']}
+                disabled
+              />
             </Form.Group>
-            <Form.Group as={Col} xs={3}>
-              <Form.Label>Commission %</Form.Label>
-              <Form.Control disabled />
+            <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '20%' }}>
+              <Form.Label>Commision %</Form.Label>
+              <Form.Control style={disabledInput} defaultValue="20" disabled />
             </Form.Group>
-          </Row>
-
-          <Row style={{ padding: '15px', paddingBottom: '0px' }}>
-            <Form.Group as={Col} xs={3}>
-              <Form.Label>Address</Form.Label>
+          </div>
+          <div className="m-3 mb-0 d-flex">
+            <div style={{ marginRight: '20px', width: '20%' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Address
+              </p>
               <p>22/13 Bajanai koil 2nd street, Choolaimedu chennai-94</p>
-            </Form.Group>
-            <Form.Group as={Col} xs={3}>
-              <Form.Label>Phone No.</Form.Label>
+            </div>
+            <div style={{ marginRight: '20px', width: '20%' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Phone No.
+              </p>
               <p>1234567890</p>
+            </div>
+          </div>
+        </div>
+        <div className="d-flex justify-content-between">
+          <div className="m-3 d-flex">
+            <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '60%' }}>
+              <Form.Label>Vehicle No.</Form.Label>
+              <Form.Control style={disabledInput} defaultValue="TN06AR4567" disabled />
             </Form.Group>
-          </Row>
+            <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '60%' }}>
+              <Form.Label>Weight Bill No.</Form.Label>
+              <Form.Control style={disabledInput} defaultValue="8941555367" disabled />
+            </Form.Group>
+          </div>
+          <div>
+            <table
+              className="mt-3"
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                width: '100%',
+                paddingRight: '50px'
+              }}>
+              <tbody className="mb-1">
+                <tr>
+                  <td style={tableRow}>Total Bill Amount :</td>
+                  <td>₹ 10,000.00</td>
+                </tr>
+                <tr>
+                  <td style={tableRow}>Total Paid:</td>
+                  <td style={{ color: '#00875A' }}>₹ 2,000.00</td>
+                </tr>
+                <tr style={{ borderBottom: '2px solid #EBEEF0', color: '#EBEEF0' }}></tr>
+                <tr>
+                  <td style={tableRow}>Outstandings :</td>
+                  <td style={{ color: '#DE350B' }}>₹ 8,000.00/-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </Container>
 
-          <Row style={{ padding: '15px', paddingBottom: '0px' }}>
-            <Col xs={6}>
-              <Row>
-                <Col>
-                  <Form.Group>
-                    <Form.Label>Vehicle No.</Form.Label>
-                    <Form.Control disabled />
-                  </Form.Group>
-                </Col>
-                <Col>
-                  <Form.Group>
-                    <Form.Label>Weight Bill No.</Form.Label>
-                    <Form.Control disabled />
-                  </Form.Group>
-                </Col>
-              </Row>
-            </Col>
-            <Col xs={3} style={{ marginLeft: 'auto' }}>
-              <table>
-                <tbody style={{ textAlign: 'left' }}>
-                  <tr>
-                    <td style={summaztionFooterRows}>Total Bill Amount</td>
-                    <td style={summaztionFooterRows}>:</td>
-                    <td>₹ 10,000</td>
-                  </tr>
-                  <tr>
-                    <td style={summaztionFooterRows}>Total Bill</td>
-                    <td style={summaztionFooterRows}>:</td>
-                    <td>₹ 8,944</td>
-                  </tr>
-                  <tr style={{ borderTop: '0.5px solid #62728D' }}>
-                    <td style={summaztionFooterRows}>Outstandings</td>
-                    <td style={summaztionFooterRows}>:</td>
-                    <td>₹ 18,944</td>
-                  </tr>
-                </tbody>
-              </table>
-            </Col>
-          </Row>
-        </div>
-      </Container>
-      <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
-        <div style={{ detailsSection }}>
-          <TPPaymentsTab></TPPaymentsTab>
-          {/* <TPPurchases tableHeading={tableHeading} tableData={tableData}></TPPurchases> */}
-          <TPPayments></TPPayments>
-        </div>
-      </Container>
+      {tableData.length > 0 && tableHeading.length > 0 ? (
+        <Container ref={containerRef} className="ag-theme-alpine mt-3" style={tableContainer}>
+          <TabComponent showTab={showTab} showPurchase={showPurchase} tabName={'Expense'} />
+          <Container style={gridStyle}>
+            {showPurchase ? (
+              <TPPurchases tableHeading={tableHeading} tableData={tableData} />
+            ) : (
+              <TPPayments />
+            )}
+          </Container>
+        </Container>
+      ) : (
+        ''
+      )}
     </>
   );
 }
