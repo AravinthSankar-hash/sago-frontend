@@ -15,7 +15,7 @@ export const sideBarItems = [
     items: [
       { name: 'DashBoard', src: dashIcon, route: '/dashboard' },
       { name: 'Inventory', src: inventIcon },
-      { name: 'Approvals', src: approvIcon }
+      { name: 'Approvals', src: approvIcon, route: '/approvals' }
     ]
   },
   {

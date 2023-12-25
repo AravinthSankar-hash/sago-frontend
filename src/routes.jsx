@@ -5,6 +5,7 @@ import Invoices from './pages/Invoices.jsx';
 import Procurements from './pages/Procurements.jsx';
 import TapicoPurchase from './components/tapicoPurchase/TapicoPurchase.jsx';
 import Expenses from './pages/Expenses.jsx';
+import Approvals from './pages/Approvals.jsx';
 import Dashboard from 'components/dashboard/Dashboard.jsx';
 import Payments from 'pages/Payments.jsx';
 import Sales from 'pages/Sales.jsx';
@@ -19,6 +20,7 @@ function AppRoutes() {
       <Route path="/expense" element={<Expenses />} />
       <Route path="/sales" element={<Sales />} />
       <Route path="/payments" element={<Payments />} />
+      <Route path="/approvals" element={<Approvals />} />
       <Route path="/invoice" element={<Invoices />} />
       <Route path="/catalog" element={<Catalog />} />
       <Route path="*" element={<NotFound />} />
