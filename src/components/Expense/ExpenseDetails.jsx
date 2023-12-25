@@ -6,8 +6,6 @@ import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlin
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import TabComponent from '../TabComponent';
-import ProcurementPurchase from '../ProcurementPurchase';
-import ProcurementPayment from '../ProcurementPayment';
 import ExpenseTab from './ExpenseTab';
 import ExpensePayment from './ExpensePayment';
 // import '../css/index.css';

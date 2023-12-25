@@ -12,22 +12,20 @@ function PaymentsTab({ handleTabSwitch, tabToSelect }) {
     handleTabSwitch(tabName);
   };
   return (
-    <Box sx={{ width: '100%', textTransform: 'none' }}>
-      <Tabs
-        value={value}
-        onChange={handleChange}
+    <Tabs
+      value={value}
+      onChange={handleChange}
+      sx={{ textTransform: 'none' }}
+      indicatorColor="primary">
+      <Tab
+        value="pendingPayments"
         sx={{ textTransform: 'none' }}
-        indicatorColor="primary">
-        <Tab
-          value="pendingPayments"
-          sx={{ textTransform: 'none' }}
-          tabIndex={0}
-          label="Pending Payments"
-        />
-        <Tab value="compeletedPayments" sx={{ textTransform: 'none' }} label="Completed Payments" />
-        <Tab value="txnHistory" sx={{ textTransform: 'none' }} label="Transaction history" />
-      </Tabs>
-    </Box>
+        tabIndex={0}
+        label="Pending Payments"
+      />
+      <Tab value="completedPayments" sx={{ textTransform: 'none' }} label="Completed Payments" />
+      <Tab value="txnHistory" sx={{ textTransform: 'none' }} label="Transaction history" />
+    </Tabs>
   );
 }
 

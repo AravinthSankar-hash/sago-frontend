@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect, useState } from 'react';
+import { useMemo, useRef, useEffect, useState } from 'react';
 import { Container, Form, Col } from 'react-bootstrap';
 import '../css/catalogNewCust.css';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';

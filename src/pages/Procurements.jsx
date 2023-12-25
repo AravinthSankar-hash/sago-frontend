@@ -94,15 +94,15 @@ function Procurements() {
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showNewForm ? (
-            <NewProcurement showForm={showForm} />
+            <NewProcurement />
           ) : (
             <>
               {' '}
               {showDetails ? (
                 <ProcurementDetails rowData={rowData} />
               ) : (
-                <div>
-                  <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
+                <div style={{ padding: '0 12px', margin: '0 28px' }}>
+                  <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                     <Row>
                       <Col lg="3">
                         <SearchBox placeHolder={'Search here'}></SearchBox>

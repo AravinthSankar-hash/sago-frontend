@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -64,6 +64,10 @@ const Catalog = () => {
         return <div>Coming soon...</div>;
     }
   };
+  useEffect(() => {
+    updateActiveCatalogTabComponent(<Customer />);
+    updateShowCatalogBackBtn(false);
+  }, []);
 
   const handleTabSwitch = (tabName) => {
     const currentTabComp = renderTabComponent(tabName);
