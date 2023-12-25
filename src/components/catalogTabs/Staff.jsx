@@ -1,9 +1,8 @@
-import React from 'react';
 import { Col } from 'react-bootstrap';
 
 // Components
 import StaffDashboard from '../StaffDashboard.jsx';
-import StaffItem from '../catalogItems/StaffItem.jsx';
+import StaffItem from '../catalogItems/staffItem.jsx';
 import StaffForm from '../../components/forms/AddStaffForm';
 
 // Store & Dtos & Custom Css
