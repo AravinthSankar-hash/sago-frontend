@@ -1,15 +1,15 @@
 export const tableHeaders = [
     'Date',
-    'Ref No.',
+    'Reference No.',
     'Type',
     'Party Name',
     'Total Amount'
-];
+]
 
 export const tableColumns = [
-    'date',
-    'referenceNo',
+    'Purchase date',
+    'Purchase No',
     'type',
-    'partyName',
-    'totalAmount'
-];
+    'Supplier Name',
+    'amount'
+]

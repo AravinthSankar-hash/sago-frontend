@@ -13,14 +13,7 @@ import {
 import '../../css/index.css';
 
 const PendingApprovalsTable = (props) => {
-  const {
-    tableData,
-    tableHeaders,
-    tableColumns,
-    handleChangePage,
-    handleChangeRowsPerPage,
-    hanleTableRowClick
-  } = props;
+  const { tableData, tableHeaders, tableColumns, hanleTableRowClick } = props;
 
   const Wrapper = styled('div')({
     display: 'flex',
@@ -83,8 +76,8 @@ const PendingApprovalsTable = (props) => {
     zIndex: 2
   }));
 
-  const onTableRowClick = () => {
-    hanleTableRowClick();
+  const onTableRowClick = (rowData) => {
+    hanleTableRowClick(rowData);
   };
 
   return (
@@ -101,7 +94,7 @@ const PendingApprovalsTable = (props) => {
           <TableBody>
             {tableData.map((tableRow, RowIdx) => {
               return (
-                <StyledTableRow key={RowIdx} onClick={onTableRowClick}>
+                <StyledTableRow key={RowIdx} onClick={() => onTableRowClick(tableRow)}>
                   {tableColumns.map((columnKey, colIdx) => {
                     return (
                       <StyledTableCell key={colIdx} align="left">
@@ -123,8 +116,8 @@ const PendingApprovalsTable = (props) => {
                   count={100}
                   rowsPerPage={5}
                   page={0}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  // onPageChange={handleChangePage}
+                  // onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </TableCell>
             </StyledTablePaginationRow>

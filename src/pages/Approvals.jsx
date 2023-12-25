@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Container, Row } from 'react-bootstrap';
-import ApprovalHistory from './ApprovalHistory';
-import ApprovalsTab from './ApprovalsTab';
-import PendingApprovals from './PendingApprovals';
+import ApprovalHistory from '../components/Approvals/ApprovalHistory';
+import ApprovalsTab from '../components/Approvals/ApprovalsTab';
+import PendingApprovals from '../components/Approvals/PendingApprovals';
 
 const Approvals = () => {
   const [activeCatalogTabComponent, setActiveCatalogTabComponent] = useState(<PendingApprovals />);
