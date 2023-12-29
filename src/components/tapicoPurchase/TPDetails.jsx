@@ -6,7 +6,7 @@ import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import TPPurchases from './TPPurchases.jsx';
 import TPPayments from './TPPayments.jsx';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
-import TabComponent from 'components/TabComponent.jsx';
+import TabComponent from 'components/helper/TabComponent.jsx';
 
 function TPDetails(props) {
   const [tableData, setTableData] = useState([]);

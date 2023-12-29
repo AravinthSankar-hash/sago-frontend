@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import ApprovalDetails from './ApprovalDetails';
 import { IconButton, Chip, Box, CircularProgress, Stack } from '@mui/material';
-import DateSelector from 'components/DateSelector';
-import SearchBox from 'components/SearchBox';
+import DateSelector from '../helper/DateSelector';
+import SearchBox from '../helper/SearchBox';
 import { Container, Row, Col } from 'react-bootstrap';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import PendingApprovalsTable from './PendingApprovalsTable';
@@ -50,7 +50,7 @@ function PendingApprovals() {
                     <Col lg="2">
                       <DateSelector customLabel="To"></DateSelector>
                     </Col>
-                    <Col lg="2" style={{ display: 'flex', justifyContent: 'space-around' }}>
+                    <Col lg="4" className="d-flex justify-content-end">
                       <IconButton size="small">
                         <IosShareIcon
                           fontSize="small"

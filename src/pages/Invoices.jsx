@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import SearchBox from '../components/SearchBox.jsx';
-import DateSelector from '../components/DateSelector.jsx';
+import SearchBox from '../components/helper/SearchBox.jsx';
+import DateSelector from '../components/helper/DateSelector.jsx';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
-import ProcurementTable from '../components/ProcurementTable.jsx';
+import ProcurementTable from '../components/procurement/ProcurementTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
-import GsInvoiceDetails from 'components/Invoice/GsInvoiceDetails.jsx';
+import GsInvoiceDetails from 'components/invoice/GsInvoiceDetails.jsx';
+// import DcSalesInvoices from 'components/Invoice/DcInvoicesDetails.jsx';
+import TsInvoiceDetails from 'components/invoice/TsInvoiceDetails.jsx';
 
 function Invoices() {
   const [procurementData, setProcurementData] = useState([]);
@@ -94,7 +96,7 @@ function Invoices() {
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showDetails ? (
-            <GsInvoiceDetails rowData={rowData} />
+            <TsInvoiceDetails rowData={rowData} />
           ) : (
             <div style={{ padding: '0 12px', margin: '0 28px' }}>
               <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>

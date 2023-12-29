@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import SearchBox from '../components/SearchBox.jsx';
-import DateSelector from '../components/DateSelector.jsx';
+import SearchBox from '../components/helper/SearchBox.jsx';
+import DateSelector from '../components/helper/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -10,11 +10,11 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
-import ExpenseTable from '../components/Expense/ExpenseTable.jsx';
+import ExpenseTable from '../components/expense/ExpenseTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import ExpenseForm from '../components/Expense/ExpenseForm.jsx';
-import ExpenseDetails from '../components/Expense/ExpenseDetails.jsx';
+import ExpenseForm from '../components/expense/ExpenseForm.jsx';
+import ExpenseDetails from '../components/expense/ExpenseDetails.jsx';
 
 const Expenses = () => {
   const [expenseData, setExpenseData] = useState([]);
@@ -105,15 +105,18 @@ const Expenses = () => {
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                     <Row>
                       <Col lg="3">
-                        <SearchBox placeHolder={'Search here'}></SearchBox>
+                        <SearchBox className="p-0" s placeHolder={'Search here'}></SearchBox>
                       </Col>
                       <Col lg="2">
-                        <DateSelector size="smaller" customLabel="From"></DateSelector>
+                        <DateSelector
+                          className="p-0"
+                          size="smaller"
+                          customLabel="From"></DateSelector>
                       </Col>
                       <Col lg="2">
-                        <DateSelector customLabel="To"></DateSelector>
+                        <DateSelector className="p-0" customLabel="To"></DateSelector>
                       </Col>
-                      <Col lg="2" style={{ display: 'flex', justifyContent: 'space-around' }}>
+                      <Col lg="3" className="d-flex justify-content-end">
                         <IconButton size="small">
                           <IosShareIcon
                             fontSize="small"
@@ -124,7 +127,7 @@ const Expenses = () => {
                           Export Data
                         </IconButton>
                       </Col>
-                      <Col lg="3">
+                      <Col lg="2" className="d-flex justify-content-end">
                         <Button
                           sx={{
                             borderColor: '#00B7FF',

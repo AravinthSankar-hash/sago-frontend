@@ -3,8 +3,8 @@ import TPAddForm from './TPAddForm.jsx';
 import TPDetails from './TPDetails.jsx';
 import TPDashboard from './TPDashboard.jsx';
 import { Col, Container, Row } from 'react-bootstrap';
-import SearchBox from '../../components/SearchBox.jsx';
-import DateSelector from '../../components/DateSelector.jsx';
+import SearchBox from '../helper/SearchBox.jsx';
+import DateSelector from '../helper/DateSelector.jsx';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
@@ -100,7 +100,7 @@ function Purchases() {
                           <Col lg="2">
                             <DateSelector customLabel="To"></DateSelector>
                           </Col>
-                          <Col lg="2" style={{ display: 'flex', justifyContent: 'space-around' }}>
+                          <Col lg="3" className="d-flex justify-content-end">
                             <IconButton size="small">
                               <IosShareIcon
                                 fontSize="small"
@@ -111,7 +111,7 @@ function Purchases() {
                               Export Data
                             </IconButton>
                           </Col>
-                          <Col lg="3">
+                          <Col lg="2">
                             <Button
                               sx={{
                                 borderColor: '#00B7FF',

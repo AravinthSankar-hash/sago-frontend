@@ -43,7 +43,7 @@ function Header() {
               color: '#191C24',
               fontWeight: 'bold'
             }}>
-            Aravinth Sankar
+            ABCD XYSZ
           </Navbar.Text>
           <Navbar.Text>
             <FontAwesomeIcon icon={faAngleDown} style={dropDown} />

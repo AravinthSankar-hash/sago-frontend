@@ -1,6 +1,6 @@
-import DcSales from 'components/Sales/DcSales/DcSales.jsx';
+import DcSales from 'components/sales/DcSales/DcSales.jsx';
 import { create } from 'zustand';
-import Customer from '../components/catalogTabs/Customer.jsx';
+import Customer from '../components/catalog/catalogTabs/Customer.jsx';
 import Purchases from '../components/tapicoPurchase/PurchasesTab';
 
 const useStore = create((set) => ({
@@ -33,7 +33,6 @@ const useStore = create((set) => ({
   showTSDetails: false,
   showGSSalesNewForm: false,
   showGSDetails: false,
-
 
   // Catalog Tabs
   updateShowCatalogBackBtn: (value) => {
@@ -71,7 +70,6 @@ const useStore = create((set) => ({
     set({ showCustomerNewForm: value });
   },
 
-
   // TP Tabs
   updateActiveTPTabComponent: (value) => {
     set({ activeTPTabComponent: value });
@@ -86,7 +84,6 @@ const useStore = create((set) => ({
   updateShowTPBackBtn: (value) => {
     set({ showTPBackBtn: value });
   },
-
 
   // Sales
   updateShowSalesBackBtn: (value) => {
@@ -118,9 +115,8 @@ const useStore = create((set) => ({
   },
   updateShowGSDetails: (value) => {
     set({ showGSDetails: value });
-  },
-
-}))
+  }
+}));
 
 export const useShowCatalogBackBtn = () => useStore((state) => state.showCatalogBackBtn);
 export const useUpdateShowCatalogBackBtn = () =>
@@ -157,50 +153,53 @@ export const useUpdateShowProductDetailsSection = () =>
   useStore((state) => state.updateShowProductDetailsSection);
 
 export const useShowCustomerNewForm = () => useStore((state) => state.showCustomerNewForm);
-export const useUpdateShowCustomerNewForm = () => useStore((state) => state.updateShowCustomerNewForm);
-
-
+export const useUpdateShowCustomerNewForm = () =>
+  useStore((state) => state.updateShowCustomerNewForm);
 
 // TP
 export const useActiveTPTabComponent = () => useStore((state) => state.activeTPTabComponent);
-export const useUpdateActiveTPTabComponent = () => useStore((state) => state.updateActiveTPTabComponent);
+export const useUpdateActiveTPTabComponent = () =>
+  useStore((state) => state.updateActiveTPTabComponent);
 // back Button
 export const useShowTPBackBtn = () => useStore((state) => state.showTPBackBtn);
 export const useUpdateShowTPBackBtn = () => useStore((state) => state.updateShowTPBackBtn);
 
 export const useShowTPPurchaseNewForm = () => useStore((state) => state.showTPPurchaseNewForm);
-export const useUpdateShowTPPurchaseNewForm = () => useStore((state) => state.updateShowTPPurchaseNewForm);
+export const useUpdateShowTPPurchaseNewForm = () =>
+  useStore((state) => state.updateShowTPPurchaseNewForm);
 
 export const useShowPurhcaseDetails = () => useStore((state) => state.showTPPurchaseDetails);
-export const useUpdateShowPurhcaseDetails = () => useStore((state) => state.updateShowTPPurchaseDetails);
+export const useUpdateShowPurhcaseDetails = () =>
+  useStore((state) => state.updateShowTPPurchaseDetails);
 
 // Sales
-export const useActiveSalesTabComponent = () =>
-  useStore((state) => state.activeSalesTabComponent);
+export const useActiveSalesTabComponent = () => useStore((state) => state.activeSalesTabComponent);
 export const useUpdateActiveSalesTabComponent = () =>
   useStore((state) => state.updateActiveSalesTabComponent);
 
 export const useShowSalesBackBtn = () => useStore((state) => state.showSalesBackBtn);
-export const useUpdateShowSalesBackBtn = () =>
-  useStore((state) => state.updateShowSalesBackBtn);
+export const useUpdateShowSalesBackBtn = () => useStore((state) => state.updateShowSalesBackBtn);
 
 // DC
 export const useShowDCSalesNewForm = () => useStore((state) => state.showDCSalesNewForm);
-export const useUpdateShowDCSalesNewForm = () => useStore((state) => state.updateShowDCSalesNewForm);
+export const useUpdateShowDCSalesNewForm = () =>
+  useStore((state) => state.updateShowDCSalesNewForm);
 
 export const useShowDCDetails = () => useStore((state) => state.showDCDetails);
 export const useUpdateShowDCDetails = () => useStore((state) => state.updateShowDCDetails);
 
 // TS
 export const useShowTSSalesNewForm = () => useStore((state) => state.showTSSalesNewForm);
-export const useUpdateShowTSSalesNewForm = () => useStore((state) => state.updateShowTSSalesNewForm);
+export const useUpdateShowTSSalesNewForm = () =>
+  useStore((state) => state.updateShowTSSalesNewForm);
 
 export const useShowTSDetails = () => useStore((state) => state.showTSDetails);
 export const useUpdateShowTSDetails = () => useStore((state) => state.updateShowTSDetails);
 
 // GS
 export const useShowGSSalesNewForm = () => useStore((state) => state.showGSSalesNewForm);
-export const useUpdateShowGSSalesNewForm = () => useStore((state) => state.updateShowGSSalesNewForm);
+export const useUpdateShowGSSalesNewForm = () =>
+  useStore((state) => state.updateShowGSSalesNewForm);
 
 export const useShowGSDetails = () => useStore((state) => state.showGSDetails);
 export const useUpdateShowGSDetails = () => useStore((state) => state.updateShowGSDetails);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import SearchBox from '../../SearchBox.jsx';
-import DateSelector from '../../DateSelector.jsx';
+import SearchBox from '../../helper/SearchBox.jsx';
+import DateSelector from '../../helper/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -116,7 +116,7 @@ const TpSales = () => {
                       <Col lg="2">
                         <DateSelector customLabel="To"></DateSelector>
                       </Col>
-                      <Col lg="2" style={{ display: 'flex', justifyContent: 'space-around' }}>
+                      <Col lg="3" className="d-flex justify-content-end">
                         <IconButton size="small">
                           <IosShareIcon
                             fontSize="small"
@@ -127,7 +127,7 @@ const TpSales = () => {
                           Export Data
                         </IconButton>
                       </Col>
-                      <Col lg="3">
+                      <Col lg="2">
                         <Button
                           sx={{
                             borderColor: '#00B7FF',
@@ -142,7 +142,7 @@ const TpSales = () => {
                           variant="outlined"
                           onClick={() => showForm(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
-                          New TP Sales
+                          New Sales
                         </Button>
                       </Col>
                     </Row>

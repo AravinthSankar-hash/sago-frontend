@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import SearchBox from '../../components/SearchBox.jsx';
-import DateSelector from '../../components/DateSelector.jsx';
+import SearchBox from '../helper/SearchBox.jsx';
+import DateSelector from '../helper/DateSelector.jsx';
 import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../../css/index.css';
-import ExpenseTable from '../../components/Expense/ExpenseTable.jsx';
+import ExpenseTable from '../expense/ExpenseTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
@@ -76,7 +76,7 @@ function PendingPayments() {
           <Col lg="2">
             <DateSelector customLabel="To"></DateSelector>
           </Col>
-          <Col lg="2" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Col lg="4" className="d-flex justify-content-end">
             <IconButton size="small">
               <IosShareIcon
                 fontSize="small"

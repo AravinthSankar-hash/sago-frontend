@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import SearchBox from '../components/SearchBox.jsx';
-import DateSelector from '../components/DateSelector.jsx';
+import SearchBox from '../components/helper/SearchBox.jsx';
+import DateSelector from '../components/helper/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -10,11 +10,11 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
-import ProcurementTable from '../components/ProcurementTable.jsx';
+import ProcurementTable from '../components/procurement/ProcurementTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import NewProcurement from '../components/forms/NewProcurement.jsx';
-import ProcurementDetails from '../components/ProcurementDetails.jsx';
+import NewProcurement from '../components/procurement/NewProcurement.jsx';
+import ProcurementDetails from '../components/procurement/ProcurementDetails.jsx';
 
 function Procurements() {
   const [procurementData, setProcurementData] = useState([]);
@@ -113,7 +113,7 @@ function Procurements() {
                       <Col lg="2">
                         <DateSelector customLabel="To"></DateSelector>
                       </Col>
-                      <Col lg="2" style={{ display: 'flex', justifyContent: 'space-around' }}>
+                      <Col lg="3" className="d-flex justify-content-end">
                         <IconButton size="small">
                           <IosShareIcon
                             fontSize="small"
@@ -124,7 +124,7 @@ function Procurements() {
                           Export Data
                         </IconButton>
                       </Col>
-                      <Col lg="3">
+                      <Col lg="2" className="d-flex justify-content-end">
                         <Button
                           sx={{
                             borderColor: '#00B7FF',

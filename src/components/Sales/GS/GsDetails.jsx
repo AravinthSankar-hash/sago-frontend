@@ -4,7 +4,7 @@ import '../../../css/catalogNewCust.css';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
-import TabComponent from '../../TabComponent';
+import TabComponent from '../../helper/TabComponent';
 import GsSales from './GsSales';
 import GsPayment from './GsPayment';
 
@@ -32,7 +32,7 @@ const GsDetails = (props) => {
       width: '100%',
       borderRadius: '10px',
       overflowY: 'auto',
-      maxHeight: '400px',
+      maxHeight: '350px',
       backgroundColor: 'white',
       fontSize: '14px',
       fontFamily: 'Roboto',
