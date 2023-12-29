@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import ApprovalDetails from './ApprovalDetails';
 import { IconButton, Chip, Box, CircularProgress, Stack } from '@mui/material';
-import DateSelector from 'components/DateSelector';
-import SearchBox from 'components/SearchBox';
+import DateSelector from '../helper/DateSelector';
+import SearchBox from '../helper/SearchBox';
 import { Container, Row, Col } from 'react-bootstrap';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ApprovalHistoryTable from './ApprovalHistoryTable';

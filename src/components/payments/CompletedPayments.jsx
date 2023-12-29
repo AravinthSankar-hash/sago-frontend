@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import DateSelector from '../../components/DateSelector.jsx';
+import DateSelector from '../helper/DateSelector.jsx';
 import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import '../../css/index.css';
-import ExpenseTable from '../../components/expense/ExpenseTable.jsx';
+import ExpenseTable from '../expense/ExpenseTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -67,7 +67,7 @@ const CompletedPayments = () => {
           <Col lg="2">
             <DateSelector customLabel="To"></DateSelector>
           </Col>
-          <Col lg="6" style={{ display: 'flex', justifyContent: 'space-around' }}>
+          <Col lg="5" className="d-flex justify-content-end">
             <IconButton size="small">
               <IosShareIcon
                 fontSize="small"

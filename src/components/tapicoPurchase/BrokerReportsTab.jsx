@@ -3,7 +3,7 @@ import BrokerReportsTable from './BrokerReportsTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { Col, Container, Row } from 'react-bootstrap';
-import SearchBox from '../../components/SearchBox.jsx';
+import SearchBox from '../helper/SearchBox.jsx';
 import IconButton from '@mui/material/IconButton';
 import '../../css/index.css';
 import Chip from '@mui/material/Chip';

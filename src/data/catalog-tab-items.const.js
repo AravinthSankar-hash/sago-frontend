@@ -1,10 +1,10 @@
-import Customer from '../components/catalogTabs/Customer.jsx';
-import Broker from '../components/catalogTabs/Broker.jsx';
-import RawMaterial from '../components/catalogTabs/RawMaterial.jsx';
-import Supplier from '../components/catalogTabs/Supplier.jsx';
-import Product from '../components/catalogTabs/Product.jsx';
-import Vehicle from '../components/catalogTabs/Vehicle.jsx';
-import Staff from '../components/catalogTabs/Staff.jsx';
+import Customer from '../components/catalog/catalogTabs/Customer.jsx';
+import Broker from '../components/catalog/catalogTabs/Broker.jsx';
+import RawMaterial from '../components/catalog/catalogTabs/RawMaterial.jsx';
+import Supplier from '../components/catalog/catalogTabs/Supplier.jsx';
+import Product from '../components/catalog/catalogTabs/Product.jsx';
+import Vehicle from '../components/catalog/catalogTabs/Vehicle.jsx';
+import Staff from '../components/catalog/catalogTabs/Staff.jsx';
 
 export const CatalogTabItems = [
   {

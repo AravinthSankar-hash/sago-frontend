@@ -18,14 +18,14 @@ import {
 } from '../store/store.js';
 
 // Custom components & services
-import CatalogTab from '../components/CatalogTab';
-import Customer from '../components/catalogTabs/Customer.jsx';
-import Broker from '../components/catalogTabs/Broker.jsx';
-import RawMaterial from '../components/catalogTabs/RawMaterial.jsx';
-import Supplier from '../components/catalogTabs/Supplier.jsx';
-import Product from '../components/catalogTabs/Product.jsx';
-import Vehicle from '../components/catalogTabs/Vehicle.jsx';
-import Staff from '../components/catalogTabs/Staff.jsx';
+import CatalogTab from '../components/catalog/CatalogTab.jsx';
+import Customer from '../components/catalog/catalogTabs/Customer.jsx';
+import Broker from '../components/catalog/catalogTabs/Broker.jsx';
+import RawMaterial from '../components/catalog/catalogTabs/RawMaterial.jsx';
+import Supplier from '../components/catalog/catalogTabs/Supplier.jsx';
+import Product from '../components/catalog/catalogTabs/Product.jsx';
+import Vehicle from '../components/catalog/catalogTabs/Vehicle.jsx';
+import Staff from '../components/catalog/catalogTabs/Staff.jsx';
 
 const Catalog = () => {
   // Internal state

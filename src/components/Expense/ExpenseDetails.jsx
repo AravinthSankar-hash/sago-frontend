@@ -5,7 +5,7 @@ import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
-import TabComponent from '../TabComponent';
+import TabComponent from '../helper/TabComponent';
 import ExpenseTab from './ExpenseTab';
 import ExpensePayment from './ExpensePayment';
 // import '../css/index.css';
@@ -78,57 +78,67 @@ const ExpenseDetails = (props) => {
         <div
           className="m-3 d-flex justify-content-between"
           style={{ borderBottom: '1px solid #EBEEF0' }}>
-          <div className="p-2">
-            <p className="mb-1" style={{ color: '#62728D' }}>
-              Expense No.
-            </p>
-            <p style={{ fontSize: '12px' }}>{props.rowData['Purchase No']}</p>
+          <div className="d-flex w-100 ">
+            <div className="p-2" style={{ marginRight: '30px' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Expense No.
+              </p>
+              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase No']}</p>
+            </div>
+            <div className="p-2" style={{ marginRight: '30px' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Expense Date
+              </p>
+              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase date']}</p>
+            </div>
+            <div className="p-2" style={{ marginRight: '30px' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Expense due date :
+              </p>
+              <p style={{ fontSize: '12px' }}>26 Oct 2022</p>
+            </div>
+            <div className="p-2" style={{ marginRight: '30px' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Expense Status :
+              </p>
+              <p
+                style={{
+                  fontSize: '12px',
+                  color: '#BF2600',
+                  backgroundColor: '#FFEBE6',
+                  width: 'fit-content',
+                  fontWeight: 'bold',
+                  padding: '0 4px'
+                }}>
+                UNPAID
+              </p>
+            </div>
           </div>
-          <div className="p-2">
-            <p className="mb-1" style={{ color: '#62728D' }}>
-              Expense Date
-            </p>
-            <p style={{ fontSize: '12px' }}>{props.rowData['Purchase date']}</p>
+          <div className="d-flex justify-content-between w-50">
+            <div
+              className="m-2 d-flex align-items-center"
+              style={{ color: '#62728D', marginRight: '50px' }}>
+              {' '}
+              <AttachFileOutlinedIcon fontSize={'small'} /> Attachments(0){' '}
+            </div>
+            <div
+              className="m-2 d-flex align-items-center"
+              style={{ color: '#62728D', marginRight: '50px' }}>
+              {' '}
+              <IosShareOutlinedIcon fontSize={'small'} /> Export PDF{' '}
+            </div>
+            <div
+              className="m-2 d-flex align-items-center"
+              style={{ color: '#62728D', marginRight: '50px' }}>
+              {' '}
+              <LocalPrintshopOutlinedIcon fontSize={'small'} /> Print{' '}
+            </div>
+            <div
+              className="m-2 d-flex align-items-center"
+              style={{ color: '#B2B3B7', marginLeft: '10px' }}>
+              <MoreVertOutlinedIcon />
+            </div>{' '}
           </div>
-          <div className="p-2">
-            <p className="mb-1" style={{ color: '#62728D' }}>
-              Expense due date :
-            </p>
-            <p style={{ fontSize: '12px' }}>26 Oct 2022</p>
-          </div>
-          <div className="p-2">
-            <p className="mb-1" style={{ color: '#62728D' }}>
-              Expense Status :
-            </p>
-            <p
-              style={{
-                fontSize: '12px',
-                color: '#BF2600',
-                backgroundColor: '#FFEBE6',
-                width: 'fit-content',
-                fontWeight: 'bold',
-                padding: '0 4px'
-              }}>
-              UNPAID
-            </p>
-          </div>
-          <div className="m-2 d-flex align-items-center" style={{ color: '#62728D' }}>
-            {' '}
-            <AttachFileOutlinedIcon fontSize={'small'} /> Attachments(0){' '}
-          </div>
-          <div className="m-2 d-flex align-items-center" style={{ color: '#62728D' }}>
-            {' '}
-            <IosShareOutlinedIcon fontSize={'small'} /> Export PDF{' '}
-          </div>
-          <div className="m-2 d-flex align-items-center" style={{ color: '#62728D' }}>
-            {' '}
-            <LocalPrintshopOutlinedIcon fontSize={'small'} /> Print{' '}
-          </div>
-
-          <MoreVertOutlinedIcon
-            className="mt-2  d-flex align-items-center"
-            style={{ color: '#B2B3B7' }}
-          />
         </div>
         <div className="d-flex justify-content-between">
           <div>

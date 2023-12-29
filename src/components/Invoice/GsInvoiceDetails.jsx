@@ -4,7 +4,7 @@ import '../../css/catalogNewCust.css';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
-import TabComponent from '../TabComponent';
+import TabComponent from '../helper/TabComponent';
 import GsSales from './GsSales';
 import InvoicePayment from './InvoicePayment';
 // import styled from 'styled-components';
@@ -94,56 +94,67 @@ const GsInvoiceDetails = (props) => {
         <div
           className="m-3 d-flex justify-content-between"
           style={{ borderBottom: '1px solid #EBEEF0' }}>
-          <div className="p-2">
-            {/* <Divider> */}
-            <p className="mb-1" style={{ color: '#62728D' }}>
-              Invoice No.
-            </p>
-            <p style={{ fontSize: '12px' }}>{props.rowData['Purchase No']}</p>
-            {/* </Divider> */}
-          </div>
-          <div className="p-2">
-            <p className="mb-1" style={{ color: '#62728D' }}>
-              Sales Date
-            </p>
-            <p style={{ fontSize: '12px' }}>{props.rowData['Purchase date']}</p>
-          </div>
-          <div className="p-2">
-            <p className="mb-1" style={{ color: '#62728D' }}>
-              Payment due date :
-            </p>
-            <p style={{ fontSize: '12px' }}>26 Oct 2022</p>
-          </div>
-          <div className="p-2">
-            <p className="mb-1" style={{ color: '#62728D' }}>
-              Invoice Status :
-            </p>
-            <p
-              style={{
-                fontSize: '12px',
-                color: '#BF2600',
-                backgroundColor: '#FFEBE6',
-                width: 'fit-content',
-                fontWeight: 'bold',
-                padding: '0 4px'
-              }}>
-              UNPAID
-            </p>
+          <div className="d-flex w-100 ">
+            <div className="p-2" style={{ marginRight: '30px' }}>
+              {/* <Divider> */}
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Invoice No.
+              </p>
+              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase No']}</p>
+              {/* </Divider> */}
+            </div>
+            <div className="p-2" style={{ marginRight: '30px' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Sales Date
+              </p>
+              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase date']}</p>
+            </div>
+            <div className="p-2" style={{ marginRight: '30px' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Payment due date :
+              </p>
+              <p style={{ fontSize: '12px' }}>26 Oct 2022</p>
+            </div>
+            <div className="p-2" style={{ marginRight: '30px' }}>
+              <p className="mb-1" style={{ color: '#62728D' }}>
+                Invoice Status :
+              </p>
+              <p
+                style={{
+                  fontSize: '12px',
+                  color: '#BF2600',
+                  backgroundColor: '#FFEBE6',
+                  width: 'fit-content',
+                  fontWeight: 'bold',
+                  padding: '0 4px'
+                }}>
+                UNPAID
+              </p>
+            </div>
           </div>
           {/* <div className="m-2 d-flex align-items-center" style={{ color: '#62728D' }}>
       {' '}
       <AttachFileOutlinedIcon fontSize={'small'} /> Attachments(0){' '}
     </div> */}
-          <div className="m-2 d-flex align-items-center" style={{ color: '#62728D' }}>
-            {' '}
-            <IosShareOutlinedIcon fontSize={'small'} /> Export PDF{' '}
+          <div className="d-flex justify-content-between w-25">
+            <div
+              className="m-2 d-flex align-items-center"
+              style={{ color: '#62728D', marginRight: '50px' }}>
+              {' '}
+              <IosShareOutlinedIcon fontSize={'small'} /> Export PDF{' '}
+            </div>
+            <div
+              className="m-2 d-flex align-items-center"
+              style={{ color: '#62728D', marginRight: '50px' }}>
+              {' '}
+              <LocalPrintshopOutlinedIcon fontSize={'small'} /> Print{' '}
+            </div>
+            <div
+              className="m-2 d-flex align-items-center"
+              style={{ color: '#B2B3B7', marginLeft: '10px' }}>
+              <MoreVertOutlinedIcon />
+            </div>{' '}
           </div>
-          <div className="m-2 d-flex align-items-center" style={{ color: '#62728D' }}>
-            {' '}
-            <LocalPrintshopOutlinedIcon fontSize={'small'} /> Print{' '}
-          </div>
-
-          <MoreVertOutlinedIcon className="m-3  d-flex" style={{ color: '#B2B3B7' }} />
         </div>
         <div style={{ borderBottom: '1px solid #EBEEF0' }}>
           <div className="m-3 d-flex">

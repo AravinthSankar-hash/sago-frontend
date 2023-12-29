@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ProcurementDetails from 'components/ProcurementDetails';
+import ProcurementDetails from '../procurement/ProcurementDetails';
 import { Button, Row, Col } from 'react-bootstrap';
 import ActionPopup from './Popup.jsx';
 
