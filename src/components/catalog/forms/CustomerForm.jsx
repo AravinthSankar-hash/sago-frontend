@@ -2,18 +2,30 @@ import { useMemo, useRef } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
+import CatalogService from 'services/catalog.api.js';
 
-function CustomerForm() {
+function CustomerForm({ customerAdded }) {
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log('customer form submit');
-    console.log(data);
-    console.log('customer form submit end');
+  const onSubmit = async (data) => {
+    const newCustomer = {
+      customer_name: data.name,
+      phone: data.phone,
+      secondary_phone: data.altphone,
+      email: data.email,
+      customer_type: data.type,
+      address: data.address,
+      city: data.city,
+      pincode: data.pincode,
+      aadhar: data.aadhar,
+      type: 'customer'
+    };
+    await CatalogService.create({ type: 'PARTNER', data: newCustomer });
+    customerAdded(newCustomer);
   };
   const containerRef = useRef();
 
