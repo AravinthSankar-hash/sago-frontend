@@ -7,7 +7,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../../css/index.css';
-import ExpenseTable from '../expense/ExpenseTable.jsx';
+import ExpenseTable from '../Expense/ExpenseTable';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 

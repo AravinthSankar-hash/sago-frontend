@@ -1,4 +1,4 @@
-import DcSales from 'components/sales/DcSales/DcSales.jsx';
+import DcSales from '../components/Sales/DcSales/DcSales.jsx';
 import { create } from 'zustand';
 import Customer from '../components/catalog/catalogTabs/Customer.jsx';
 import Purchases from '../components/tapicoPurchase/PurchasesTab';

@@ -4,7 +4,7 @@ import DateSelector from '../helper/DateSelector.jsx';
 import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import '../../css/index.css';
-import ExpenseTable from '../expense/ExpenseTable.jsx';
+import ExpenseTable from '../Expense/ExpenseTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
