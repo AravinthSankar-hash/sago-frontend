@@ -1,14 +1,11 @@
-import React from 'react';
 import { Row, Col, Container } from 'react-bootstrap';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
-// import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import '../../css/catalogNewCust.css';
 
 const CatalogCustomerDetails = (props) => {
+  const { customer_name, email, address, aadhar, phone, customer_type } = props.customerDetails;
   const boxWrapper = {
     boxShadow: '#EBEEF0 0px 0px 0px 3px'
-    // fontSize: '12px'
-    // overflowY: 'auto'
   };
   const containerWrapper = {
     font: 'Roboto',
@@ -70,38 +67,38 @@ const CatalogCustomerDetails = (props) => {
           <p className="m-0" style={paraFontStyle}>
             Customer Name
           </p>
-          <span className="m-0 w-400">Sago Serve</span>
+          <span className="m-0 w-400">{customer_name}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             Customer Type
           </p>
-          <span className="m-0 w-400">Delivery Challan</span>
+          <span className="m-0 w-400">{customer_type}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             E-mail
           </p>
-          <span className="m-0 w-400">sago.serve@gmail.com</span>
+          <span className="m-0 w-400">{email}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             Address
           </p>
-          <span className="m-0 w-400">22/13 Bajanai koil 2nd street, Choolaimedu chennai-94</span>
+          <span className="m-0 w-400">{address}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
-            Phone No.
+            Phone
           </p>
-          <span className="m-0 w-400">1457896478 / 1236574852</span>
+          <span className="m-0 w-400">{phone} / 1236574852</span>
         </div>
         <hr style={{ color: '#62728D' }}></hr>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
-            Aadhar no.
+            Aadhar
           </p>
-          <span className="m-0 w-400">GASTFDIU56465</span>
+          <span className="m-0 w-400">{aadhar}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>

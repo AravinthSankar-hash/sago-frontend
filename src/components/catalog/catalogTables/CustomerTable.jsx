@@ -13,7 +13,7 @@ import {
 import '../../../css/index.css';
 
 const CustomerTable = (props) => {
-  const { tableData, tableHeaders, tableColumns, hanldePageChange } = props;
+  const { tableData, tableHeaders, tableColumns, hanldePageChange, tableRowClicked } = props;
 
   const Wrapper = styled('div')({
     display: 'flex',
@@ -90,7 +90,7 @@ const CustomerTable = (props) => {
           <TableBody>
             {tableData.map((tableRow, RowIdx) => {
               return (
-                <StyledTableRow key={RowIdx}>
+                <StyledTableRow key={RowIdx} onClick={() => tableRowClicked(tableRow)}>
                   {tableColumns.map((columnKey, colIdx) => {
                     return (
                       <StyledTableCell key={colIdx} align="left">

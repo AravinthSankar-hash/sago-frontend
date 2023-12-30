@@ -8,7 +8,7 @@ const SERVICES = {
             VEHICLE: '/vehicle',
             PRODUCT: '/product',
             RAWMATERIAL: '/raw-material',
-            PARTNERS: '/partner'
+            PARTNER: '/partner'
         },
         QUERY_PARAMS: {
             CUSTOMER: 'customer',
