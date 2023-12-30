@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import AgGridTable from '../helper/AgGridTable.jsx';
 import SearchBox from '../helper/SearchBox.jsx';
 import DateSelector from '../helper/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
@@ -9,21 +8,25 @@ import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
+import CustomerTable from './catalogTables/CustomerTable.jsx';
 import '../../css/index.css';
+import { customerTableHeaders, customerTableColumns } from './catalog.const.js';
+// API
+import CatalogService from 'services/catalog.api.js';
+import { SERVICES } from '../../services/api.const.js';
 
 const CustomerDashboard = (props) => {
-  const [tableColumns, setTableColuns] = useState([]);
+  const [customerData, setCustomerData] = useState([]);
   const [selectedChips, setSelectedChips] = useState([]);
   const [showFields, setShowFields] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:3001/columns')
-      .then((rawResponse) => rawResponse.json())
+    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.CUSTOMER)
       .then((response) => {
-        setTableColuns(response.data);
+        setCustomerData(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.log('Error in getting customer data', error);
       });
   }, []);
 
@@ -66,6 +69,10 @@ const CustomerDashboard = (props) => {
 
   const addNewCustomer = () => {
     props.addFormBtnClick();
+  };
+
+  const customerPageChanged = () => {
+    console.log('page changed');
   };
 
   return (
@@ -128,17 +135,15 @@ const CustomerDashboard = (props) => {
       </div>
       <Row>
         <Col className="d-flex flex-column justify-content-center">
-          <AgGridTable
-            propFromParent={gridRowClicked}
-            columnDefs={[
-              { field: 'make' },
-              { field: 'model' },
-              { field: 'price' },
-              { field: 'location' },
-              { field: 'pincode' }
-            ]}
-            rowData={tableColumns}
-          />
+          {customerData.length ? (
+            <CustomerTable
+              tableData={customerData}
+              tableHeaders={customerTableHeaders}
+              tableColumns={customerTableColumns}
+              hanldePageChange={customerPageChanged}
+              rowsPerPage={10}
+              page={5}></CustomerTable>
+          ) : null}
         </Col>
       </Row>
     </div>

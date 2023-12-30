@@ -12,7 +12,7 @@ function getItems(type) {
 
 function getPartners(type) {
     return request({
-        url: `${ROUTES.BASE_ROUTE}?partner_type=${QUERY_PARAMS[type]}`,
+        url: `${ROUTES.BASE_ROUTE}/partners?partner_type=${type}`,
         method: 'GET'
     });
 }

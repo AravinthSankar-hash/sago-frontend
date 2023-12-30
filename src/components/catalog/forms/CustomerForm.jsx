@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
@@ -9,7 +9,12 @@ function CustomerForm() {
     handleSubmit,
     formState: { errors }
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+
+  const onSubmit = (data) => {
+    console.log('customer form submit');
+    console.log(data);
+    console.log('customer form submit end');
+  };
   const containerRef = useRef();
 
   const gridStyle = useMemo(
@@ -68,12 +73,13 @@ function CustomerForm() {
             </Form.Label>
             <Form.Select
               aria-label="Default select example"
-              // defaultValue=""
+              defaultValue="GS"
               style={inputStyle}
               // type="select"
               {...register('type', { required: 'This field is required' })}>
-              <option value="">Choose Something</option>
-              <option>...</option>
+              <option value="GS">GS</option>
+              <option value="TS">TS</option>
+              <option value="DC">DC</option>
             </Form.Select>
             {errors.type && <Form.Text className="text-danger">{errors.type.message}</Form.Text>}
           </Form.Group>

@@ -3,7 +3,7 @@ const BASE_URL = 'http://localhost:3333';
 const SERVICES = {
     CATALOG: {
         ROUTES: {
-            BASE_ROUTE: '/catalogue',
+            BASE_ROUTE: '/catalog',
             STAFF: '/staff',
             VEHICLE: '/vehicle',
             PRODUCT: '/product',
