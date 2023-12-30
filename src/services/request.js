@@ -4,7 +4,7 @@ import axios from 'axios'
 import { BASE_ROUTE, BASE_URL } from './api.const';
 
 const client = axios.create({
-    baseURL: `${BASE_ROUTE}${BASE_URL}`
+    baseURL: `${BASE_URL}${BASE_ROUTE}`
 });
 
 const request = function (options) {

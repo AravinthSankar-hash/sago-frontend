@@ -3,7 +3,7 @@ import {
   useUpdateShowCustomerNewForm,
   useUpdateShowCatalogBackBtn
 } from '../../../store/store.js';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import CatalogNewCustForm from '../forms/CustomerForm.jsx';
 import '../../../css/index.css';
