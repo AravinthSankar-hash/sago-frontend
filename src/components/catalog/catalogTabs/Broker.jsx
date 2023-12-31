@@ -15,6 +15,7 @@ import BrokerTable from '../catalogTables/BrokerTable';
 import { brokerTableHeaders, brokerTableColumns } from '../catalog.const';
 import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
+import Toaster from '../../helper/Snackbar.jsx';
 
 const Broker = () => {
   const [showBrokerNewForm, setShowBrokerNewForm] = useState(false);
@@ -23,6 +24,7 @@ const Broker = () => {
   const [brokerData, setBrokerData] = useState([]);
   const [selectedBroker, setSelectedBroker] = useState([]);
   const [showBrokerDetailsSection, setShowBrokerDetailsSection] = useState(false);
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
 
   useEffect(() => {
     CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.BROKER)
@@ -87,6 +89,7 @@ const Broker = () => {
   };
 
   const onBrokerSave = (newAddedCustomer) => {
+    setShouldShowToaster(true);
     setBrokerData((brokers) => [newAddedCustomer, ...brokers]);
   };
 
@@ -189,6 +192,7 @@ const Broker = () => {
               <> </>
             )}
           </Row>
+          <Toaster shouldOpen={shouldShowToaster} message="Broker data saved"></Toaster>
         </div>
       )}
     </>
