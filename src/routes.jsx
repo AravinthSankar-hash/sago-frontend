@@ -6,7 +6,8 @@ import Procurements from './pages/Procurements.jsx';
 import TapicoPurchase from './components/tapicoPurchase/TapicoPurchase.jsx';
 import Expenses from './pages/Expenses.jsx';
 import Approvals from './pages/Approvals.jsx';
-import Dashboard from 'components/dashboard/Dashboard.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+// import Dashboard from './components/dashboard/Dashboard.jsx';
 import Payments from 'pages/Payments.jsx';
 import Sales from 'pages/Sales.jsx';
 
