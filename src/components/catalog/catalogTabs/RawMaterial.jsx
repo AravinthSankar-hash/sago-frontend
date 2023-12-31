@@ -13,6 +13,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import DateSelector from '../../helper/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import { rawMaterialTableHeaders, rawMaterialTableColuns } from '../catalog.const';
+import Toaster from '../../helper/Snackbar.jsx';
 // API
 import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
@@ -63,6 +64,7 @@ const RawMaterial = () => {
   const [selectedRawMaterial, setSelectedRawMaterial] = useState();
   const [rawMaterialData, setRawMaterialData] = useState([]);
   const [showRawMaterialDetails, setShowRawMaterialDetails] = useState(false);
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
 
   const showForm = (shouldShow) => {
     setShowNewForm(shouldShow);
@@ -77,12 +79,17 @@ const RawMaterial = () => {
   const rawMaterialPageChanged = () => {
     console.log('page changed');
   };
+  const onRawMaterialSave = (newAddedRawMaterial) => {
+    setShouldShowToaster(true);
+    setShowNewForm(false);
+    setRawMaterialData((rawMaterials) => [newAddedRawMaterial, ...rawMaterials]);
+  };
   return (
     <>
       {showNewForm ? (
         <>
           <Col className="d-flex flex-column justify-content-center">
-            <CatalogNewRawMaterialForm showForm={showForm} />
+            <CatalogNewRawMaterialForm rawMaterialAdded={onRawMaterialSave} />
           </Col>
         </>
       ) : (
@@ -158,6 +165,7 @@ const RawMaterial = () => {
               </div>
             </>
           )}
+          <Toaster shouldOpen={shouldShowToaster} message="Raw-Material data saved"></Toaster>
         </div>
       )}
     </>
