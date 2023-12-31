@@ -5,6 +5,7 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import '../../css/catalogNewCust.css';
 
 const CatalogSupplierDetails = (props) => {
+  const { supplierDetails, closeDetails } = props;
   const boxWrapper = {
     boxShadow: '#EBEEF0 0px 0px 0px 3px'
   };
@@ -58,44 +59,44 @@ const CatalogSupplierDetails = (props) => {
           <p className="m-0" style={paraFontStyle}>
             Supplier Name
           </p>
-          <span className="m-0 w-400">Suguna Chickens</span>
+          <span className="m-0 w-400">{supplierDetails.supplier_name}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             Supplier type
           </p>
-          <span className="m-0 w-400">Feed</span>
+          <span className="m-0 w-400">{supplierDetails.supplier_type}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             E-mail
           </p>
-          <span className="m-0 w-400">sugunachickens@gmail.com</span>
+          <span className="m-0 w-400">{supplierDetails.email}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             Address
           </p>
-          <span className="m-0 w-400">22/13 Bajanai koil 2nd street, Choolaimedu chennai-94</span>
+          <span className="m-0 w-400">{supplierDetails.address}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             Phone No.
           </p>
-          <span className="m-0 w-400">1457896478 / 1236574852</span>
+          <span className="m-0 w-400">{supplierDetails.phone}</span>
         </div>
         <hr style={{ color: '#62728D' }}></hr>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             GST no.
           </p>
-          <span className="m-0 w-400">54165416HBJU</span>
+          <span className="m-0 w-400">{supplierDetails.gst}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             PAN No.
           </p>
-          <span className="m-0 w-400">54165416HBJU</span>
+          <span className="m-0 w-400">{supplierDetails.pan}</span>
         </div>
         <hr style={{ color: '#62728D' }}></hr>
       </div>

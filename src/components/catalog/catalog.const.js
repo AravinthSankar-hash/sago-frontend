@@ -47,3 +47,25 @@ export const customerTableColumns = [
   'aadhar',
   'createdAt'
 ];
+
+export const supplierTableHeaders = [
+  'Supplier Name',
+  'Type',
+  'Address',
+  'Phone no.',
+  'City',
+  'Bank Name',
+  'Pan',
+  'Branch'
+];
+
+export const supplierTableColumns = [
+  'supplier_name',
+  'supplier_type',
+  'address',
+  'phone',
+  'city',
+  'bank_name',
+  'branch',
+  'pan'
+];
