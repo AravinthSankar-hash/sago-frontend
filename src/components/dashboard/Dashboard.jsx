@@ -3,7 +3,7 @@ import Chart from 'react-apexcharts';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-function Dashboard() {
+function DashboardGraphs() {
   const graph4Series = [
     {
       name: 'Sale Rate', //will be displayed on the y-axis
@@ -202,6 +202,12 @@ function Dashboard() {
         },
         customScale: 0.7
       }
+    },
+    dataLabels: {
+      enabled: true,
+      formatter: function (val) {
+        return val + '%';
+      }
     }
   };
   const graph3Series = [44, 55, 41, 17];
@@ -294,4 +300,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default DashboardGraphs;
