@@ -3,14 +3,27 @@ import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
+// API
+import CatalogService from '../../../services/catalog.api.js';
 
-const CatalogForm = (props) => {
+const CatalogForm = ({ showForm, productAdded }) => {
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    const newProduct = {
+      product_name: data.productname,
+      unit: data.unit,
+      is_food_safe: data.foodSafety,
+      hsn_code: data.hsncode,
+      tax_percent: data.tax,
+      description: data.description
+    };
+    await CatalogService.create({ type: 'PRODUCT', data: newProduct });
+    productAdded(newProduct);
+  };
   const containerRef = useRef();
 
   const gridStyle = useMemo(
@@ -48,7 +61,7 @@ const CatalogForm = (props) => {
           1. Product details
           <CloseSharpIcon
             style={{ cursor: 'pointer' }}
-            onClick={() => props.showForm(false)}
+            onClick={() => showForm(false)}
             fontSize="medium"
           />
         </Form.Label>

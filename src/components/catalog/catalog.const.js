@@ -11,7 +11,7 @@ export const customerTableHeaders = [
 
 export const rawMaterialTableHeaders = ['Name', 'Description'];
 
-export const rawMaterialTableColuns = ['name', 'description'];
+export const rawMaterialTableColumns = ['name', 'description'];
 
 export const brokerTableHeaders = [
   'Broker Name',
@@ -67,3 +67,7 @@ export const supplierTableColumns = [
   'bank_name',
   'branch'
 ];
+
+export const productTableHeaders = ['Product Name', 'HSN', 'Food Safety', 'Tax %'];
+
+export const productTableColumns = ['product_name', 'hsn_code', 'is_food_safe', 'tax_percent'];
