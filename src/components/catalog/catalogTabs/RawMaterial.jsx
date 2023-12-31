@@ -14,11 +14,26 @@ import DateSelector from '../../helper/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import { rawMaterialTableHeaders, rawMaterialTableColuns } from '../catalog.const';
 import Toaster from '../../helper/Snackbar.jsx';
+// Store
+import {
+  useUpdateShowCatalogBackBtn,
+  useShowRawMaterialNewForm,
+  useShowRawMaterialDetailsSection,
+  useUpdateShowRawMaterialNewForm,
+  useUpdateShowRawMaterialDetailsSection
+} from '../../../store/store.js';
 // API
 import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 
 const RawMaterial = () => {
+  // Store
+  const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
+  const showRawMaterialNewForm = useShowRawMaterialNewForm(); // Show Add RawMaterial form
+  const showRawMaterialDetailsSection = useShowRawMaterialDetailsSection(); // Show RawMaterial Dashboard
+  const updateShowRawMaterialNewForm = useUpdateShowRawMaterialNewForm(); // Show RawMaterial Dashboard
+  const updateShowRawMaterialDetailsSection = useUpdateShowRawMaterialDetailsSection(); // Show RawMaterial Dashboard
+
   useEffect(() => {
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.RAWMATERIALS)
       .then((response) => {
@@ -28,6 +43,7 @@ const RawMaterial = () => {
         console.log('Error in getting customer data', error);
       });
   }, []);
+
   // CSS
   const buttonStyle = {
     borderColor: '#00B7FF',
@@ -59,21 +75,22 @@ const RawMaterial = () => {
       setSelectedChips((prevSelectedChips) => [prevSelectedChips, label]);
     }
   };
-  const [showNewForm, setShowNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState([]);
   const [selectedRawMaterial, setSelectedRawMaterial] = useState();
   const [rawMaterialData, setRawMaterialData] = useState([]);
-  const [showRawMaterialDetails, setShowRawMaterialDetails] = useState(false);
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
 
   const showForm = (shouldShow) => {
-    setShowNewForm(shouldShow);
+    updateShowRawMaterialNewForm(shouldShow);
+    updateShowCatalogBackBtn(true);
   };
 
   const onTableRowClick = (clickedRow) => {
     setSelectedRawMaterial(clickedRow);
-    setShowRawMaterialDetails(true);
+    updateShowRawMaterialDetailsSection(true);
     console.log(clickedRow);
+    // Show back btn - Store
+    updateShowCatalogBackBtn(true);
   };
 
   const rawMaterialPageChanged = () => {
@@ -81,12 +98,12 @@ const RawMaterial = () => {
   };
   const onRawMaterialSave = (newAddedRawMaterial) => {
     setShouldShowToaster(true);
-    setShowNewForm(false);
+    updateShowRawMaterialNewForm(false);
     setRawMaterialData((rawMaterials) => [newAddedRawMaterial, ...rawMaterials]);
   };
   return (
     <>
-      {showNewForm ? (
+      {showRawMaterialNewForm ? (
         <>
           <Col className="d-flex flex-column justify-content-center">
             <CatalogNewRawMaterialForm rawMaterialAdded={onRawMaterialSave} />
@@ -94,7 +111,7 @@ const RawMaterial = () => {
         </>
       ) : (
         <div>
-          {showRawMaterialDetails ? (
+          {showRawMaterialDetailsSection ? (
             <RawMaterialItem />
           ) : (
             <>

@@ -10,6 +10,10 @@ const useStore = create((set) => ({
   showStaffNewForm: false,
   showStaffDetailsSection: false,
 
+  // Raw-material
+  showRawMaterialNewForm: false,
+  showRawMaterialDetailsSection: false,
+
   showVehicleNewForm: false,
   showVehicleDetailsSection: false,
 
@@ -48,6 +52,14 @@ const useStore = create((set) => ({
   },
   updateShowStaffDetailsSection: (value) => {
     set({ showStaffDetailsSection: value });
+  },
+
+  // Raw Material
+  updateShowRawMaterialNewForm: (value) => {
+    set({ showRawMaterialNewForm: value });
+  },
+  updateShowRawMaterialDetailsSection: (value) => {
+    set({ showRawMaterialDetailsSection: value });
   },
   // Vehicle
   updateShowVehicleNewForm: (value) => {
@@ -127,12 +139,19 @@ export const useActiveCatalogTabComponent = () =>
 export const useUpdateActiveCatalogTabComponent = () =>
   useStore((state) => state.updateActiveCatalogTabComponent);
 
+// Staff
 export const useShowStaffNewForm = () => useStore((state) => state.showStaffNewForm);
 export const useUpdateShowStaffNewForm = () => useStore((state) => state.updateShowStaffNewForm);
-
 export const useShowStaffDetailsSection = () => useStore((state) => state.showStaffDetailsSection);
 export const useUpdateShowStaffDetailsSection = () =>
   useStore((state) => state.updateShowStaffDetailsSection);
+
+// Raw Material
+export const useShowRawMaterialNewForm = () => useStore((state) => state.showRawMaterialNewForm);
+export const useUpdateShowRawMaterialNewForm = () => useStore((state) => state.updateShowRawMaterialNewForm);
+export const useShowRawMaterialDetailsSection = () => useStore((state) => state.showRawMaterialDetailsSection);
+export const useUpdateShowRawMaterialDetailsSection = () =>
+  useStore((state) => state.updateShowRawMaterialDetailsSection);
 
 export const useShowVehicleNewForm = () => useStore((state) => state.showVehicleNewForm);
 export const useUpdateShowVehicleNewForm = () =>
