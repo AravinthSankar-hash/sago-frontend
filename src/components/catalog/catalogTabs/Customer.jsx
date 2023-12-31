@@ -18,6 +18,7 @@ import DateSelector from '../../helper/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import CatalogCustomerDetails from '../CatalogCustomerDetails.jsx';
 import { customerTableHeaders, customerTableColumns } from '../catalog.const';
+import Toaster from '../../helper/Snackbar.jsx';
 // API
 import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
@@ -42,6 +43,7 @@ const Customer = () => {
   const [selectedChips, setSelectedChips] = useState([]);
   const [showFields, setShowFields] = useState(true);
   const [selectedCustomer, setSelectedCustomer] = useState();
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const buttonStyle = {
     borderColor: '#00B7FF',
     backgroundColor: 'white',
@@ -91,6 +93,9 @@ const Customer = () => {
   };
 
   const onCustomerSave = (newAddedCustomer) => {
+    setShouldShowToaster(true);
+    // Store
+    updateShowCustomerNewForm(false);
     setCustomerData((customers) => [newAddedCustomer, ...customers]);
   };
 
@@ -195,6 +200,7 @@ const Customer = () => {
               <> </>
             )}
           </Row>
+          <Toaster shouldOpen={shouldShowToaster} message="Customer data saved"></Toaster>
         </div>
       )}
     </>

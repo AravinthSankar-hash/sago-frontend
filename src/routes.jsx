@@ -14,7 +14,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Invoices />} />
-      <Route path="/dashboard" element={<Invoices />} />
+      <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/purchase" element={<TapicoPurchase />} />
       <Route path="/procurement" element={<Procurements />} />
       <Route path="/expense" element={<Expenses />} />

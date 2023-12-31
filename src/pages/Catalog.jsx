@@ -14,7 +14,9 @@ import {
   useUpdateShowVehicleDetailsSection,
   useUpdateShowProductDetailsSection,
   useUpdateShowProductNewForm,
-  useUpdateShowCustomerNewForm
+  useUpdateShowCustomerNewForm,
+  useUpdateShowRawMaterialNewForm,
+  useUpdateShowRawMaterialDetailsSection
 } from '../store/store.js';
 
 // Custom components & services
@@ -38,6 +40,8 @@ const Catalog = () => {
   const updateActiveCatalogTabComponent = useUpdateActiveCatalogTabComponent(); // Method to update the active component, whenver the tab is clicked
   const updateShowStaffDetailsSection = useUpdateShowStaffDetailsSection(); // staff details should not be visible when back is clicked, actually whole dashboard of staff should be visible
   const updateShowStaffNewForm = useUpdateShowStaffNewForm(); // staff form should not be visible when back is clicked, actually whole dashboard of staff should be visible
+  const updateShowRawMaterialDetailsSection = useUpdateShowRawMaterialDetailsSection(); // RawMaterial details should not be visible when back is clicked, actually whole dashboard of RawMaterial should be visible
+  const updateShowRawMaterialNewForm = useUpdateShowRawMaterialNewForm(); // RawMaterial form should not be visible when back is clicked, actually whole dashboard of RawMaterial should be visible
   const updateShowVehicleDetailsSection = useUpdateShowVehicleDetailsSection(); // Vehicle details should not be visible when back is clicked, actually whole dashboard of staff should be visible
   const updateShowVehicleNewForm = useUpdateShowVehicleNewForm(); // Vehicle form should not be visible when back is clicked, actually whole dashboard of staff should be visible
   const updateShowProductDetailsSection = useUpdateShowProductDetailsSection(); // Product details should not be visible when back is clicked, actually whole dashboard of staff should be visible
@@ -80,6 +84,8 @@ const Catalog = () => {
     updateShowCatalogBackBtn(false);
     updateShowStaffNewForm(false);
     updateShowStaffDetailsSection(false);
+    updateShowRawMaterialNewForm(false);
+    updateShowRawMaterialDetailsSection(false);
     updateShowVehicleNewForm(false);
     updateShowVehicleDetailsSection(false);
     updateShowProductNewForm(false);

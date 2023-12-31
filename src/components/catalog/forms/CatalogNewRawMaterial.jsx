@@ -1,16 +1,25 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
-import '../../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
+// Custom styles
+import '../../../css/catalogNewCust.css';
+// API
+import CatalogService from '../../../services/catalog.api.js';
 
-const CatalogNewRawMaterialForm = (props) => {
+const CatalogNewRawMaterialForm = ({ rawMaterialAdded }) => {
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    const newRawMaterial = {
+      name: data.name,
+      description: data.description
+    };
+    await CatalogService.create({ type: 'RAWMATERIAL', data: newRawMaterial });
+    rawMaterialAdded(newRawMaterial);
+  };
   const gridStyle = useMemo(
     () => ({
       width: '100%',
@@ -39,18 +48,10 @@ const CatalogNewRawMaterialForm = (props) => {
     border: '2px solid #DFE1E6'
   };
   return (
-    <Container
-      //   ref={containerRef}
-      className="ag-theme-alpine mt-4"
-      style={gridStyle}>
+    <Container className="ag-theme-alpine mt-4" style={gridStyle}>
       <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
         <Form.Label className="mt-4" style={headingStyle}>
           1. Topioca Type
-          <CloseSharpIcon
-            style={{ cursor: 'pointer' }}
-            onClick={() => props.showForm(false)}
-            fontSize="medium"
-          />
         </Form.Label>
         <Row className="mb-3 mt-3">
           <Form.Group as={Col} xs={3} controlId="NewRawformName">

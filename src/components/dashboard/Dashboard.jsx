@@ -53,6 +53,9 @@ function Dashboard() {
         tools: {
           download: true
         }
+      },
+      zoom: {
+        enabled: false
       }
     },
     // To fill the graph in color

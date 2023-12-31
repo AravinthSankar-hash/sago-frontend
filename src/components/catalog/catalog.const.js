@@ -20,6 +20,10 @@ export const customerTableColumns = [
   'createdAt'
 ];
 
+export const rawMaterialTableHeaders = ['Name', 'Description'];
+
+export const rawMaterialTableColuns = ['name', 'description'];
+
 export const brokerTableHeaders = [
   'Broker Name',
   'Address',
