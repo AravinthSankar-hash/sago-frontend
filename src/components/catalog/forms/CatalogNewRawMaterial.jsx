@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
-import '../../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
+// Custom styles
+import '../../../css/catalogNewCust.css';
 // API
 import CatalogService from '../../../services/catalog.api.js';
 
@@ -52,7 +52,6 @@ const CatalogNewRawMaterialForm = ({ rawMaterialAdded }) => {
       <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
         <Form.Label className="mt-4" style={headingStyle}>
           1. Topioca Type
-          <CloseSharpIcon style={{ cursor: 'pointer' }} fontSize="medium" />
         </Form.Label>
         <Row className="mb-3 mt-3">
           <Form.Group as={Col} xs={3} controlId="NewRawformName">
