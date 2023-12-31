@@ -204,7 +204,7 @@ const Customer = () => {
               <> </>
             )}
           </Row>
-          <Toaster shouldOpen={shouldShowToaster} message="Catalog data saved"></Toaster>
+          <Toaster shouldOpen={shouldShowToaster} message="Customer data saved"></Toaster>
         </div>
       )}
     </>

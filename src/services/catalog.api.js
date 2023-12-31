@@ -1,7 +1,7 @@
 import request from './request.js';
 import { HTTP_METHODS, SERVICES } from './api.const.js';
 
-const { ROUTES, QUERY_PARAMS } = SERVICES.CATALOG;
+const { ROUTES } = SERVICES.CATALOG;
 
 function getItems(type) {
     return request({
