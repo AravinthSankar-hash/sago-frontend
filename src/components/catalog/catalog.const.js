@@ -55,7 +55,6 @@ export const supplierTableHeaders = [
   'Phone no.',
   'City',
   'Bank Name',
-  'Pan',
   'Branch'
 ];
 
@@ -66,6 +65,5 @@ export const supplierTableColumns = [
   'phone',
   'city',
   'bank_name',
-  'branch',
-  'pan'
+  'branch'
 ];
