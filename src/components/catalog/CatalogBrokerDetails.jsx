@@ -1,10 +1,9 @@
-import React from 'react';
 import { Row, Col, Container } from 'react-bootstrap';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
-// import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import '../../css/catalogNewCust.css';
 
 const CatalogBrokerDetails = (props) => {
+  const { brokerDetails, closeDetails } = props;
   const boxWrapper = {
     boxShadow: '#EBEEF0 0px 0px 0px 3px'
   };
@@ -28,7 +27,7 @@ const CatalogBrokerDetails = (props) => {
           <CloseSharpIcon
             fontSize="small"
             style={{ cursor: 'pointer', color: '#B2B3B7' }}
-            onClick={() => props.closeDetails(false)}
+            onClick={() => closeDetails(false)}
           />
         </div>
       </div>
@@ -42,8 +41,6 @@ const CatalogBrokerDetails = (props) => {
               ₹ 10,000
             </p>
           </Col>
-          {/* <div style={{ borderRight: '5px solid #EBEEF0', margin: '3%' }}></div> */}
-          {/* <div style={{ borderRight: '1px solid #EBEEF0' }}></div> */}
           <Col className="g-2">
             <p className="p-0 m-0 text-center" style={paraFontStyle}>
               {' '}
@@ -58,69 +55,73 @@ const CatalogBrokerDetails = (props) => {
           <p className="m-0" style={paraFontStyle}>
             Broker Name
           </p>
-          <span className="m-0 w-400">ABC Broker</span>
+          <span className="m-0 w-400">{brokerDetails.broker_name}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             Broker commision
           </p>
-          <span className="m-0 w-400">25%</span>
+          <span className="m-0 w-400">{brokerDetails.commission_percent} %</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             E-mail
           </p>
-          <span className="m-0 w-400">sugunachickens@gmail.com</span>
+          <span className="m-0 w-400">{brokerDetails.email}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             Address
           </p>
-          <span className="m-0 w-400">22/13 Bajanai koil 2nd street, Choolaimedu chennai-94</span>
+          <span className="m-0 w-400">
+            {brokerDetails.address
+              ? brokerDetails.address
+              : '22/13 Bajanai koil 2nd street, Choolaimedu chennai-94'}
+          </span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             Phone No.
           </p>
-          <span className="m-0 w-400">1457896478 / 1236574852</span>
+          <span className="m-0 w-400">{brokerDetails.phone}</span>
         </div>
         <hr style={{ color: '#62728D' }}></hr>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             GST no.
           </p>
-          <span className="m-0 w-400">54165416HBJU</span>
+          <span className="m-0 w-400">33AAACH7409R1Z8</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             PAN No.
           </p>
-          <span className="m-0 w-400">54165416HBJU</span>
+          <span className="m-0 w-400">{brokerDetails.pan}</span>
         </div>
         <hr style={{ color: '#62728D' }}></hr>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             Bank Name
           </p>
-          <span className="m-0 w-400">Karur Vysya Bank</span>
+          <span className="m-0 w-400">{brokerDetails.bank_name}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             A/c. No.
           </p>
-          <span className="m-0 w-400">54165416HBJU</span>
+          <span className="m-0 w-400">{brokerDetails.account_no}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             IFSC Code
           </p>
-          <span className="m-0 w-400">54165416HBJU</span>
+          <span className="m-0 w-400">{brokerDetails.ifsc}</span>
         </div>
         <div className="m-2 mt-4">
           <p className="m-0" style={paraFontStyle}>
             Branch Name
           </p>
-          <span className="m-0 w-400">Kodambakkam</span>
+          <span className="m-0 w-400">Sivakasi</span>
         </div>
         <hr style={{ color: '#62728D' }}></hr>
         <div className="m-2 mt-4">

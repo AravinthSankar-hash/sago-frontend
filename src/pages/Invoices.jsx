@@ -15,9 +15,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
-import GsInvoiceDetails from 'components/Invoice/GsInvoiceDetails.jsx';
+import GsInvoiceDetails from 'components/invoice/GsInvoiceDetails.jsx';
 // import DcSalesInvoices from 'components/Invoice/DcInvoicesDetails.jsx';
-import TsInvoiceDetails from '../components/Invoice/TsInvoiceDetails.jsx';
+import TsInvoiceDetails from '../components/invoice/TsInvoiceDetails.jsx';
 
 function Invoices() {
   const [procurementData, setProcurementData] = useState([]);

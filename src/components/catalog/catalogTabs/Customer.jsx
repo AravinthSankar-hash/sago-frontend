@@ -37,8 +37,8 @@ const Customer = () => {
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
   const showCustomerNewForm = useShowCustomerNewForm(); // Show Customer Add form
-  const updateShowCustomerNewForm = useUpdateShowCustomerNewForm(); // Show staff Dashboard
-  const [showStaffDetailsSection, setShowStaffDetailsSection] = useState(false);
+  const updateShowCustomerNewForm = useUpdateShowCustomerNewForm(); // Show Customer Dashboard
+  const [showCustomerDetailsSection, setShowCustomerDetailsSection] = useState(false);
   const [customerData, setCustomerData] = useState([]);
   const [selectedChips, setSelectedChips] = useState([]);
   const [showFields, setShowFields] = useState(true);
@@ -76,24 +76,20 @@ const Customer = () => {
   };
 
   const addNewCustomer = () => {
-    showForm();
+    console.log('Customer table SHOW FORM CLICKED');
+
+    // Show Add Customer form - Store
+    updateShowCustomerNewForm(true);
+    // Show back btn - Store
+    updateShowCatalogBackBtn(true);
   };
 
   const customerPageChanged = () => {
     console.log('page changed');
   };
 
-  const showForm = () => {
-    console.log('Customer table SHOW FORM CLICKED');
-
-    // Show Add staff form - Store
-    updateShowCustomerNewForm(true);
-    // Show back btn - Store
-    updateShowCatalogBackBtn(true);
-  };
-
   const closeDetails = () => {
-    setShowStaffDetailsSection(false);
+    setShowCustomerDetailsSection(false);
   };
 
   const onCustomerSave = (newAddedCustomer) => {
@@ -106,7 +102,7 @@ const Customer = () => {
   const onTableRowClick = (clickedRow) => {
     setSelectedCustomer(clickedRow);
     console.log(clickedRow);
-    setShowStaffDetailsSection(true);
+    setShowCustomerDetailsSection(true);
   };
   return (
     <>
@@ -119,7 +115,7 @@ const Customer = () => {
       ) : (
         <div>
           <Row>
-            <Col lg={showStaffDetailsSection ? 9 : 12}>
+            <Col lg={showCustomerDetailsSection ? 9 : 12}>
               <div>
                 <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
                   <Row style={{ display: 'flex' }}>
@@ -193,7 +189,7 @@ const Customer = () => {
                 </Row>
               </div>
             </Col>
-            {showStaffDetailsSection ? (
+            {showCustomerDetailsSection ? (
               <Col lg="3" style={{ paddingRight: '0px' }}>
                 <CatalogCustomerDetails
                   customerDetails={selectedCustomer}
