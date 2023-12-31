@@ -3,14 +3,43 @@ import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
+import CatalogService from 'services/catalog.api.js';
 
-const CatalogNewBrokerForm = (props) => {
+const CatalogNewBrokerForm = ({ showForm, brokerAdded }) => {
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    console.log(data, 'brokerdata');
+    const newBroker = {
+      broker_name: data.name,
+      phone: data.phone,
+      secondary_phone: data.altphone,
+      email: data.email,
+      address: data.address,
+      city: data.city,
+      pincode: data.pincode,
+      state: data.state,
+      bank_name: data.bankname,
+      account_no: data.accountno,
+      ifsc: data.ifscCode,
+      open_balance: data.openbal,
+      commission_percent: data.commission,
+      pan: data.pan,
+      description: data.description,
+      type: 'broker'
+    };
+    try {
+      await CatalogService.create({ type: 'PARTNER', data: newBroker });
+      brokerAdded(newBroker);
+      showForm(false);
+    } catch (error) {
+      // Handle errors, show toastr error message, etc.
+      console.error('Error adding broker:', error);
+    }
+  };
   const containerRef = useRef();
 
   const gridStyle = useMemo(
@@ -46,7 +75,7 @@ const CatalogNewBrokerForm = (props) => {
           1. Supplier details
           <CloseSharpIcon
             style={{ cursor: 'pointer' }}
-            onClick={() => props.showForm(false)}
+            onClick={() => showForm(false)}
             fontSize="medium"
           />
         </Form.Label>

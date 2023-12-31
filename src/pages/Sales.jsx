@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Container, Row, Col } from 'react-bootstrap';
-import SalesTab from 'components/Sales/SalesTab.jsx';
-import DcSales from 'components/Sales/DcSales/Dc.jsx';
-import TpSales from 'components/Sales/TS/Ts.jsx';
-import SalesPerformance from '../components/Sales/SalesPerformance/SalesPerformance.jsx';
-import GeneralSales from 'components/Sales/GS/Gs.jsx';
+import SalesTab from 'components/sales/SalesTab.jsx';
+import DcSales from 'components/sales/DcSales/Dc.jsx';
+import TpSales from 'components/sales/TS/Ts.jsx';
+import SalesPerformance from '../components/sales/SalesPerformance/SalesPerformance.jsx';
+import GeneralSales from 'components/sales/GS/Gs.jsx';
 // Store
 import {
   useShowSalesBackBtn,
