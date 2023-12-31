@@ -4,7 +4,6 @@ export const customerTableHeaders = [
     "Email",
     "Type",
     "City",
-    "State",
     "Aadhar",
     "Created Date",
 ];
@@ -15,7 +14,6 @@ export const customerTableColumns = [
     "email",
     "customer_type",
     "city",
-    "state",
     "aadhar",
     "createdAt",
 ];
