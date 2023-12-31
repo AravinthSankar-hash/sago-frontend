@@ -5,7 +5,7 @@ const { ROUTES, QUERY_PARAMS } = SERVICES.CATALOG;
 
 function getItems(type) {
     return request({
-        url: `${ROUTES.BASE_ROUTE}?item_type=${QUERY_PARAMS[type]}`,
+        url: `${ROUTES.BASE_ROUTE}/items?item_type=${type}`,
         method: 'GET'
     });
 }

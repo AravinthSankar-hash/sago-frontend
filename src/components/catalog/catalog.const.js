@@ -17,3 +17,13 @@ export const customerTableColumns = [
     "aadhar",
     "createdAt",
 ];
+
+export const rawMaterialTableHeaders = [
+    'Name',
+    'Description'
+]
+
+export const rawMaterialTableColuns = [
+    'name',
+    'description'
+]
