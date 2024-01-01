@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   styled,
   TableCell,
@@ -13,9 +12,8 @@ import {
 } from '@mui/material';
 import '../../css/index.css';
 
-const BrokerReportsTable = (props) => {
-  const { tableData, tableHeaders, tableColumns, handleChangePage, handleChangeRowsPerPage } =
-    props;
+function InventoryStatsGraphTable(props) {
+  const { tableData, tableHeaders, tableColumns, handleChangePage } = props;
 
   const Wrapper = styled('div')({
     display: 'flex',
@@ -84,16 +82,18 @@ const BrokerReportsTable = (props) => {
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead style={{ position: 'sticky', top: 0, zIndex: 2 }}>
             <TableRow>
-              {tableHeaders.map((key, index) => (
+              {tableHeaders?.map((key, index) => (
                 <StyledTableCell key={index}>{key}</StyledTableCell>
               ))}{' '}
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData.map((tableRow, RowIdx) => {
+            {tableData?.map((tableRow, RowIdx) => {
               return (
                 <StyledTableRow key={RowIdx}>
-                  {tableColumns.map((columnKey, colIdx) => {
+                  {tableColumns?.map((columnKey, colIdx) => {
+                    console.log('tableColumns');
+                    console.log(tableColumns);
                     return (
                       <StyledTableCell key={colIdx} align="left">
                         {tableRow[columnKey]}
@@ -107,7 +107,7 @@ const BrokerReportsTable = (props) => {
           <TableBody>
             {' '}
             <StyledTablePaginationRow>
-              <TableCell colSpan={Object.keys(tableData[0]).length}>
+              <TableCell colSpan={10}>
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
@@ -115,7 +115,6 @@ const BrokerReportsTable = (props) => {
                   rowsPerPage={5}
                   page={0}
                   onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </TableCell>
             </StyledTablePaginationRow>
@@ -124,6 +123,6 @@ const BrokerReportsTable = (props) => {
       </TableContainer>
     </Wrapper>
   );
-};
+}
 
-export default BrokerReportsTable;
+export default InventoryStatsGraphTable;

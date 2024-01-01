@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   styled,
   TableCell,
@@ -13,7 +12,7 @@ import {
 } from '@mui/material';
 import '../../css/index.css';
 
-const BrokerReportsTable = (props) => {
+function InventoryTable(props) {
   const { tableData, tableHeaders, tableColumns, handleChangePage, handleChangeRowsPerPage } =
     props;
 
@@ -107,7 +106,7 @@ const BrokerReportsTable = (props) => {
           <TableBody>
             {' '}
             <StyledTablePaginationRow>
-              <TableCell colSpan={Object.keys(tableData[0]).length}>
+              <TableCell colSpan={10}>
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
@@ -124,6 +123,6 @@ const BrokerReportsTable = (props) => {
       </TableContainer>
     </Wrapper>
   );
-};
+}
 
-export default BrokerReportsTable;
+export default InventoryTable;
