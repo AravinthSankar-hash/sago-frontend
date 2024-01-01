@@ -136,7 +136,7 @@ const Supplier = () => {
                         </Col>
                       </>
                     )}
-                    <Col lg="2" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Col lg="7" className="d-flex justify-content-end">
                       <IconButton size="small">
                         <IosShareIcon
                           fontSize="small"
@@ -148,7 +148,7 @@ const Supplier = () => {
                       </IconButton>
                     </Col>
                     {showFields && (
-                      <Col lg="3">
+                      <Col lg="2" className="d-flex justify-content-end">
                         <Button sx={buttonStyle} variant="outlined" onClick={addNewBroker}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
                           New Supplier
