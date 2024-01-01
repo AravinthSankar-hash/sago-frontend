@@ -34,7 +34,7 @@ const ProcurementDetails = (props) => {
       width: '100%',
       borderRadius: '10px',
       overflowY: 'auto',
-      maxHeight: '400px',
+      maxHeight: '350px',
       backgroundColor: 'white',
       fontSize: '14px',
       fontFamily: 'Roboto',

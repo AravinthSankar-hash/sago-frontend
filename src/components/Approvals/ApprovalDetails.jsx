@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ProcurementDetails from '../procurement/ProcurementDetails';
-import { Button, Row, Col } from 'react-bootstrap';
+import { Button, Row, Col, Container } from 'react-bootstrap';
 import ActionPopup from './Popup.jsx';
 
 function ApprovalDetails({ detailsData, isActionRequired }) {
@@ -22,11 +22,17 @@ function ApprovalDetails({ detailsData, isActionRequired }) {
     }
   };
   return (
-    <>
-      <Row className="theen">
+    <Container>
+      <Row style={{ padding: '0px 12px', margin: '0px 28px' }}>
         <ProcurementDetails rowData={detailsData} />
       </Row>
-      <Row style={{ display: 'flex', justifyContent: 'end', marginTop: '10px' }}>
+      <Row
+        style={{
+          display: 'flex',
+          justifyContent: 'end',
+          padding: '0px 12px',
+          margin: '20px 28px'
+        }}>
         {isActionRequired ? (
           <>
             <Col lg="1">
@@ -61,7 +67,7 @@ function ApprovalDetails({ detailsData, isActionRequired }) {
         onAgree={() => setModalShow(true)}
         show={modalShow}
       />
-    </>
+    </Container>
   );
 }
 

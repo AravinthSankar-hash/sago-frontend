@@ -89,7 +89,7 @@ function Purchases() {
                 <Row>
                   <Col className="d-flex flex-column justify-content-center">
                     <div>
-                      <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
+                      <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                         <Row>
                           <Col lg="3">
                             <SearchBox placeHolder={'Search here'}></SearchBox>

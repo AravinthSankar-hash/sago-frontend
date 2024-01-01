@@ -43,6 +43,8 @@ function TapicoPurchase() {
   };
   useEffect(() => {
     updateActiveTPTabComponent(<Purchases />);
+    // On Component Init set store to defaults
+    onBackBtnClick();
   }, []);
   const handleTabSwitch = (tabName) => {
     const currentTabComp = renderTabComponent(tabName);
