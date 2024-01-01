@@ -11,9 +11,8 @@ import {
   tableCellClasses
 } from '@mui/material';
 import '../../../css/index.css';
-import { rawMaterialTableColumns } from '../catalog.const.js';
 
-const RawMaterialTable = (props) => {
+const SupplierTable = (props) => {
   const { tableData, tableHeaders, tableColumns, hanldePageChange, tableRowClicked } = props;
 
   const Wrapper = styled('div')({
@@ -92,19 +91,20 @@ const RawMaterialTable = (props) => {
             {tableData.map((tableRow, RowIdx) => {
               return (
                 <StyledTableRow key={RowIdx} onClick={() => tableRowClicked(tableRow)}>
-                  <StyledTableCell style={{ width: '40%' }} key={0} align="left">
-                    {tableRow[rawMaterialTableColumns[0]]}
-                  </StyledTableCell>
-                  <StyledTableCell style={{ width: '50%' }} key={1} align="left">
-                    {tableRow[rawMaterialTableColumns[1]]}
-                  </StyledTableCell>
+                  {tableColumns.map((columnKey, colIdx) => {
+                    return (
+                      <StyledTableCell key={colIdx} align="left">
+                        {tableRow[columnKey]}
+                      </StyledTableCell>
+                    );
+                  })}
                 </StyledTableRow>
               );
             })}
           </TableBody>
           <TableBody>
             <StyledTablePaginationRow>
-              <TableCell colSpan={10}>
+              <TableCell colSpan={Object.keys(tableData[0]).length}>
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25]}
                   component="div"
@@ -122,4 +122,4 @@ const RawMaterialTable = (props) => {
   );
 };
 
-export default RawMaterialTable;
+export default SupplierTable;

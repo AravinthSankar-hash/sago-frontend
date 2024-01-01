@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import DateSelector from '../../helper/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
-import { rawMaterialTableHeaders, rawMaterialTableColuns } from '../catalog.const';
+import { rawMaterialTableHeaders, rawMaterialTableColumns } from '../catalog.const';
 import Toaster from '../../helper/Snackbar.jsx';
 // Store
 import {
@@ -171,7 +171,7 @@ const RawMaterial = () => {
                     <RawMaterialTable
                       tableData={rawMaterialData}
                       tableHeaders={rawMaterialTableHeaders}
-                      tableColumns={rawMaterialTableColuns}
+                      tableColumns={rawMaterialTableColumns}
                       hanldePageChange={rawMaterialPageChanged}
                       tableRowClicked={onTableRowClick}
                       rowsPerPage={10}

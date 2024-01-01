@@ -11,7 +11,7 @@ export const customerTableHeaders = [
 
 export const rawMaterialTableHeaders = ['Name', 'Description'];
 
-export const rawMaterialTableColuns = ['name', 'description'];
+export const rawMaterialTableColumns = ['name', 'description'];
 
 export const brokerTableHeaders = [
   'Broker Name',
@@ -47,3 +47,46 @@ export const customerTableColumns = [
   'aadhar',
   'createdAt'
 ];
+
+export const supplierTableHeaders = [
+  'Supplier Name',
+  'Type',
+  'Address',
+  'Phone no.',
+  'City',
+  'Bank Name',
+  'Branch'
+];
+
+export const supplierTableColumns = [
+  'supplier_name',
+  'supplier_type',
+  'address',
+  'phone',
+  'city',
+  'bank_name',
+  'branch'
+];
+
+export const productTableHeaders = ['Product Name', 'HSN', 'Food Safety', 'Tax %'];
+
+export const productTableColumns = ['product_name', 'hsn_code', 'is_food_safe', 'tax_percent'];
+
+export const vehicleTableHeaders = [
+  'Owner Name',
+  'Contact No.',
+  'Vehicle type',
+  'Vehicle No.',
+  'Ownership Type'
+];
+
+export const vehicleTableColumns = [
+  'owner_name',
+  'phone',
+  'vehicle_type',
+  'vehicle_no',
+  'ownership_type'
+];
+export const staffTableHeaders = ['Staffs Name', 'Address', 'Phone no.', 'Work'];
+
+export const staffTableColumns = ['name', 'address', 'phone', 'designation'];

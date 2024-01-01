@@ -4,14 +4,35 @@ import '../../../css/catalogNewCust.css';
 import Avatar from '@mui/material/Avatar';
 import { useForm } from 'react-hook-form';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+// API
+import CatalogService from '../../../services/catalog.api.js';
 
-const StaffForm = () => {
+const StaffForm = ({ showForm, staffAdded }) => {
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+
+  const onSubmit = async (data) => {
+    console.log(data);
+    const newStaff = {
+      name: data.staffname,
+      phone: data.phone,
+      secondary_phone: data.altphone,
+      email: data.email,
+      qualification: data.qualification,
+      address: data.address,
+      city: data.city,
+      pincode: data.pincode,
+      aadhar: data.aadhar,
+      pan: data.pan,
+      description: data.description,
+      designation: data.designation
+    };
+    await CatalogService.create({ type: 'STAFF', data: newStaff });
+    staffAdded(newStaff);
+  };
   const containerRef = useRef();
 
   const gridStyle = useMemo(
@@ -153,7 +174,7 @@ const StaffForm = () => {
 
           <Form.Group as={Col} xs={3} controlId="NewStaffFormQualification">
             <Form.Label>Qualification</Form.Label>
-            <Form.Control style={inputStyle} type="text" {...register('email')} />
+            <Form.Control style={inputStyle} type="text" {...register('qualification')} />
           </Form.Group>
         </Row>
 
