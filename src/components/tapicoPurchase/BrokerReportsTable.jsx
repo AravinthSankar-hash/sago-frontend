@@ -14,8 +14,14 @@ import {
 import '../../css/index.css';
 
 const BrokerReportsTable = (props) => {
-  const { tableData, tableHeaders, tableColumns, handleChangePage, handleChangeRowsPerPage } =
-    props;
+  const {
+    tableData,
+    tableHeaders,
+    tableColumns,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    tableRowClicked
+  } = props;
 
   const Wrapper = styled('div')({
     display: 'flex',
@@ -92,7 +98,7 @@ const BrokerReportsTable = (props) => {
           <TableBody>
             {tableData.map((tableRow, RowIdx) => {
               return (
-                <StyledTableRow key={RowIdx}>
+                <StyledTableRow key={RowIdx} onClick={() => tableRowClicked(tableRow)}>
                   {tableColumns.map((columnKey, colIdx) => {
                     return (
                       <StyledTableCell key={colIdx} align="left">
