@@ -38,6 +38,13 @@ const useStore = create((set) => ({
   showGSSalesNewForm: false,
   showGSDetails: false,
 
+  // Inventory
+  showInventoryBackBtn: false,
+  showInventoryDetails: true,
+  showInventoryNewForm: false,
+  showInventoryCharts: false,
+
+
   // Catalog Tabs
   updateShowCatalogBackBtn: (value) => {
     set({ showCatalogBackBtn: value });
@@ -127,7 +134,21 @@ const useStore = create((set) => ({
   },
   updateShowGSDetails: (value) => {
     set({ showGSDetails: value });
-  }
+  },
+
+  // Inventory
+  updateShowInventoryBackBtn: (value) => {
+    set({ showInventoryBackBtn: value });
+  },
+  updateShowInvetoryDetails: (value) => {
+    set({ showInventoryDetails: value });
+  },
+  updateShowInventoryNewForm: (value) => {
+    set({ showInventoryNewForm: value });
+  },
+  updateShowInventoryCharts: (value) => {
+    set({ showInventoryCharts: value });
+  },
 }));
 
 export const useShowCatalogBackBtn = () => useStore((state) => state.showCatalogBackBtn);
@@ -222,3 +243,16 @@ export const useUpdateShowGSSalesNewForm = () =>
 
 export const useShowGSDetails = () => useStore((state) => state.showGSDetails);
 export const useUpdateShowGSDetails = () => useStore((state) => state.updateShowGSDetails);
+
+// Inventory
+export const useShowInventoryBackBtn = () => useStore((state) => state.showInventoryBackBtn);
+export const useUpdateShowInventoryBackBtn = () =>
+  useStore((state) => state.updateShowInventoryBackBtn);
+
+export const useShowInventoryDetails = () => useStore((state) => state.showInventoryDetails);
+export const useShowInventoryNewForm = () => useStore((state) => state.showInventoryNewForm);
+export const useShowInventoryCharts = () => useStore((state) => state.showInventoryCharts);
+
+export const useUpdateShowInvetoryDetails = () => useStore((state) => state.updateShowInvetoryDetails);
+export const useUpdateShowInventoryNewForm = () => useStore((state) => state.updateShowInventoryNewForm);
+export const useUpdateShowInventoryCharts = () => useStore((state) => state.updateShowInventoryCharts);

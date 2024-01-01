@@ -37,7 +37,6 @@ const Staff = () => {
   const showStaffDetailsSection = useShowStaffDetailsSection(); // Show staff Dashboard
   const updateShowStaffNewForm = useUpdateShowStaffNewForm(); // Show staff Dashboard
   const updateShowStaffDetailsSection = useUpdateShowStaffDetailsSection(); // Show staff Dashboard
-  const [tableColumns, setTableColuns] = useState([]);
   const [staffData, setStaffData] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState();
   const [shouldShowToaster, setShouldShowToaster] = useState(false);

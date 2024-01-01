@@ -158,7 +158,7 @@ function BrokerReports() {
             </Row>
           </div>
           {/* Table */}
-          <div>
+          <div onClick={handleTableClick}>
             {brokerReportsData.length > 0 ? (
               <BrokerReportsTable
                 tableData={brokerReportsData}
