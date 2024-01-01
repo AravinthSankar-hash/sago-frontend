@@ -7,11 +7,20 @@ import { Container, Row, Col } from 'react-bootstrap';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ApprovalHistoryTable from './ApprovalHistoryTable';
 import { tableColumns, tableHeaders } from './approvals.const.js';
+// Store
+import {
+  useUpdateShowApprovalsBackBtn,
+  useShowApprovalHistoryDetails,
+  useUpdateShowApprovalHistoryDetails
+} from '../../store/store.js';
 
 function ApprovalHistory() {
-  const [showApprovalDetails, setShowApprovalDetails] = useState(false);
   const [approvalHistoryData, setApprovalHistoryData] = useState([]);
   const [clickedRowData, setClickedRowData] = useState({});
+  // Store
+  const updateShowApprovalsBackBtn = useUpdateShowApprovalsBackBtn();
+  const showApprovalHistoryDetails = useShowApprovalHistoryDetails();
+  const updateShowApprovalHistoryDetails = useUpdateShowApprovalHistoryDetails();
 
   useEffect(() => {
     fetch('http://localhost:3001/procurement')
@@ -27,12 +36,13 @@ function ApprovalHistory() {
 
   const onTableRowClick = (rowData) => {
     setClickedRowData(rowData);
-    setShowApprovalDetails(true);
+    updateShowApprovalHistoryDetails(true);
+    updateShowApprovalsBackBtn(true);
   };
 
   return (
     <>
-      {showApprovalDetails ? (
+      {showApprovalHistoryDetails ? (
         <ApprovalDetails detailsData={clickedRowData} isActionRequired={false} />
       ) : (
         <Container style={{ background: '#EBEEF0', padding: '10px', paddingBottom: '0px' }}>

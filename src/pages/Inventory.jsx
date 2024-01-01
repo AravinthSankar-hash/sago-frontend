@@ -41,6 +41,9 @@ function Inventory() {
   const updateShowInventoryCharts = useUpdateShowInventoryCharts();
 
   useEffect(() => {
+    // On component Init clear the store to defaults
+    onBackBtnClick();
+
     fetch('http://localhost:3001/broker-reports')
       .then((rawResponse) => rawResponse.json())
       .then((response) => {

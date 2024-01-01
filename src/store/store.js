@@ -44,6 +44,11 @@ const useStore = create((set) => ({
   showInventoryNewForm: false,
   showInventoryCharts: false,
 
+  // Approvals
+  showApprovalsBackBtn: false,
+  showPendingApprovalDetails: false,
+  showApprovalHistoryDetails: false,
+
 
   // Catalog Tabs
   updateShowCatalogBackBtn: (value) => {
@@ -148,6 +153,17 @@ const useStore = create((set) => ({
   },
   updateShowInventoryCharts: (value) => {
     set({ showInventoryCharts: value });
+  },
+
+  // Approvals
+  updateShowApprovalsBackBtn: (value) => {
+    set({ showApprovalsBackBtn: value });
+  },
+  updateShowPendingApprovalDetails: (value) => {
+    set({ showPendingApprovalDetails: value });
+  },
+  updateShowApprovalHistoryDetails: (value) => {
+    set({ showApprovalHistoryDetails: value });
   },
 }));
 
@@ -256,3 +272,11 @@ export const useShowInventoryCharts = () => useStore((state) => state.showInvent
 export const useUpdateShowInvetoryDetails = () => useStore((state) => state.updateShowInvetoryDetails);
 export const useUpdateShowInventoryNewForm = () => useStore((state) => state.updateShowInventoryNewForm);
 export const useUpdateShowInventoryCharts = () => useStore((state) => state.updateShowInventoryCharts);
+
+// Approvals
+export const useShowApprovalsBackBtn = () => useStore((state) => state.showApprovalsBackBtn);
+export const useShowPendingApprovalDetails = () => useStore((state) => state.showPendingApprovalDetails);
+export const useShowApprovalHistoryDetails = () => useStore((state) => state.showApprovalHistoryDetails);
+export const useUpdateShowApprovalsBackBtn = () => useStore((state) => state.updateShowApprovalsBackBtn);
+export const useUpdateShowPendingApprovalDetails = () => useStore((state) => state.updateShowPendingApprovalDetails);
+export const useUpdateShowApprovalHistoryDetails = () => useStore((state) => state.updateShowApprovalHistoryDetails);
