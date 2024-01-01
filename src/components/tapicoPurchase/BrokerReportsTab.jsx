@@ -13,6 +13,8 @@ import { tableHeaders, tableColumns } from './tp.const';
 
 function BrokerReports() {
   const [brokerReportsData, setBrokerReportsData] = useState([]);
+  const [selectedBroker, setSelectedBroker] = useState();
+
   useEffect(() => {
     fetch('http://localhost:3001/broker-reports')
       .then((rawResponse) => rawResponse.json())
@@ -41,15 +43,22 @@ function BrokerReports() {
     setSelectedChips([label]);
   };
   const [showBrokerReportDetails, setShowBrokerReportDetails] = useState(false);
-  const handleTableClick = () => {
+  // const handleTableClick = () => {
+  //   setShowBrokerReportDetails(true);
+  // };
+
+  const onTableRowClick = (clickedRow) => {
+    setSelectedBroker(clickedRow);
+    console.log(clickedRow, 'clickedrow');
     setShowBrokerReportDetails(true);
   };
+
   const fontHeader = { font: 'Roboto', color: '#62728D', fontSize: '14px' };
   const fontValue = { font: 'Roboto', fontSize: '14px' };
   return (
     <Container style={{ background: '#EBEEF0' }}>
       <Row>
-        {showBrokerReportDetails && (
+        {showBrokerReportDetails && selectedBroker && (
           <Col lg={3} style={{ padding: '20px' }}>
             <Row
               style={{
@@ -60,29 +69,29 @@ function BrokerReports() {
               <Col style={{ padding: '20px' }}>
                 <Row>
                   <label style={fontHeader}>Broker Name</label>
-                  <p style={fontValue}>Aravinth Sankar</p>
+                  <p style={fontValue}>{selectedBroker.brokerName}</p>
                 </Row>
                 <Row>
                   <label style={fontHeader}>Last Purchase Date</label>
-                  <p style={fontValue}>25 Oct 23</p>
+                  <p style={fontValue}>{selectedBroker.lastPurchase}</p>
                 </Row>
                 <Row>
                   <label style={fontHeader}>Avg Rate</label>
-                  <p style={fontValue}>61,412</p>
+                  <p style={fontValue}>{selectedBroker.avgBagRate}</p>
                 </Row>
               </Col>
               <Col style={{ padding: '20px' }}>
                 <Row>
                   <label style={fontHeader}>AP</label>
-                  <p style={fontValue}>8.3</p>
+                  <p style={fontValue}>{selectedBroker.ap}</p>
                 </Row>{' '}
                 <Row>
                   <label style={fontHeader}>TP</label>
-                  <p style={fontValue}>28.10</p>
+                  <p style={fontValue}>{selectedBroker.tp}</p>
                 </Row>{' '}
                 <Row>
                   <label style={fontHeader}>Total Bags</label>
-                  <p style={fontValue}>13,000</p>
+                  <p style={fontValue}>{selectedBroker.totalBags}</p>
                 </Row>
               </Col>
             </Row>
@@ -96,7 +105,7 @@ function BrokerReports() {
                 padding: '15px'
               }}>
               <label style={fontHeader}>Total Payment</label>
-              <p style={fontValue}>1,00,000</p>
+              <p style={fontValue}>{selectedBroker.outstandings}</p>
             </Row>
             <Row
               style={{
@@ -108,7 +117,7 @@ function BrokerReports() {
                 marginTop: '20px'
               }}>
               <label style={fontHeader}>Pending Payment</label>
-              <p style={fontValue}>3000</p>
+              <p style={fontValue}>{selectedBroker.outstandings}</p>
             </Row>
           </Col>
         )}
@@ -164,6 +173,7 @@ function BrokerReports() {
                 tableData={brokerReportsData}
                 tableHeaders={tableHeaders}
                 tableColumns={tableColumns}
+                tableRowClicked={onTableRowClick}
               />
             ) : (
               <Box sx={{ display: 'flex' }}>
