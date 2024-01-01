@@ -16,7 +16,9 @@ import {
   useUpdateShowProductNewForm,
   useUpdateShowCustomerNewForm,
   useUpdateShowRawMaterialNewForm,
-  useUpdateShowRawMaterialDetailsSection
+  useUpdateShowRawMaterialDetailsSection,
+  useUpdateShowBrokerNewForm,
+  useUpdateShowSupplierNewForm
 } from '../store/store.js';
 
 // Custom components & services
@@ -47,6 +49,8 @@ const Catalog = () => {
   const updateShowProductDetailsSection = useUpdateShowProductDetailsSection(); // Product details should not be visible when back is clicked, actually whole dashboard of staff should be visible
   const updateShowProductNewForm = useUpdateShowProductNewForm(); // Product form should not be visible when back is clicked, actually whole dashboard of staff should be visible
   const updateShowCustomerNewForm = useUpdateShowCustomerNewForm(); // Customer form should not be visible when back is clicked, actually whole dashboard of customer should be visible
+  const updateShowBrokerNewForm = useUpdateShowBrokerNewForm(); // Show Broker Dashboard
+  const updateShowSupplierNewForm = useUpdateShowSupplierNewForm(); // Show Supplier Dashboard
 
   const renderTabComponent = (tabName) => {
     switch (tabName) {
@@ -70,7 +74,8 @@ const Catalog = () => {
   };
   useEffect(() => {
     updateActiveCatalogTabComponent(<Customer />);
-    updateShowCatalogBackBtn(false);
+    // On component Init load store to defaults
+    onBackBtnClick();
   }, []);
 
   const handleTabSwitch = (tabName) => {
@@ -91,6 +96,8 @@ const Catalog = () => {
     updateShowProductNewForm(false);
     updateShowProductDetailsSection(false);
     updateShowCustomerNewForm(false);
+    updateShowBrokerNewForm(false);
+    updateShowSupplierNewForm(false);
   };
 
   return (

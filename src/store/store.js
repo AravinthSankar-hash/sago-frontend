@@ -21,6 +21,10 @@ const useStore = create((set) => ({
   showProductDetailsSection: false,
 
   showCustomerNewForm: false,
+  // Broker
+  showBrokerNewForm: false,
+  // Supplier
+  showSupplierNewForm: false,
 
   // TP
   showTPPurchaseNewForm: false,
@@ -92,6 +96,14 @@ const useStore = create((set) => ({
   // Customer
   updateShowCustomerNewForm: (value) => {
     set({ showCustomerNewForm: value });
+  },
+  // Broker
+  updateShowBrokerNewForm: (value) => {
+    set({ showBrokerNewForm: value });
+  },
+  // Supplier
+  updateShowSupplierNewForm: (value) => {
+    set({ showSupplierNewForm: value });
   },
 
   // TP Tabs
@@ -211,6 +223,15 @@ export const useUpdateShowProductDetailsSection = () =>
 export const useShowCustomerNewForm = () => useStore((state) => state.showCustomerNewForm);
 export const useUpdateShowCustomerNewForm = () =>
   useStore((state) => state.updateShowCustomerNewForm);
+
+// Broker
+export const useShowBrokerNewForm = () => useStore((state) => state.showBrokerNewForm);
+export const useUpdateShowBrokerNewForm = () =>
+  useStore((state) => state.updateShowBrokerNewForm);
+// Supplier
+export const useShowSupplierNewForm = () => useStore((state) => state.showSupplierNewForm);
+export const useUpdateShowSupplierNewForm = () =>
+  useStore((state) => state.updateShowSupplierNewForm);
 
 // TP
 export const useActiveTPTabComponent = () => useStore((state) => state.activeTPTabComponent);

@@ -16,15 +16,24 @@ import { brokerTableHeaders, brokerTableColumns } from '../catalog.const';
 import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 import Toaster from '../../helper/Snackbar.jsx';
+// Store
+import {
+  useShowBrokerNewForm,
+  useUpdateShowBrokerNewForm,
+  useUpdateShowCatalogBackBtn
+} from '../../../store/store.js';
 
 const Broker = () => {
-  const [showBrokerNewForm, setShowBrokerNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState([]);
   const [showFields, setShowFields] = useState(true);
   const [brokerData, setBrokerData] = useState([]);
   const [selectedBroker, setSelectedBroker] = useState([]);
   const [showBrokerDetailsSection, setShowBrokerDetailsSection] = useState(false);
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  // Store
+  const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
+  const showBrokerNewForm = useShowBrokerNewForm(); // Show Broker Add form
+  const updateShowBrokerNewForm = useUpdateShowBrokerNewForm(); // Show Broker Dashboard
 
   useEffect(() => {
     CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.BROKER)
@@ -37,7 +46,9 @@ const Broker = () => {
   }, []);
 
   const showForm = (shouldShow) => {
-    setShowBrokerNewForm(shouldShow);
+    updateShowBrokerNewForm(shouldShow);
+    // Show back btn - Store
+    updateShowCatalogBackBtn(true);
   };
 
   const openDetails = () => {
