@@ -13,14 +13,32 @@ import { tableHeaders, tableColumns } from '../components/tapicoPurchase/tp.cons
 import sago_icon from '../assets/images/sago_inventory.svg';
 import chart_icon from '../assets/images/chart_icon_inventory.svg';
 import InventoryNewForm from 'components/inventory/InventoryNewForm.jsx';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import InventoryStatsGraph from 'components/inventory/InventoryStatsGraph.jsx';
+// Store
+import {
+  useShowInventoryDetails,
+  useShowInventoryNewForm,
+  useShowInventoryCharts,
+  useUpdateShowInvetoryDetails,
+  useUpdateShowInventoryNewForm,
+  useUpdateShowInventoryCharts,
+  useShowInventoryBackBtn,
+  useUpdateShowInventoryBackBtn
+} from '../store/store.js';
 
 function Inventory() {
-  const [showNewForm, setShowNewForm] = useState(false);
   const [inventoryData, setInventoryData] = useState([]);
-  const [showInventoryDetails, setShowInventoryDetails] = useState(true);
-  const [showInventoryNewForm, setShowInventoryNewForm] = useState(false);
-  const [showCharts, setShowCharts] = useState(false);
+
+  // Store
+  const showInventoryBackBtn = useShowInventoryBackBtn();
+  const showInventoryDetails = useShowInventoryDetails();
+  const showInventoryNewForm = useShowInventoryNewForm();
+  const showInventoryCharts = useShowInventoryCharts();
+  const updateShowInventoryBackBtn = useUpdateShowInventoryBackBtn();
+  const updateShowInvetoryDetails = useUpdateShowInvetoryDetails();
+  const updateShowInventoryNewForm = useUpdateShowInventoryNewForm();
+  const updateShowInventoryCharts = useUpdateShowInventoryCharts();
 
   useEffect(() => {
     fetch('http://localhost:3001/broker-reports')
@@ -32,21 +50,27 @@ function Inventory() {
         console.error('Error fetching data:', error);
       });
   }, []);
-  const showForm = (shouldShow) => {
-    setShowNewForm(shouldShow);
-  };
 
   const onInventoryDataSave = (newAddedInventory) => {
     setInventoryData((brokers) => [newAddedInventory, ...brokers]);
   };
   const handleTableClick = () => {
-    setShowInventoryDetails(true);
+    updateShowInvetoryDetails(true);
+    updateShowInventoryBackBtn(true);
   };
   const addNewInventoryDataHanlder = () => {
-    setShowInventoryNewForm(true);
+    updateShowInventoryNewForm(true);
+    updateShowInventoryBackBtn(true);
   };
   const viewChat = () => {
-    setShowCharts(true);
+    updateShowInventoryCharts(true);
+    updateShowInventoryBackBtn(true);
+  };
+  const onBackBtnClick = () => {
+    updateShowInventoryCharts(false);
+    updateShowInventoryNewForm(false);
+    updateShowInvetoryDetails(true);
+    updateShowInventoryBackBtn(false);
   };
 
   const boldNumbers = { fontSize: '18px' };
@@ -56,9 +80,20 @@ function Inventory() {
   return (
     <Container style={{ background: '#EBEEF0' }}>
       <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
-        <Col>Inventory</Col>
+        {showInventoryBackBtn ? (
+          <Col>
+            <ArrowBackIcon
+              onClick={onBackBtnClick}
+              style={{ cursor: 'pointer' }}
+              fontSize="medium"
+            />{' '}
+            <span>&nbsp;&nbsp;</span>Back
+          </Col>
+        ) : (
+          <Col>Inventory</Col>
+        )}
       </Row>
-      {showCharts ? (
+      {showInventoryCharts ? (
         <InventoryStatsGraph />
       ) : (
         <>
