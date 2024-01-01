@@ -19,15 +19,24 @@ import Toaster from '../../helper/Snackbar.jsx';
 import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 import SupplierTable from '../catalogTables/SupplierTable';
+// Store
+import {
+  useShowSupplierNewForm,
+  useUpdateShowSupplierNewForm,
+  useUpdateShowCatalogBackBtn
+} from '../../../store/store.js';
 
 const Supplier = () => {
-  const [showNewForm, setShowNewForm] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState();
   const [selectedChips, setSelectedChips] = useState([]);
   const [showFields, setShowFields] = useState(true);
   const [supplierData, setSupplierData] = useState([]);
-  const [showBrokerDetailsSection, setShowBrokerDetailsSection] = useState(false);
+  const [showSupplierDetailsSection, setShowSupplierDetailsSection] = useState(false);
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  // Store
+  const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
+  const showSupplierNewForm = useShowSupplierNewForm(); // Show Supplier Add form
+  const updateShowSupplierNewForm = useUpdateShowSupplierNewForm(); // Show Supplier Dashboard
 
   useEffect(() => {
     CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.SUPPLIER)
@@ -76,7 +85,9 @@ const Supplier = () => {
     console.log('page changed');
   };
   const showForm = (shouldShow) => {
-    setShowNewForm(shouldShow);
+    updateShowSupplierNewForm(shouldShow);
+    // Show back btn - Store
+    updateShowCatalogBackBtn(true);
   };
   const addNewBroker = () => {
     console.log('Supplier table SHOW FORM CLICKED');
@@ -84,7 +95,7 @@ const Supplier = () => {
   };
 
   const closeDetails = () => {
-    setShowBrokerDetailsSection(false);
+    setShowSupplierDetailsSection(false);
   };
 
   const onSupplierSave = (newAddedSupplier) => {
@@ -95,11 +106,11 @@ const Supplier = () => {
   const onTableRowClick = (clickedRow) => {
     setSelectedSupplier(clickedRow);
     console.log(clickedRow);
-    setShowBrokerDetailsSection(true);
+    setShowSupplierDetailsSection(true);
   };
   return (
     <>
-      {showNewForm ? (
+      {showSupplierNewForm ? (
         <>
           <Col className="d-flex flex-column justify-content-center">
             <CatalogNewSupplierForm showForm={showForm} supplierAdded={onSupplierSave} />
@@ -108,7 +119,7 @@ const Supplier = () => {
       ) : (
         <div>
           <Row>
-            <Col lg={showBrokerDetailsSection ? 9 : 12}>
+            <Col lg={showSupplierDetailsSection ? 9 : 12}>
               <div style={{ padding: '0px 12px', margin: '0px 28px' }}>
                 <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                   <Row style={{ display: 'flex', justifyContent: 'flex-start' }}>
@@ -182,7 +193,7 @@ const Supplier = () => {
                 </Row>
               </div>{' '}
             </Col>
-            {showBrokerDetailsSection ? (
+            {showSupplierDetailsSection ? (
               <Col lg="3" style={{ paddingRight: '0px' }}>
                 <CatalogSupplierDetails
                   closeDetails={closeDetails}

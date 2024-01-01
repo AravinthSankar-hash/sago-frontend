@@ -1,8 +1,7 @@
-import React, { useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import CatalogService from 'services/catalog.api.js';
 
 const CatalogNewBrokerForm = ({ showForm, brokerAdded }) => {
@@ -73,11 +72,6 @@ const CatalogNewBrokerForm = ({ showForm, brokerAdded }) => {
       <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
         <Form.Label className="mt-4" style={headingStyle}>
           1. Supplier details
-          <CloseSharpIcon
-            style={{ cursor: 'pointer' }}
-            onClick={() => showForm(false)}
-            fontSize="medium"
-          />
         </Form.Label>
         <Row className="mb-3 mt-2">
           <Form.Group as={Col} xs={3} controlId="NewBroformName">
