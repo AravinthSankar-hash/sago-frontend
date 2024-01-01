@@ -43,9 +43,6 @@ function BrokerReports() {
     setSelectedChips([label]);
   };
   const [showBrokerReportDetails, setShowBrokerReportDetails] = useState(false);
-  // const handleTableClick = () => {
-  //   setShowBrokerReportDetails(true);
-  // };
 
   const onTableRowClick = (clickedRow) => {
     setSelectedBroker(clickedRow);
@@ -167,7 +164,7 @@ function BrokerReports() {
             </Row>
           </div>
           {/* Table */}
-          <div onClick={handleTableClick}>
+          <div>
             {brokerReportsData.length > 0 ? (
               <BrokerReportsTable
                 tableData={brokerReportsData}

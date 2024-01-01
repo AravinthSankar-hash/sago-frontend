@@ -109,8 +109,8 @@ const Broker = () => {
         <div>
           <Row>
             <Col lg={showBrokerDetailsSection ? 9 : 12}>
-              <div>
-                <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
+              <div style={{ padding: '0px 12px', margin: '0px 28px' }}>
+                <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                   <Row style={{ display: 'flex', justifyContent: 'flex-start' }}>
                     <Col lg="3">
                       <SearchBox placeHolder={'Search Name / Phone no.'}></SearchBox>
