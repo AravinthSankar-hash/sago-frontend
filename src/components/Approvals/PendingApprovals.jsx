@@ -7,11 +7,20 @@ import { Container, Row, Col } from 'react-bootstrap';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import PendingApprovalsTable from './PendingApprovalsTable';
 import { tableColumns, tableHeaders } from './approvals.const.js';
+// Store
+import {
+  useUpdateShowApprovalsBackBtn,
+  useShowPendingApprovalDetails,
+  useUpdateShowPendingApprovalDetails
+} from '../../store/store.js';
 
 function PendingApprovals() {
-  const [showApprovalDetails, setShowApprovalDetails] = useState(false);
   const [pendingApprovalsData, setPendingApprovalsData] = useState([]);
   const [clickedRowData, setClickedRowData] = useState({});
+  // Store
+  const updateShowApprovalsBackBtn = useUpdateShowApprovalsBackBtn();
+  const showPendingApprovalDetails = useShowPendingApprovalDetails();
+  const updateShowPendingApprovalDetails = useUpdateShowPendingApprovalDetails();
 
   useEffect(() => {
     fetch('http://localhost:3001/procurement')
@@ -27,12 +36,13 @@ function PendingApprovals() {
 
   const onTableRowClick = (rowData) => {
     setClickedRowData(rowData);
-    setShowApprovalDetails(true);
+    updateShowPendingApprovalDetails(true);
+    updateShowApprovalsBackBtn(true);
   };
 
   return (
     <>
-      {showApprovalDetails ? (
+      {showPendingApprovalDetails ? (
         <ApprovalDetails detailsData={clickedRowData} isActionRequired={true} />
       ) : (
         <Container style={{ background: '#EBEEF0', padding: '10px', paddingBottom: '0px' }}>
