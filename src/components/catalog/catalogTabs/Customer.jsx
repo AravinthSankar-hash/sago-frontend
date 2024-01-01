@@ -132,7 +132,7 @@ const Customer = () => {
                         </Col>
                       </>
                     )}
-                    <Col lg="2" className="d-flex justify-content-end">
+                    <Col lg="7" className="d-flex justify-content-end">
                       <IconButton size="small">
                         <IosShareIcon
                           fontSize="small"
@@ -144,7 +144,7 @@ const Customer = () => {
                       </IconButton>
                     </Col>
                     {showFields && (
-                      <Col lg="5" className="d-flex justify-content-end">
+                      <Col lg="2" className="d-flex justify-content-end">
                         <Button sx={buttonStyle} variant="outlined" onClick={addNewCustomer}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
                           New Customer
