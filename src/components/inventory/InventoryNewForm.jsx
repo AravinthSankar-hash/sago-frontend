@@ -1,5 +1,5 @@
 import { useMemo, useRef } from 'react';
-import { Container, Form, Row, Col } from 'react-bootstrap';
+import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -67,7 +67,7 @@ const InventoryNewForm = () => {
             />
           </Form.Group>
         </Row>
-        <Row>
+        <Row className="mb-3 mt-3">
           <Form.Group
             lg="3"
             as={Col}
@@ -77,6 +77,19 @@ const InventoryNewForm = () => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker disableFuture />
             </LocalizationProvider>
+          </Form.Group>
+        </Row>
+        <Row className="mb-4 mt-3"></Row>
+        <Row className="mb-4 mt-3"></Row>
+        <Row className="mb-2 mt-5">
+          <Form.Group
+            lg="2"
+            as={Col}
+            controlId="NewCustformBtn"
+            style={{ height: '15px', display: 'grid' }}>
+            <Button variant="primary" style={{ backgroundColor: '#00B7FF', border: 'none' }}>
+              Save
+            </Button>
           </Form.Group>
         </Row>
       </Form>
