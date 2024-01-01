@@ -87,3 +87,6 @@ export const vehicleTableColumns = [
   'vehicle_no',
   'ownership_type'
 ];
+export const staffTableHeaders = ['Staffs Name', 'Address', 'Phone no.', 'Work'];
+
+export const staffTableColumns = ['name', 'address', 'phone', 'designation'];
