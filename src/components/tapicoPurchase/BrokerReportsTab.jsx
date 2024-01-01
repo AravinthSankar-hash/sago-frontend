@@ -54,9 +54,9 @@ function BrokerReports() {
   const fontValue = { font: 'Roboto', fontSize: '14px' };
   return (
     <Container style={{ background: '#EBEEF0' }}>
-      <Row>
+      <Row style={{ padding: '0px 12px', margin: '0px 28px' }}>
         {showBrokerReportDetails && selectedBroker && (
-          <Col lg={3} style={{ padding: '20px' }}>
+          <Col lg={3}>
             <Row
               style={{
                 backgroundColor: 'white',
@@ -122,7 +122,7 @@ function BrokerReports() {
           lg={showBrokerReportDetails ? 9 : 12}
           className="d-flex flex-column justify-content-center">
           {/* Filters */}
-          <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
+          <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
             <Row style={{ display: 'flex', justifyContent: 'space-between' }}>
               <Col lg="3">
                 <SearchBox placeHolder={'Search here'}></SearchBox>
