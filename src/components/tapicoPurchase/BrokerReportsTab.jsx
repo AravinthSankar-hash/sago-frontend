@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BrokerReportsTable from './BrokerReportsTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
@@ -158,7 +158,7 @@ function BrokerReports() {
             </Row>
           </div>
           {/* Table */}
-          <div onClick={handleTableClick}>
+          <div>
             {brokerReportsData.length > 0 ? (
               <BrokerReportsTable
                 tableData={brokerReportsData}

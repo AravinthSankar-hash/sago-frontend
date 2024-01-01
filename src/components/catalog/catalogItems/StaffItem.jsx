@@ -1,5 +1,4 @@
 import { Row, Col, Image, Container } from 'react-bootstrap';
-import React from 'react';
 import dp_icon from '../../../assets/images/penguin.jpeg';
 
 function StaffItem() {

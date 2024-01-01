@@ -2,7 +2,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import Chart from 'react-apexcharts';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+
 function DashboardGraphs() {
   const graph4Series = [
     {
