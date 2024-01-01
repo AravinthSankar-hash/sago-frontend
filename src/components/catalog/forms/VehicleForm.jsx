@@ -3,14 +3,31 @@ import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import '../../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
+// API
+import CatalogService from '../../../services/catalog.api.js';
 
-const VehicleForm = (props) => {
+const VehicleForm = ({ showForm, vehicleAdded }) => {
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    const newVehicle = {
+      owner_name: data.name,
+      phone: data.phone,
+      ownership_type: data.ownership,
+      address: data.address,
+      city: data.city,
+      pincode: data.pincode,
+      vehicle_type: data.vehicletype,
+      vehicle_no: data.vehiclenum,
+      description: data.description
+    };
+
+    await CatalogService.create({ type: 'VEHICLE', data: newVehicle });
+    vehicleAdded(newVehicle);
+  };
   const containerRef = useRef();
 
   const gridStyle = useMemo(
@@ -47,7 +64,7 @@ const VehicleForm = (props) => {
           1. Owner details
           <CloseSharpIcon
             style={{ cursor: 'pointer' }}
-            onClick={() => props.showForm(false)}
+            onClick={() => showForm(false)}
             fontSize="medium"
           />
         </Form.Label>

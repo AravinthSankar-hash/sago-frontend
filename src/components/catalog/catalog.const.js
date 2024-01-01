@@ -71,3 +71,19 @@ export const supplierTableColumns = [
 export const productTableHeaders = ['Product Name', 'HSN', 'Food Safety', 'Tax %'];
 
 export const productTableColumns = ['product_name', 'hsn_code', 'is_food_safe', 'tax_percent'];
+
+export const vehicleTableHeaders = [
+  'Owner Name',
+  'Contact No.',
+  'Vehicle type',
+  'Vehicle No.',
+  'Ownership Type'
+];
+
+export const vehicleTableColumns = [
+  'owner_name',
+  'phone',
+  'vehicle_type',
+  'vehicle_no',
+  'ownership_type'
+];
