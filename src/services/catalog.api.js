@@ -10,10 +10,11 @@ function getItems(type) {
     });
 }
 
-function getPartners(type) {
+function getPartners(type, data = {}) {
     return request({
         url: `${ROUTES.BASE_ROUTE}/partners?partner_type=${type}`,
-        method: 'GET'
+        method: 'POST',
+        data: data
     });
 }
 

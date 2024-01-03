@@ -83,3 +83,9 @@ export const vehicleTableColumns = [
 export const staffTableHeaders = ['Staffs Name', 'Address', 'Phone no.', 'Work'];
 
 export const staffTableColumns = ['name', 'address', 'phone', 'designation'];
+
+
+export const RESPONSE_MSG = {
+  INVALID_SEARCH_TEXT: 'Invalid Search Text',
+  NO_DATA_FOUND: 'No Data Found'
+}
