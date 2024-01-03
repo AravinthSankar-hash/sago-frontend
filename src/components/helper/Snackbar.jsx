@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 
-function Toaster({ shouldOpen, message }) {
+function Toaster({ shouldOpen, message, backgroundColor }) {
   const [open, setOpen] = useState(shouldOpen);
+  const successGreen = '#4BB543';
   useEffect(() => {
     setOpen(shouldOpen);
   }, [shouldOpen]);
@@ -16,7 +17,7 @@ function Toaster({ shouldOpen, message }) {
       <Snackbar
         ContentProps={{
           sx: {
-            background: '#4BB543'
+            background: backgroundColor || successGreen
           }
         }}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}

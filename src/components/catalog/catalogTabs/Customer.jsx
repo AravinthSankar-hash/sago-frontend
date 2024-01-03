@@ -17,8 +17,10 @@ import CustomerTable from '../catalogTables/CustomerTable.jsx';
 import DateSelector from '../../helper/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import CatalogCustomerDetails from '../CatalogCustomerDetails.jsx';
-import { customerTableHeaders, customerTableColumns } from '../catalog.const';
+import { customerTableHeaders, customerTableColumns, RESPONSE_MSG } from '../catalog.const';
+// Helper
 import Toaster from '../../helper/Snackbar.jsx';
+import { isNumeric } from '../../helper/helper.js';
 // API
 import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
@@ -44,6 +46,8 @@ const Customer = () => {
   const [showFields, setShowFields] = useState(true);
   const [selectedCustomer, setSelectedCustomer] = useState();
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [toasterBackground, setToasterBackground] = useState(null);
+  const [toasterMsg, setToasterMsg] = useState('Customer data saved');
   const buttonStyle = {
     borderColor: '#00B7FF',
     backgroundColor: 'white',
@@ -93,7 +97,7 @@ const Customer = () => {
   };
 
   const onCustomerSave = (newAddedCustomer) => {
-    setShouldShowToaster(true);
+    invokeToaster();
     // Store
     updateShowCustomerNewForm(false);
     setCustomerData((customers) => [newAddedCustomer, ...customers]);
@@ -103,6 +107,37 @@ const Customer = () => {
     setSelectedCustomer(clickedRow);
     console.log(clickedRow);
     setShowCustomerDetailsSection(true);
+  };
+
+  // Called every time user changes input value in search, debounce 1 seconds.
+  // If value is number phone search or name search, API call.
+  const onSearchBoxValueChange = (currentInputValue) => {
+    const isPhoneNumberSearch = isNumeric(currentInputValue);
+    const payload = {
+      ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
+    };
+    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.CUSTOMER, payload)
+      .then((response) => {
+        setCustomerData(response.data);
+        if (response.data?.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching customer data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = null) => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    if (backgroundClr) {
+      setToasterBackground(backgroundClr);
+    }
+    setShouldShowToaster(true);
   };
   return (
     <>
@@ -120,7 +155,9 @@ const Customer = () => {
                 <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                   <Row style={{ display: 'flex' }}>
                     <Col lg="3">
-                      <SearchBox placeHolder={'Search Name / Phone no.'}></SearchBox>
+                      <SearchBox
+                        placeHolder={'Search Name / Phone no.'}
+                        inputValueChanged={onSearchBoxValueChange}></SearchBox>
                     </Col>
                     {!showFields && (
                       <>
@@ -204,7 +241,10 @@ const Customer = () => {
               <> </>
             )}
           </Row>
-          <Toaster shouldOpen={shouldShowToaster} message="Customer data saved"></Toaster>
+          <Toaster
+            shouldOpen={shouldShowToaster}
+            message={toasterMsg}
+            backgroundColor={toasterBackground}></Toaster>
         </div>
       )}
     </>
