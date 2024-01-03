@@ -29,13 +29,6 @@ export const brokerTableColumns = [
   'bank_name',
   'open_balance',
   'city',
-  'Customer Name',
-  'Phone',
-  'Email',
-  'Type',
-  'City',
-  'Aadhar',
-  'Created Date'
 ];
 
 export const customerTableColumns = [

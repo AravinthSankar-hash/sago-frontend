@@ -136,7 +136,9 @@ const Broker = () => {
                         </Col>
                       </>
                     )}
-                    <Col lg="7" className="d-flex justify-content-end">
+                    <Col
+                      lg={showBrokerDetailsSection ? 6 : 7}
+                      className="d-flex justify-content-end">
                       <IconButton size="small">
                         <IosShareIcon
                           fontSize="small"
@@ -148,7 +150,9 @@ const Broker = () => {
                       </IconButton>
                     </Col>
                     {showFields && (
-                      <Col lg="2" className="d-flex justify-content-end">
+                      <Col
+                        lg={showBrokerDetailsSection ? 3 : 2}
+                        className="d-flex justify-content-end">
                         <Button sx={buttonStyle} variant="outlined" onClick={() => showForm(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
                           New Broker
