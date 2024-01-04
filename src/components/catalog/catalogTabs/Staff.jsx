@@ -23,7 +23,8 @@ import {
   useShowStaffNewForm,
   useShowStaffDetailsSection,
   useUpdateShowStaffNewForm,
-  useUpdateShowStaffDetailsSection
+  useUpdateShowStaffDetailsSection,
+  useUpdateCatalogBackBtnTxt
 } from '../../../store/store.js';
 import StaffTable from '../catalogTables/StaffTable.jsx';
 // API
@@ -32,7 +33,8 @@ import { SERVICES } from '../../../services/api.const.js';
 
 const Staff = () => {
   // Store
-  const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
+  const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn(); // Bool to show/hide back button
+  const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
   const showStaffNewForm = useShowStaffNewForm(); // Show Add staff form
   const showStaffDetailsSection = useShowStaffDetailsSection(); // Show staff Dashboard
   const updateShowStaffNewForm = useUpdateShowStaffNewForm(); // Show staff Dashboard
@@ -66,6 +68,7 @@ const Staff = () => {
 
     // Show Add staff form - Store
     updateShowStaffNewForm(shouldShow);
+    updateCatalogBackBtnTxt('Add Staff');
     // Show back btn - Store
     updateShowCatalogBackBtn(shouldShow);
   };
@@ -75,6 +78,7 @@ const Staff = () => {
     console.log('staff table row clicked');
     // Show details section - Store
     updateShowStaffDetailsSection(true);
+    updateCatalogBackBtnTxt('Staff Details');
     // Show back btn - Store
     updateShowCatalogBackBtn(true);
   };

@@ -18,7 +18,9 @@ import {
   useUpdateShowRawMaterialNewForm,
   useUpdateShowRawMaterialDetailsSection,
   useUpdateShowBrokerNewForm,
-  useUpdateShowSupplierNewForm
+  useUpdateShowSupplierNewForm,
+  useCatalogBackBtnTxt,
+  useUpdateCatalogBackBtnTxt
 } from '../store/store.js';
 
 // Custom components & services
@@ -37,6 +39,8 @@ const Catalog = () => {
 
   // Store
   const showBackButton = useShowCatalogBackBtn(); // Bool to show/hide the back btn
+  const catalogBackBtnTxt = useCatalogBackBtnTxt(); // Back Button Text
+  const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn(); // Method to update bool, if back btn is clicked
   const activeCatalogTabComponent = useActiveCatalogTabComponent(); // Component initially will be customer component, will be updated whenever user clicks on any tab
   const updateActiveCatalogTabComponent = useUpdateActiveCatalogTabComponent(); // Method to update the active component, whenver the tab is clicked
@@ -83,6 +87,8 @@ const Catalog = () => {
     // On every tab switch update the active component
     updateActiveCatalogTabComponent(currentTabComp);
     setCurrentTabName(tabName);
+    // Update the back button text to default
+    updateCatalogBackBtnTxt('Back');
   };
 
   const onBackBtnClick = () => {
@@ -110,7 +116,8 @@ const Catalog = () => {
               style={{ cursor: 'pointer' }}
               fontSize="medium"
             />{' '}
-            <span>&nbsp;&nbsp;</span>Back
+            <span>&nbsp;&nbsp;</span>
+            {catalogBackBtnTxt}
           </Col>
         ) : (
           <CatalogTab handleTabSwitch={handleTabSwitch} tabToSelect={currentTabName} />

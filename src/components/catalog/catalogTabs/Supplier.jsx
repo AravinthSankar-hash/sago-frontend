@@ -23,7 +23,8 @@ import SupplierTable from '../catalogTables/SupplierTable';
 import {
   useShowSupplierNewForm,
   useUpdateShowSupplierNewForm,
-  useUpdateShowCatalogBackBtn
+  useUpdateShowCatalogBackBtn,
+  useUpdateCatalogBackBtnTxt
 } from '../../../store/store.js';
 
 const Supplier = () => {
@@ -35,6 +36,7 @@ const Supplier = () => {
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
+  const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
   const showSupplierNewForm = useShowSupplierNewForm(); // Show Supplier Add form
   const updateShowSupplierNewForm = useUpdateShowSupplierNewForm(); // Show Supplier Dashboard
 
@@ -88,6 +90,7 @@ const Supplier = () => {
     updateShowSupplierNewForm(shouldShow);
     // Show back btn - Store
     updateShowCatalogBackBtn(true);
+    updateCatalogBackBtnTxt('Add Supplier');
   };
   const addNewBroker = () => {
     console.log('Supplier table SHOW FORM CLICKED');
@@ -107,6 +110,7 @@ const Supplier = () => {
     setSelectedSupplier(clickedRow);
     console.log(clickedRow);
     setShowSupplierDetailsSection(true);
+    updateCatalogBackBtnTxt('Supplier Details');
   };
   return (
     <>

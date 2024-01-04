@@ -20,7 +20,8 @@ import Toaster from '../../helper/Snackbar.jsx';
 import {
   useShowBrokerNewForm,
   useUpdateShowBrokerNewForm,
-  useUpdateShowCatalogBackBtn
+  useUpdateShowCatalogBackBtn,
+  useUpdateCatalogBackBtnTxt
 } from '../../../store/store.js';
 
 const Broker = () => {
@@ -32,6 +33,7 @@ const Broker = () => {
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
+  const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
   const showBrokerNewForm = useShowBrokerNewForm(); // Show Broker Add form
   const updateShowBrokerNewForm = useUpdateShowBrokerNewForm(); // Show Broker Dashboard
 
@@ -49,6 +51,7 @@ const Broker = () => {
     updateShowBrokerNewForm(shouldShow);
     // Show back btn - Store
     updateShowCatalogBackBtn(true);
+    updateCatalogBackBtnTxt('Add Broker');
   };
 
   const openDetails = () => {
@@ -107,6 +110,7 @@ const Broker = () => {
   const onTableRowClick = (clickedRow) => {
     setSelectedBroker(clickedRow);
     setShowBrokerDetailsSection(true);
+    updateCatalogBackBtnTxt('Broker Details');
   };
   return (
     <>

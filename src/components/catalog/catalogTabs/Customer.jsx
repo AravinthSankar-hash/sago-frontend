@@ -1,7 +1,8 @@
 import {
   useShowCustomerNewForm,
   useUpdateShowCustomerNewForm,
-  useUpdateShowCatalogBackBtn
+  useUpdateShowCatalogBackBtn,
+  useUpdateCatalogBackBtnTxt
 } from '../../../store/store.js';
 import { useState, useEffect } from 'react';
 import { Col, Row } from 'react-bootstrap';
@@ -38,6 +39,7 @@ const Customer = () => {
 
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
+  const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
   const showCustomerNewForm = useShowCustomerNewForm(); // Show Customer Add form
   const updateShowCustomerNewForm = useUpdateShowCustomerNewForm(); // Show Customer Dashboard
   const [showCustomerDetailsSection, setShowCustomerDetailsSection] = useState(false);
@@ -86,6 +88,7 @@ const Customer = () => {
     updateShowCustomerNewForm(true);
     // Show back btn - Store
     updateShowCatalogBackBtn(true);
+    updateCatalogBackBtnTxt('Add New Customer');
   };
 
   const customerPageChanged = () => {
@@ -107,6 +110,7 @@ const Customer = () => {
     setSelectedCustomer(clickedRow);
     console.log(clickedRow);
     setShowCustomerDetailsSection(true);
+    updateCatalogBackBtnTxt('Customer Details');
   };
 
   // Called every time user changes input value in search, debounce 1 seconds.
