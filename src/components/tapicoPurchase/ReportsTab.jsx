@@ -3,25 +3,13 @@ import DateSelector from 'components/helper/DateSelector';
 import bagIcon from '../../assets/images/tp_reports_bag.svg';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import Chart from 'react-apexcharts';
 import Select from '@mui/material/Select';
 import { Col, Row, Image } from 'react-bootstrap';
-import { Doughnut } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
+import { donutGraphOptions, donutGraphDataPoints } from '../dashboard/graph-spec.js';
 import '../../css/index.css';
 
 function Reports() {
-  const doughnutChart = {
-    labels: ['January', 'February', 'March', 'April', 'May'],
-    datasets: [
-      {
-        label: 'Rainfall',
-        backgroundColor: ['#B21F00', '#C9DE00', '#2FDE00', '#00A6B4', '#6800B4'],
-        hoverBackgroundColor: ['#501800', '#4B5000', '#175000', '#003350', '#35014F'],
-        data: [65, 59, 80, 81, 56],
-        hoverOffset: 4
-      }
-    ]
-  };
   const fontHeader = { font: 'Roboto', color: '#62728D', fontSize: '14px' };
   const fontValue = { font: 'Roboto', fontSize: '14px' };
   const leftRowStyle = {
@@ -87,40 +75,30 @@ function Reports() {
               </Col>
             </Row>
           </Col>
-          <Col lg="7" style={{ margin: '30px', marginTop: '60px' }}>
-            <label style={{ ...fontHeader }}>Reports</label>
+          <Col
+            lg="7"
+            style={{
+              marginLeft: '30px',
+              backgroundColor: 'white',
+              marginTop: '60px',
+              borderRadius: '15px'
+            }}>
             <Row
               style={{
-                backgroundColor: 'white',
-                height: '500px',
-                justifyContent: 'left',
-                borderRadius: '15px'
+                margin: '30px'
               }}>
-              <Col lg="8">
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                  <Select
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    value="Broker-wise purchases">
-                    <MenuItem value="Total Commissions">Total Commissions</MenuItem>
-                    <MenuItem value="Total purchases">Total purchases</MenuItem>
-                    <MenuItem value="Broker-wise purchases">Broker-wise purchases</MenuItem>
-                  </Select>
-                </FormControl>
-              </Col>
-              <Doughnut
-                data={doughnutChart}
-                options={{
-                  responsive: true,
-                  plugins: {
-                    legend: {
-                      display: true,
-                      position: 'right'
-                    }
-                  }
-                }}
-              />
+              <FormControl variant="standard" size="small" style={{ width: '50%' }}>
+                <Select
+                  labelId="demo-simple-select-standard-label"
+                  id="demo-simple-select-standard"
+                  value="Broker-wise purchases">
+                  <MenuItem value="Total Commissions">Total Commissions</MenuItem>
+                  <MenuItem value="Total purchases">Total purchases</MenuItem>
+                  <MenuItem value="Broker-wise purchases">Broker-wise purchases</MenuItem>
+                </Select>
+              </FormControl>
             </Row>
+            <Chart options={donutGraphOptions} type="donut" series={donutGraphDataPoints} />
           </Col>
         </Row>
       </Container>
