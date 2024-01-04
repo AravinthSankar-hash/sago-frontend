@@ -17,7 +17,8 @@ import {
   useShowVehicleNewForm,
   useShowVehicleDetailsSection,
   useUpdateShowVehicleNewForm,
-  useUpdateShowVehicleDetailsSection
+  useUpdateShowVehicleDetailsSection,
+  useUpdateCatalogBackBtnTxt
 } from '../../../store/store.js';
 import VehicleTable from '../catalogTables/VehicleTable';
 import { vehicleTableHeaders, vehicleTableColumns } from '../catalog.const';
@@ -29,11 +30,11 @@ import { SERVICES } from '../../../services/api.const.js';
 const Vehicle = () => {
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
+  const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
   const showVehicleNewForm = useShowVehicleNewForm(); // Show Add Vehicle form
   const showVehicleDetailsSection = useShowVehicleDetailsSection(); // Show Vehicle Dashboard
   const updateShowVehicleNewForm = useUpdateShowVehicleNewForm(); // Show Vehicle Dashboard
   const updateShowVehicleDetailsSection = useUpdateShowVehicleDetailsSection(); // Show Vehicle Dashboard
-  const [tableColumns, setTableColuns] = useState([]);
   const [selectedChips, setSelectedChips] = useState([]);
   const [showFields, setShowFields] = useState(true);
   const [vehicleData, setVehicleData] = useState([]);
@@ -89,6 +90,7 @@ const Vehicle = () => {
     updateShowVehicleNewForm(shouldShow);
     // Show back btn - Store
     updateShowCatalogBackBtn(shouldShow);
+    updateCatalogBackBtnTxt('Add Vehicle');
   };
 
   const onTableRowClick = (clickedRow) => {
@@ -99,6 +101,7 @@ const Vehicle = () => {
     updateShowVehicleDetailsSection(true);
     // Show back btn - Store
     updateShowCatalogBackBtn(true);
+    updateCatalogBackBtnTxt('Vehicle Details');
   };
 
   const vehiclePageChanged = () => {

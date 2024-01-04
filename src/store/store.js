@@ -5,6 +5,7 @@ import Purchases from '../components/tapicoPurchase/PurchasesTab';
 
 const useStore = create((set) => ({
   showCatalogBackBtn: false,
+  catalogBackBtnTxt: 'Back2',
   activeCatalogTabComponent: <Customer />,
 
   showStaffNewForm: false,
@@ -57,6 +58,9 @@ const useStore = create((set) => ({
   // Catalog Tabs
   updateShowCatalogBackBtn: (value) => {
     set({ showCatalogBackBtn: value });
+  },
+  updateCatalogBackBtnTxt: (value) => {
+    set({ catalogBackBtnTxt: value });
   },
   updateActiveCatalogTabComponent: (value) => {
     set({ activeCatalogTabComponent: value });
@@ -182,6 +186,10 @@ const useStore = create((set) => ({
 export const useShowCatalogBackBtn = () => useStore((state) => state.showCatalogBackBtn);
 export const useUpdateShowCatalogBackBtn = () =>
   useStore((state) => state.updateShowCatalogBackBtn);
+// Back Btn Txt Catalog
+export const useCatalogBackBtnTxt = () => useStore((state) => state.catalogBackBtnTxt);
+export const useUpdateCatalogBackBtnTxt = () =>
+  useStore((state) => state.updateCatalogBackBtnTxt);
 
 export const useActiveCatalogTabComponent = () =>
   useStore((state) => state.activeCatalogTabComponent);

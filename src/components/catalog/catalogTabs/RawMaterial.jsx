@@ -20,7 +20,8 @@ import {
   useShowRawMaterialNewForm,
   useShowRawMaterialDetailsSection,
   useUpdateShowRawMaterialNewForm,
-  useUpdateShowRawMaterialDetailsSection
+  useUpdateShowRawMaterialDetailsSection,
+  useUpdateCatalogBackBtnTxt
 } from '../../../store/store.js';
 // API
 import CatalogService from 'services/catalog.api.js';
@@ -29,6 +30,7 @@ import { SERVICES } from '../../../services/api.const.js';
 const RawMaterial = () => {
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
+  const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
   const showRawMaterialNewForm = useShowRawMaterialNewForm(); // Show Add RawMaterial form
   const showRawMaterialDetailsSection = useShowRawMaterialDetailsSection(); // Show RawMaterial Dashboard
   const updateShowRawMaterialNewForm = useUpdateShowRawMaterialNewForm(); // Show RawMaterial Dashboard
@@ -83,6 +85,7 @@ const RawMaterial = () => {
   const showForm = (shouldShow) => {
     updateShowRawMaterialNewForm(shouldShow);
     updateShowCatalogBackBtn(true);
+    updateCatalogBackBtnTxt('Add Raw-Material');
   };
 
   const onTableRowClick = (clickedRow) => {
@@ -91,6 +94,7 @@ const RawMaterial = () => {
     console.log(clickedRow);
     // Show back btn - Store
     updateShowCatalogBackBtn(true);
+    updateCatalogBackBtnTxt('Raw-Materials Details');
   };
 
   const rawMaterialPageChanged = () => {

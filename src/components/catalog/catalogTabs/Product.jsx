@@ -20,7 +20,8 @@ import {
   useShowProductNewForm,
   useShowProductDetailsSection,
   useUpdateShowProductNewForm,
-  useUpdateShowProductDetailsSection
+  useUpdateShowProductDetailsSection,
+  useUpdateCatalogBackBtnTxt
 } from '../../../store/store.js';
 import ProductTable from '../catalogTables/ProductTable.jsx';
 // API
@@ -31,6 +32,7 @@ const Product = () => {
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
   const showProductNewForm = useShowProductNewForm(); // Show Add Product form
+  const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
   const showProductDetailsSection = useShowProductDetailsSection(); // Show Product Dashboard
   const updateShowProductNewForm = useUpdateShowProductNewForm(); // Show Product Dashboard
   const updateShowProductDetailsSection = useUpdateShowProductDetailsSection(); // Show Product Dashboard
@@ -93,6 +95,7 @@ const Product = () => {
     updateShowProductNewForm(shouldShow);
     // Show back btn - Store
     updateShowCatalogBackBtn(shouldShow);
+    updateCatalogBackBtnTxt('Add Product');
   };
 
   const onTableRowClick = (clickedRow) => {
@@ -102,6 +105,7 @@ const Product = () => {
     updateShowProductDetailsSection(true);
     // Show back btn - Store
     updateShowCatalogBackBtn(true);
+    updateCatalogBackBtnTxt('Product Details');
   };
   const onProductSave = (newAddedProduct) => {
     setShouldShowToaster(true);
