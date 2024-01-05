@@ -10,8 +10,9 @@ import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import { productTableHeaders, productTableColumns } from '../catalog.const';
+import { productTableHeaders, productTableColumns, RESPONSE_MSG } from '../catalog.const';
 import Toaster from '../../helper/Snackbar.jsx';
+import { isNumeric } from '../../helper/helper.js';
 
 // Store & Dtos & Custom Css
 import '../../../css/index.css';
@@ -41,6 +42,8 @@ const Product = () => {
   const [showFields, setShowFields] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState();
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [toasterMsg, setToasterMsg] = useState('Product data saved');
+  const [toasterBackground, setToasterBackground] = useState(null);
 
   useEffect(() => {
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.PRODUCTS)
@@ -108,10 +111,40 @@ const Product = () => {
     updateCatalogBackBtnTxt('Product Details');
   };
   const onProductSave = (newAddedProduct) => {
-    setShouldShowToaster(true);
+    invokeToaster();
     updateShowProductNewForm(false);
     setProductData((products) => [newAddedProduct, ...products]);
   };
+
+  const onSearchBoxValueChange = (currentInputValue) => {
+    const isPhoneNumberSearch = isNumeric(currentInputValue);
+    const payload = {
+      ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
+    };
+    CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.PRODUCTS, payload)
+      .then((response) => {
+        setProductData(response.data);
+        if (response.data?.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching customer data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = null) => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    if (backgroundClr) {
+      setToasterBackground(backgroundClr);
+    }
+    setShouldShowToaster(true);
+  };
+
   return (
     <>
       {showProductNewForm ? (
@@ -130,7 +163,9 @@ const Product = () => {
                 <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                   <Row style={{ display: 'flex', justifyContent: 'flex-start' }}>
                     <Col lg="3">
-                      <SearchBox placeHolder={'Search Here'}></SearchBox>
+                      <SearchBox
+                        placeHolder={'Search Here'}
+                        inputValueChanged={onSearchBoxValueChange}></SearchBox>
                     </Col>
                     {!showFields && (
                       <>
@@ -199,7 +234,10 @@ const Product = () => {
               </div>{' '}
             </>
           )}
-          <Toaster shouldOpen={shouldShowToaster} message="Raw-Material data saved"></Toaster>
+          <Toaster
+            shouldOpen={shouldShowToaster}
+            message={toasterMsg}
+            backgroundColor={toasterBackground}></Toaster>
         </div>
       )}
     </>
