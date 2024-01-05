@@ -12,8 +12,9 @@ import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import { supplierTableHeaders, supplierTableColumns } from '../catalog.const';
+import { supplierTableHeaders, supplierTableColumns, RESPONSE_MSG } from '../catalog.const';
 import Toaster from '../../helper/Snackbar.jsx';
+import { isNumeric } from '../../helper/helper.js';
 
 // API
 import CatalogService from 'services/catalog.api.js';
@@ -34,6 +35,9 @@ const Supplier = () => {
   const [supplierData, setSupplierData] = useState([]);
   const [showSupplierDetailsSection, setShowSupplierDetailsSection] = useState(false);
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [toasterMsg, setToasterMsg] = useState('Customer data saved');
+  const [toasterBackground, setToasterBackground] = useState(null);
+
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
   const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
@@ -102,7 +106,7 @@ const Supplier = () => {
   };
 
   const onSupplierSave = (newAddedSupplier) => {
-    setShouldShowToaster(true);
+    invokeToaster();
     setSupplierData((suppliers) => [newAddedSupplier, ...suppliers]);
   };
 
@@ -112,6 +116,36 @@ const Supplier = () => {
     setShowSupplierDetailsSection(true);
     updateCatalogBackBtnTxt('Supplier Details');
   };
+
+  const onSearchBoxValueChange = (currentInputValue) => {
+    const isPhoneNumberSearch = isNumeric(currentInputValue);
+    const payload = {
+      ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
+    };
+    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.SUPPLIER, payload)
+      .then((response) => {
+        setSupplierData(response.data);
+        if (response.data?.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching customer data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = null) => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    if (backgroundClr) {
+      setToasterBackground(backgroundClr);
+    }
+    setShouldShowToaster(true);
+  };
+
   return (
     <>
       {showSupplierNewForm ? (
@@ -128,7 +162,9 @@ const Supplier = () => {
                 <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                   <Row style={{ display: 'flex', justifyContent: 'flex-start' }}>
                     <Col lg="3">
-                      <SearchBox placeHolder={'Search Name / Phone no.'}></SearchBox>
+                      <SearchBox
+                        placeHolder={'Search Name / Phone no.'}
+                        inputValueChanged={onSearchBoxValueChange}></SearchBox>
                     </Col>
                     {!showFields && (
                       <>
@@ -212,7 +248,10 @@ const Supplier = () => {
               <> </>
             )}
           </Row>
-          <Toaster shouldOpen={shouldShowToaster} message="Broker data saved"></Toaster>
+          <Toaster
+            shouldOpen={shouldShowToaster}
+            message={toasterMsg}
+            backgroundColor={toasterBackground}></Toaster>
         </div>
       )}
     </>
