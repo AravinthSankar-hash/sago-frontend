@@ -12,8 +12,10 @@ import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import DateSelector from '../../helper/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
-import { rawMaterialTableHeaders, rawMaterialTableColumns } from '../catalog.const';
+import { rawMaterialTableHeaders, rawMaterialTableColumns, RESPONSE_MSG } from '../catalog.const';
 import Toaster from '../../helper/Snackbar.jsx';
+import { isNumeric } from '../../helper/helper.js';
+
 // Store
 import {
   useUpdateShowCatalogBackBtn,
@@ -28,6 +30,13 @@ import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 
 const RawMaterial = () => {
+  //State
+  const [selectedChips, setSelectedChips] = useState([]);
+  const [selectedRawMaterial, setSelectedRawMaterial] = useState();
+  const [rawMaterialData, setRawMaterialData] = useState([]);
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [toasterMsg, setToasterMsg] = useState('Raw-material data saved');
+  const [toasterBackground, setToasterBackground] = useState(null);
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
   const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
@@ -77,10 +86,6 @@ const RawMaterial = () => {
       setSelectedChips((prevSelectedChips) => [prevSelectedChips, label]);
     }
   };
-  const [selectedChips, setSelectedChips] = useState([]);
-  const [selectedRawMaterial, setSelectedRawMaterial] = useState();
-  const [rawMaterialData, setRawMaterialData] = useState([]);
-  const [shouldShowToaster, setShouldShowToaster] = useState(false);
 
   const showForm = (shouldShow) => {
     updateShowRawMaterialNewForm(shouldShow);
@@ -101,10 +106,42 @@ const RawMaterial = () => {
     console.log('page changed');
   };
   const onRawMaterialSave = (newAddedRawMaterial) => {
-    setShouldShowToaster(true);
+    invokeToaster();
     updateShowRawMaterialNewForm(false);
     setRawMaterialData((rawMaterials) => [newAddedRawMaterial, ...rawMaterials]);
   };
+
+  // Called every time user changes input value in search, debounce 1 seconds.
+  // If value is number phone search or name search, API call.
+  const onSearchBoxValueChange = (currentInputValue) => {
+    const isPhoneNumberSearch = isNumeric(currentInputValue);
+    const payload = {
+      ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
+    };
+    CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.RAWMATERIALS, payload)
+      .then((response) => {
+        setRawMaterialData(response.data);
+        if (response.data?.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching customer data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = null) => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    if (backgroundClr) {
+      setToasterBackground(backgroundClr);
+    }
+    setShouldShowToaster(true);
+  };
+
   return (
     <>
       {showRawMaterialNewForm ? (
@@ -123,7 +160,9 @@ const RawMaterial = () => {
                 <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                   <Row style={{ display: 'flex', justifyContent: 'flex-start' }}>
                     <Col lg="3">
-                      <SearchBox placeHolder={'Search Here'}></SearchBox>
+                      <SearchBox
+                        placeHolder={'Search Here'}
+                        inputValueChanged={onSearchBoxValueChange}></SearchBox>
                     </Col>
                     <Col lg="2">
                       <DateSelector size="smaller" customLabel="From"></DateSelector>
@@ -186,7 +225,10 @@ const RawMaterial = () => {
               </div>
             </>
           )}
-          <Toaster shouldOpen={shouldShowToaster} message="Raw-Material data saved"></Toaster>
+          <Toaster
+            shouldOpen={shouldShowToaster}
+            message={toasterMsg}
+            backgroundColor={toasterBackground}></Toaster>
         </div>
       )}
     </>

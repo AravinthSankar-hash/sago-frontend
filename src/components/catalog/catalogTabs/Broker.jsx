@@ -32,7 +32,7 @@ const Broker = () => {
   const [selectedBroker, setSelectedBroker] = useState([]);
   const [showBrokerDetailsSection, setShowBrokerDetailsSection] = useState(false);
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
-  const [toasterMsg, setToasterMsg] = useState('Customer data saved');
+  const [toasterMsg, setToasterMsg] = useState('Broker data saved');
   const [toasterBackground, setToasterBackground] = useState(null);
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();

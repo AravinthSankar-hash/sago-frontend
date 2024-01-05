@@ -21,8 +21,10 @@ import {
   useUpdateCatalogBackBtnTxt
 } from '../../../store/store.js';
 import VehicleTable from '../catalogTables/VehicleTable';
-import { vehicleTableHeaders, vehicleTableColumns } from '../catalog.const';
+import { vehicleTableHeaders, vehicleTableColumns, RESPONSE_MSG } from '../catalog.const';
 import Toaster from '../../helper/Snackbar.jsx';
+import { isNumeric } from '../../helper/helper.js';
+
 // API
 import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
@@ -40,6 +42,8 @@ const Vehicle = () => {
   const [vehicleData, setVehicleData] = useState([]);
   const [selectedVehicle, setSelectedVehicle] = useState();
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [toasterMsg, setToasterMsg] = useState('Vehicle data saved');
+  const [toasterBackground, setToasterBackground] = useState(null);
 
   useEffect(() => {
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.VEHICLES)
@@ -108,10 +112,40 @@ const Vehicle = () => {
     console.log('page changed');
   };
   const onVehicleSave = (newAddedVehicle) => {
-    setShouldShowToaster(true);
+    invokeToaster();
     updateShowVehicleNewForm(false);
     setVehicleData((vehicles) => [newAddedVehicle, ...vehicles]);
   };
+
+  const onSearchBoxValueChange = (currentInputValue) => {
+    const isPhoneNumberSearch = isNumeric(currentInputValue);
+    const payload = {
+      ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
+    };
+    CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.VEHICLES, payload)
+      .then((response) => {
+        setVehicleData(response.data);
+        if (response.data?.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching customer data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = null) => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    if (backgroundClr) {
+      setToasterBackground(backgroundClr);
+    }
+    setShouldShowToaster(true);
+  };
+
   return (
     <>
       {showVehicleNewForm ? (
@@ -130,7 +164,9 @@ const Vehicle = () => {
                 <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                   <Row style={{ display: 'flex', justifyContent: 'flex-start' }}>
                     <Col lg="3">
-                      <SearchBox placeHolder={'Search Here'}></SearchBox>
+                      <SearchBox
+                        placeHolder={'Search Here'}
+                        inputValueChanged={onSearchBoxValueChange}></SearchBox>
                     </Col>
                     {!showFields && (
                       <>
@@ -199,7 +235,10 @@ const Vehicle = () => {
               </div>{' '}
             </>
           )}
-          <Toaster shouldOpen={shouldShowToaster} message="Raw-Material data saved"></Toaster>
+          <Toaster
+            shouldOpen={shouldShowToaster}
+            message={toasterMsg}
+            backgroundColor={toasterBackground}></Toaster>
         </div>
       )}
     </>

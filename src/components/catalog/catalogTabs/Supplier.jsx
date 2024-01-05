@@ -35,7 +35,7 @@ const Supplier = () => {
   const [supplierData, setSupplierData] = useState([]);
   const [showSupplierDetailsSection, setShowSupplierDetailsSection] = useState(false);
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
-  const [toasterMsg, setToasterMsg] = useState('Customer data saved');
+  const [toasterMsg, setToasterMsg] = useState('Supplier data saved');
   const [toasterBackground, setToasterBackground] = useState(null);
 
   // Store

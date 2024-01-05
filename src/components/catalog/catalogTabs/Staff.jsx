@@ -9,8 +9,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
-import { staffTableHeaders, staffTableColumns } from '../catalog.const';
+import { staffTableHeaders, staffTableColumns, RESPONSE_MSG } from '../catalog.const';
 import Toaster from '../../helper/Snackbar.jsx';
+import { isNumeric } from '../../helper/helper.js';
 
 // Components
 import StaffItem from '../catalogItems/StaffItem.jsx';
@@ -42,6 +43,8 @@ const Staff = () => {
   const [staffData, setStaffData] = useState([]);
   const [selectedStaff, setSelectedStaff] = useState();
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [toasterBackground, setToasterBackground] = useState(null);
+  const [toasterMsg, setToasterMsg] = useState('Staff data saved');
 
   useEffect(() => {
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.STAFFS)
@@ -86,9 +89,38 @@ const Staff = () => {
     console.log('page changed');
   };
   const onStaffSave = (newAddedStaff) => {
-    setShouldShowToaster(true);
+    invokeToaster();
     updateShowStaffNewForm(false);
     setStaffData((staffs) => [newAddedStaff, ...staffs]);
+  };
+
+  const onSearchBoxValueChange = (currentInputValue) => {
+    const isPhoneNumberSearch = isNumeric(currentInputValue);
+    const payload = {
+      ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
+    };
+    CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.STAFFS, payload)
+      .then((response) => {
+        setStaffData(response.data);
+        if (response.data?.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching customer data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = null) => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    if (backgroundClr) {
+      setToasterBackground(backgroundClr);
+    }
+    setShouldShowToaster(true);
   };
 
   return (
@@ -109,7 +141,9 @@ const Staff = () => {
                 <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                   <Row style={{ display: 'flex', justifyContent: 'flex-start' }}>
                     <Col lg="3">
-                      <SearchBox placeHolder={'Search Name / Phone no.'}></SearchBox>
+                      <SearchBox
+                        placeHolder={'Search Name / Phone no.'}
+                        inputValueChanged={onSearchBoxValueChange}></SearchBox>
                     </Col>
                     <>
                       <Col lg="4">
@@ -160,7 +194,10 @@ const Staff = () => {
               </div>{' '}
             </>
           )}
-          <Toaster shouldOpen={shouldShowToaster} message="Raw-Material data saved"></Toaster>
+          <Toaster
+            shouldOpen={shouldShowToaster}
+            message={toasterMsg}
+            backgroundColor={toasterBackground}></Toaster>
         </div>
       )}
     </>
