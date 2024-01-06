@@ -43,7 +43,7 @@ const Broker = () => {
   useEffect(() => {
     CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.BROKER)
       .then((response) => {
-        setBrokerData(response.data);
+        setBrokerData(response.data.data);
       })
       .catch((error) => {
         console.log('Error in getting customer data', error);

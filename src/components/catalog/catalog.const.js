@@ -1,12 +1,36 @@
 export const customerTableHeaders = [
-  'Customer Name',
-  'Phone',
-  'Email',
-  'Type',
-  'City',
-  'State',
-  'Aadhar',
-  'Created Date'
+  {
+
+    headerKey: 'Customer Name', sortKey: 'customer_name', sortEnabled: true,
+  },
+  {
+    headerKey: 'Phone', sortKey: 'phone', sortEnabled: true,
+  },
+  {
+    headerKey: 'Email', sortKey: 'email'
+  },
+  {
+    headerKey: 'Type', sortKey: 'customer_type', sortEnabled: true,
+  },
+  {
+    headerKey: 'City', sortKey: 'city',
+  },
+  {
+    headerKey: 'State', sortKey: 'state',
+  },
+  {
+    headerKey: 'Aadhar', sortKey: 'aadhar'
+  }
+];
+
+export const customerTableColumns = [
+  'customer_name',
+  'phone',
+  'email',
+  'customer_type',
+  'city',
+  'aadhar',
+  'aadhar',
 ];
 
 export const rawMaterialTableHeaders = ['Name', 'Description'];
@@ -29,16 +53,6 @@ export const brokerTableColumns = [
   'bank_name',
   'open_balance',
   'city',
-];
-
-export const customerTableColumns = [
-  'customer_name',
-  'phone',
-  'email',
-  'customer_type',
-  'city',
-  'aadhar',
-  'createdAt'
 ];
 
 export const supplierTableHeaders = [
@@ -87,5 +101,8 @@ export const staffTableColumns = ['name', 'address', 'phone', 'designation'];
 
 export const RESPONSE_MSG = {
   INVALID_SEARCH_TEXT: 'Invalid Search Text',
-  NO_DATA_FOUND: 'No Data Found'
+  NO_DATA_FOUND: 'No Data Found',
+  DATA_FETCHED_SUCCESSFULLY: 'Data Fetched Successfully',
 }
+
+export const TABLE_ROW_SIZE_OPTIONS = [5, 10, 25, 50, 100];

@@ -47,8 +47,7 @@ const Supplier = () => {
   useEffect(() => {
     CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.SUPPLIER)
       .then((response) => {
-        console.log(response.data, 'dataaaaa');
-        setSupplierData(response.data);
+        setSupplierData(response.data.data);
       })
       .catch((error) => {
         console.log('Error in getting customer data', error);

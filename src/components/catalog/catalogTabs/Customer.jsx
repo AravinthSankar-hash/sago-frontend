@@ -28,13 +28,8 @@ import { SERVICES } from '../../../services/api.const.js';
 
 const Customer = () => {
   useEffect(() => {
-    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.CUSTOMER)
-      .then((response) => {
-        setCustomerData(response.data);
-      })
-      .catch((error) => {
-        console.log('Error in getting customer data', error);
-      });
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   }, []);
 
   // Store
@@ -42,6 +37,7 @@ const Customer = () => {
   const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
   const showCustomerNewForm = useShowCustomerNewForm(); // Show Customer Add form
   const updateShowCustomerNewForm = useUpdateShowCustomerNewForm(); // Show Customer Dashboard
+  // Internal State
   const [showCustomerDetailsSection, setShowCustomerDetailsSection] = useState(false);
   const [customerData, setCustomerData] = useState([]);
   const [selectedChips, setSelectedChips] = useState([]);
@@ -50,6 +46,10 @@ const Customer = () => {
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [toasterBackground, setToasterBackground] = useState(null);
   const [toasterMsg, setToasterMsg] = useState('Customer data saved');
+  const [searchPayload, setSearchPayload] = useState({});
+  const [totalCustomerDataCount, setTotalCustomerDataCount] = useState(0);
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(5);
+
   const buttonStyle = {
     borderColor: '#00B7FF',
     backgroundColor: 'white',
@@ -91,10 +91,6 @@ const Customer = () => {
     updateCatalogBackBtnTxt('Add New Customer');
   };
 
-  const customerPageChanged = () => {
-    console.log('page changed');
-  };
-
   const closeDetails = () => {
     setShowCustomerDetailsSection(false);
   };
@@ -113,6 +109,12 @@ const Customer = () => {
     updateCatalogBackBtnTxt('Customer Details');
   };
 
+  const customerPageChanged = (currentPageNo, rowsPerPage) => {
+    setCurrentRowsPerPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  };
+
   // Called every time user changes input value in search, debounce 1 seconds.
   // If value is number phone search or name search, API call.
   const onSearchBoxValueChange = (currentInputValue) => {
@@ -120,10 +122,16 @@ const Customer = () => {
     const payload = {
       ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
     };
-    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.CUSTOMER, payload)
+    setSearchPayload(payload);
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
+
+  const invokeSearchAPI = (payload, query = null) => {
+    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.CUSTOMER, payload, query)
       .then((response) => {
-        setCustomerData(response.data);
-        if (response.data?.length === 0) {
+        setCustomerData(response.data.data);
+        setTotalCustomerDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
           invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
         }
       })
@@ -134,14 +142,12 @@ const Customer = () => {
   };
 
   // Just a generic method to invoke toaster
-  const invokeToaster = (msg, backgroundClr = null) => {
+  const invokeToaster = (msg, backgroundClr = '#4BB543') => {
     if (msg) {
       setToasterMsg(msg);
     }
-    if (backgroundClr) {
-      setToasterBackground(backgroundClr);
-    }
-    setShouldShowToaster(true);
+    setToasterBackground(backgroundClr);
+    setShouldShowToaster(Math.random());
   };
   return (
     <>
@@ -225,6 +231,7 @@ const Customer = () => {
                         tableData={customerData}
                         tableHeaders={customerTableHeaders}
                         tableColumns={customerTableColumns}
+                        totalCustomerDataCount={totalCustomerDataCount}
                         hanldePageChange={customerPageChanged}
                         tableRowClicked={onTableRowClick}
                         rowsPerPage={10}

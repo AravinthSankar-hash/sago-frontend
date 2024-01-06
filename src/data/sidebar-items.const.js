@@ -21,7 +21,7 @@ export const sideBarItems = [
   {
     itemHeader: 'PURCHASE',
     items: [
-      { name: 'Tapico Purchase', src: topioIcon, route: '/purchase' },
+      { name: 'Tapioca Purchase', src: topioIcon, route: '/purchase' },
       { name: 'Procurements', src: procureIcon, route: '/procurement' },
       { name: 'Expenses', src: expenseIcon, route: '/expense' }
     ]
@@ -36,6 +36,6 @@ export const sideBarItems = [
   },
   {
     itemHeader: 'DATA',
-    items: [{ name: 'Cataglog', src: catIcon, route: '/catalog' }]
+    items: [{ name: 'Catalog', src: catIcon, route: '/catalog' }]
   }
 ];
