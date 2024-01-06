@@ -11,6 +11,10 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import InventoryTable from 'components/inventory/InventoryTable.jsx';
 import { tableHeaders, tableColumns } from '../components/tapicoPurchase/tp.const.js';
 import sago_icon from '../assets/images/sago_inventory.svg';
+import broken_icon from '../assets/images/broken_inventory.svg';
+import starch_inventory from '../assets/images/starch_inventory.svg';
+import wet_thippi_inventory from '../assets/images/wet_thippi_inventory.svg';
+import dry_thippi_inventory from '../assets/images/dry_thippi_inventory.svg';
 import chart_icon from '../assets/images/chart_icon_inventory.svg';
 import InventoryNewForm from 'components/inventory/InventoryNewForm.jsx';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -148,7 +152,7 @@ function Inventory() {
                       padding: '15px'
                     }}>
                     <Col>
-                      <Image style={{ height: '60px', width: '60px' }} src={sago_icon} />
+                      <Image style={{ height: '60px', width: '60px' }} src={broken_icon} />
                     </Col>
                     <Col>
                       <Row>
@@ -162,7 +166,7 @@ function Inventory() {
                     </Col>
                     <hr style={{ color: '#62728D' }}></hr>
                     <Row>
-                      <Col>
+                      <Col style={{ cursor: 'pointer' }}>
                         <Image style={{ height: '17px', width: '17px' }} src={chart_icon} />
                         <span style={{ ...fontValue, color: '#00B7FF', marginLeft: '15px' }}>
                           <u>View Charts</u>
@@ -180,7 +184,7 @@ function Inventory() {
                       padding: '15px'
                     }}>
                     <Col>
-                      <Image style={{ height: '60px', width: '60px' }} src={sago_icon} />
+                      <Image style={{ height: '60px', width: '60px' }} src={dry_thippi_inventory} />
                     </Col>
                     <Col>
                       <Row>
@@ -212,7 +216,7 @@ function Inventory() {
                       padding: '15px'
                     }}>
                     <Col>
-                      <Image style={{ height: '60px', width: '60px' }} src={sago_icon} />
+                      <Image style={{ height: '60px', width: '60px' }} src={wet_thippi_inventory} />
                     </Col>
                     <Col>
                       <Row>
@@ -244,7 +248,7 @@ function Inventory() {
                       padding: '15px'
                     }}>
                     <Col>
-                      <Image style={{ height: '60px', width: '60px' }} src={sago_icon} />
+                      <Image style={{ height: '60px', width: '60px' }} src={starch_inventory} />
                     </Col>
                     <Col>
                       <Row>

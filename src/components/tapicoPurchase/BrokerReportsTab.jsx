@@ -56,7 +56,7 @@ function BrokerReports() {
     <Container style={{ background: '#EBEEF0' }}>
       <Row style={{ padding: '0px 12px', margin: '0px 28px' }}>
         {showBrokerReportDetails && selectedBroker && (
-          <Col lg={3}>
+          <Col lg={3} className="mt-3">
             <Row
               style={{
                 backgroundColor: 'white',

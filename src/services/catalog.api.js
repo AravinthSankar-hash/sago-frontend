@@ -10,9 +10,9 @@ function getItems(type) {
     });
 }
 
-function getPartners(type, data = {}) {
+function getPartners(type, data = {}, query = null) {
     return request({
-        url: `${ROUTES.BASE_ROUTE}/partners?partner_type=${type}`,
+        url: `${ROUTES.BASE_ROUTE}/partners?partner_type=${type}${query ? '&' + query : ''}`,
         method: 'POST',
         data: data
     });

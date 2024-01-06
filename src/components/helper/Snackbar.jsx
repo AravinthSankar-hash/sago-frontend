@@ -3,10 +3,10 @@ import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 
 function Toaster({ shouldOpen, message, backgroundColor }) {
-  const [open, setOpen] = useState(shouldOpen);
+  const [open, setOpen] = useState(Boolean(shouldOpen));
   const successGreen = '#4BB543';
   useEffect(() => {
-    setOpen(shouldOpen);
+    setOpen(Boolean(shouldOpen));
   }, [shouldOpen]);
 
   const handleClose = () => {
