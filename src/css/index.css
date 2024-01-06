@@ -92,3 +92,7 @@ body {
 .MuiTablePagination-selectLabel {
   margin-bottom: 0px !important;
 }
+
+.sidebar .css-19colxx-MuiDrawer-docked .MuiDrawer-paper{
+  background: #0A3546
+}

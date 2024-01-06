@@ -12,28 +12,28 @@ const headerStyle = {
 };
 
 const zeroPaddings = {
-  padding: '0px'
+  padding: '0px',
 };
 
 const Layout = () => {
   return (
     <div>
       <Container fluid>
-        <Row>
-          <Col style={zeroPaddings} lg="2" sm md="3">
+        <div>
+          <div style={zeroPaddings} className='sidebar'>
             {/* <Sidebar></Sidebar> */}
             <SidebarResp></SidebarResp>
-          </Col>
+          </div>
           {/* Considering full view port - header 56px as per figma and remaining for the dynamic routes*/}
-          <Col className="vh-100" lg="10">
+          <div className="main-container" style={{paddingLeft: '280px'}}>
             <Row style={headerStyle}>
               <Header></Header>
             </Row>
             <Row style={{ height: 'calc(100% - 56px)' }}>
               <AppRoutes />
             </Row>
-          </Col>
-        </Row>
+          </div>
+        </div>
       </Container>
     </div>
   );

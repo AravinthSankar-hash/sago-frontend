@@ -35,7 +35,7 @@ function SidebarResp(props) {
   };
   const drawer = (
     <div className="w-100 h-100">
-      <div style={{ background: '#0A3546', height: '100%' }}>
+      <div style={{ height: '100%' }}>
         <div style={{ backgroundColor: '#00B7FF', color: 'white', alignItems: 'center' }}>
           <Toolbar className="d-flex justify-content-between p-0">
             <div className="d-flex px-3 gap-3 align-items-center">
