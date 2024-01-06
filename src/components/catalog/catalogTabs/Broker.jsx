@@ -12,10 +12,11 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import BrokerTable from '../catalogTables/BrokerTable';
-import { brokerTableHeaders, brokerTableColumns } from '../catalog.const';
+import { brokerTableHeaders, brokerTableColumns, RESPONSE_MSG } from '../catalog.const';
 import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 import Toaster from '../../helper/Snackbar.jsx';
+import { isNumeric } from '../../helper/helper.js';
 // Store
 import {
   useShowBrokerNewForm,
@@ -31,6 +32,8 @@ const Broker = () => {
   const [selectedBroker, setSelectedBroker] = useState([]);
   const [showBrokerDetailsSection, setShowBrokerDetailsSection] = useState(false);
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [toasterMsg, setToasterMsg] = useState('Broker data saved');
+  const [toasterBackground, setToasterBackground] = useState(null);
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
   const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
@@ -93,17 +96,12 @@ const Broker = () => {
       setSelectedChips((prevSelectedChips) => [prevSelectedChips, label]);
     }
   };
-
-  const hideChanges = () => {
-    setShowFields(false);
-    openDetails();
-  };
   const brokerPageChanged = () => {
     console.log('page changed');
   };
 
   const onBrokerSave = (newAddedCustomer) => {
-    setShouldShowToaster(true);
+    invokeToaster();
     setBrokerData((brokers) => [newAddedCustomer, ...brokers]);
   };
 
@@ -112,6 +110,38 @@ const Broker = () => {
     setShowBrokerDetailsSection(true);
     updateCatalogBackBtnTxt('Broker Details');
   };
+
+  // Called every time user changes input value in search, debounce 1 seconds.
+  // If value is number phone search or name search, API call.
+  const onSearchBoxValueChange = (currentInputValue) => {
+    const isPhoneNumberSearch = isNumeric(currentInputValue);
+    const payload = {
+      ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
+    };
+    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.BROKER, payload)
+      .then((response) => {
+        setBrokerData(response.data);
+        if (response.data?.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching customer data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = null) => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    if (backgroundClr) {
+      setToasterBackground(backgroundClr);
+    }
+    setShouldShowToaster(true);
+  };
+
   return (
     <>
       {showBrokerNewForm ? (
@@ -128,7 +158,9 @@ const Broker = () => {
                 <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                   <Row style={{ display: 'flex', justifyContent: 'flex-start' }}>
                     <Col lg="3">
-                      <SearchBox placeHolder={'Search Name / Phone no.'}></SearchBox>
+                      <SearchBox
+                        placeHolder={'Search Name / Phone no.'}
+                        inputValueChanged={onSearchBoxValueChange}></SearchBox>
                     </Col>
                     {!showFields && (
                       <>
@@ -211,7 +243,10 @@ const Broker = () => {
               <> </>
             )}
           </Row>
-          <Toaster shouldOpen={shouldShowToaster} message="Broker data saved"></Toaster>
+          <Toaster
+            shouldOpen={shouldShowToaster}
+            message={toasterMsg}
+            backgroundColor={toasterBackground}></Toaster>
         </div>
       )}
     </>

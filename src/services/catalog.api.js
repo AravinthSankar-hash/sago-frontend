@@ -3,10 +3,11 @@ import { HTTP_METHODS, SERVICES } from './api.const.js';
 
 const { ROUTES } = SERVICES.CATALOG;
 
-function getItems(type) {
+function getItems(type, data = {}) {
     return request({
         url: `${ROUTES.BASE_ROUTE}/items?item_type=${type}`,
-        method: 'GET'
+        method: 'POST',
+        data: data
     });
 }
 
@@ -44,7 +45,11 @@ function remove({ type, id }) {
 }
 
 const CatalogService = {
-    getItems, getPartners, create, update, remove
-}
+    getItems,
+    getPartners,
+    create,
+    update,
+    remove
+};
 
 export default CatalogService;
