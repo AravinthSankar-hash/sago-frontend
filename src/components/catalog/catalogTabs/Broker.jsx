@@ -120,8 +120,8 @@ const Broker = () => {
     };
     CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.BROKER, payload)
       .then((response) => {
-        setBrokerData(response.data);
-        if (response.data?.length === 0) {
+        setBrokerData(response.data.data);
+        if (response.data?.data.length === 0) {
           invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
         }
       })

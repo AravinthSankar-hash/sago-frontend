@@ -123,8 +123,8 @@ const Supplier = () => {
     };
     CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.SUPPLIER, payload)
       .then((response) => {
-        setSupplierData(response.data);
-        if (response.data?.length === 0) {
+        setSupplierData(response.data.data);
+        if (response.data?.data.length === 0) {
           invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
         }
       })
