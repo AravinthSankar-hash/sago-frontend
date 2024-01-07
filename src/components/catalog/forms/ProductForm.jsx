@@ -59,11 +59,6 @@ const CatalogForm = ({ showForm, productAdded }) => {
       <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
         <Form.Label className="mt-4" style={headingStyle}>
           1. Product details
-          <CloseSharpIcon
-            style={{ cursor: 'pointer' }}
-            onClick={() => showForm(false)}
-            fontSize="medium"
-          />
         </Form.Label>
         <Row className="mb-3 mt-3">
           <Form.Group as={Col} xs={3} controlId="NewProdformName">

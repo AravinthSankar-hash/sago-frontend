@@ -102,8 +102,8 @@ const Staff = () => {
     };
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.STAFFS, payload)
       .then((response) => {
-        setStaffData(response.data);
-        if (response.data?.length === 0) {
+        setStaffData(response.data.data);
+        if (response.data?.data.length === 0) {
           invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
         }
       })

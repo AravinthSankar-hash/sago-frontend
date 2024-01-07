@@ -22,10 +22,10 @@ export const customerTableHeaders = [
     headerKey: 'City',
     sortKey: 'city'
   },
-  {
-    headerKey: 'State',
-    sortKey: 'state'
-  },
+  // {
+  //   headerKey: 'State',
+  //   sortKey: 'state'
+  // },
   {
     headerKey: 'Aadhar',
     sortKey: 'aadhar'
@@ -38,7 +38,7 @@ export const customerTableColumns = [
   'email',
   'customer_type',
   'city',
-  'aadhar',
+  // 'aadhar',
   'aadhar'
 ];
 
