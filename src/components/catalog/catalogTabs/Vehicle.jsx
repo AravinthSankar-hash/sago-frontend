@@ -125,8 +125,8 @@ const Vehicle = () => {
     };
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.VEHICLES, payload)
       .then((response) => {
-        setVehicleData(response.data);
-        if (response.data?.length === 0) {
+        setVehicleData(response.data.data);
+        if (response.data?.data.length === 0) {
           invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
         }
       })

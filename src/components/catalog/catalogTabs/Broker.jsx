@@ -128,6 +128,7 @@ const Broker = () => {
 
   const onBrokerSave = (newAddedBroker) => {
     invokeToaster();
+    updateShowBrokerNewForm(false);
     updateShowCatalogBackBtn(false);
     setBrokerData((brokers) => [newAddedBroker, ...brokers]);
   };

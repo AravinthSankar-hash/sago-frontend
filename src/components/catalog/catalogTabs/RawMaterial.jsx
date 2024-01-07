@@ -121,8 +121,8 @@ const RawMaterial = () => {
     };
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.RAWMATERIALS, payload)
       .then((response) => {
-        setRawMaterialData(response.data);
-        if (response.data?.length === 0) {
+        setRawMaterialData(response?.data?.data);
+        if (response.data?.data.length === 0) {
           invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
         }
       })

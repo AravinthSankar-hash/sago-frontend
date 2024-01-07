@@ -124,8 +124,8 @@ const Product = () => {
     };
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.PRODUCTS, payload)
       .then((response) => {
-        setProductData(response.data);
-        if (response.data?.length === 0) {
+        setProductData(response.data.data);
+        if (response.data?.data.length === 0) {
           invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
         }
       })
