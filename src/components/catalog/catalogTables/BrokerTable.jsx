@@ -12,6 +12,7 @@ import {
   tableCellClasses
 } from '@mui/material';
 import '../../../css/index.css';
+import TableSortLabel from '@mui/material/TableSortLabel';
 import { TABLE_ROW_SIZE_OPTIONS } from '../catalog.const.js';
 
 const BrokerTable = (props) => {
@@ -101,19 +102,64 @@ const BrokerTable = (props) => {
     hanldePageChange(0, parseInt(event.target.value));
   };
 
+  // Sorting
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState(null);
+  const handleSortRequest = (property) => {
+    const isAsc = orderBy === property && sortOrder === 'asc';
+    setSortOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+  const sortData = (data, order, orderByColumn) => {
+    if (!['broker_name', 'address'].includes(orderByColumn)) {
+      return data;
+    }
+    return data.sort((a, b) => {
+      let aData = a[orderByColumn];
+      let bData = b[orderByColumn];
+
+      if (aData < bData) {
+        return order === 'asc' ? -1 : 1;
+      }
+      if (aData > bData) {
+        return order === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  };
+
   return (
     <Wrapper>
       <TableContainer component={Paper} style={{ borderRadius: '15px' }}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead style={{ position: 'sticky', top: 0, zIndex: 2 }}>
             <TableRow>
-              {tableHeaders?.map((key, index) => (
+              {/* {tableHeaders?.map((key, index) => (
                 <StyledTableCell key={index}>{key}</StyledTableCell>
-              ))}
+              ))} */}
+              {tableHeaders.map((headerObj, index) => {
+                let sortDirection = 'asc';
+                if (headerObj.sortKey === orderBy) {
+                  sortDirection = sortOrder;
+                }
+                return (
+                  <StyledTableCell
+                    key={index}
+                    sortDirection={orderBy === headerObj.sortKey ? sortDirection : false}>
+                    <TableSortLabel
+                      hideSortIcon={headerObj?.sortEnabled ? false : true}
+                      active={headerObj.sortEnabled || false}
+                      direction={orderBy === headerObj.sortKey ? sortOrder : 'asc'}
+                      onClick={() => handleSortRequest(headerObj.sortKey)}>
+                      {headerObj.headerKey}
+                    </TableSortLabel>
+                  </StyledTableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData?.map((tableRow, RowIdx) => {
+            {sortData(tableData, sortOrder, orderBy).map((tableRow, RowIdx) => {
               return (
                 <StyledTableRow key={RowIdx} onClick={() => tableRowClicked(tableRow)}>
                   {tableColumns?.map((columnKey, colIdx) => {

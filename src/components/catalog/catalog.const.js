@@ -42,9 +42,34 @@ export const customerTableColumns = [
   'aadhar'
 ];
 
-export const rawMaterialTableHeaders = ['Name', 'Description'];
-
-export const rawMaterialTableColumns = ['name', 'description'];
+export const brokerTableHeadersSample = [
+  {
+    headerKey: 'Broker Name',
+    sortKey: 'broker_name',
+    sortEnabled: true
+  },
+  {
+    headerKey: 'Address',
+    sortKey: 'address',
+    sortEnabled: true
+  },
+  {
+    headerKey: 'Com. %',
+    sortKey: 'commission_percent'
+  },
+  {
+    headerKey: 'Bank Name',
+    sortKey: 'bank_name'
+  },
+  {
+    headerKey: 'Balance',
+    sortKey: 'open_balance'
+  },
+  {
+    headerKey: 'City',
+    sortKey: 'city'
+  }
+];
 
 export const brokerTableHeaders = [
   'Broker Name',
@@ -63,6 +88,10 @@ export const brokerTableColumns = [
   'open_balance',
   'city'
 ];
+
+export const rawMaterialTableHeaders = ['Name', 'Description'];
+
+export const rawMaterialTableColumns = ['name', 'description'];
 
 export const supplierTableHeaders = [
   'Supplier Name',

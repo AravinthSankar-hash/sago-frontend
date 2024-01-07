@@ -48,7 +48,7 @@ const Vehicle = () => {
   useEffect(() => {
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.VEHICLES)
       .then((response) => {
-        setVehicleData(response.data);
+        setVehicleData(response.data.data);
       })
       .catch((error) => {
         console.log('Error in getting customer data', error);

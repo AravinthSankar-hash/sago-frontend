@@ -37,16 +37,15 @@ function Dashboard() {
   };
   return (
     <>
-      <div style={{ height: '56px' }}>
+      <div>
         <Row
           style={{
             background: '#ffffff',
-            // height: '56px',
             padding: '20px'
           }}>
           Dashboard
         </Row>
-        <Row style={{ background: '#ffffff' }}>
+        <Row style={{ background: '#ffffff', marginBottom: '15px' }}>
           <Col lg="2">
             <DateSelector size="smaller" customLabel="From"></DateSelector>
           </Col>
