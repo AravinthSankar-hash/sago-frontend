@@ -113,6 +113,7 @@ const Product = () => {
   const onProductSave = (newAddedProduct) => {
     invokeToaster();
     updateShowProductNewForm(false);
+    updateShowCatalogBackBtn(false);
     setProductData((products) => [newAddedProduct, ...products]);
   };
 

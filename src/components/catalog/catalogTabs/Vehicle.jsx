@@ -113,6 +113,7 @@ const Vehicle = () => {
   };
   const onVehicleSave = (newAddedVehicle) => {
     invokeToaster();
+    updateShowCatalogBackBtn(false);
     updateShowVehicleNewForm(false);
     setVehicleData((vehicles) => [newAddedVehicle, ...vehicles]);
   };

@@ -99,6 +99,7 @@ const Customer = () => {
     invokeToaster();
     // Store
     updateShowCustomerNewForm(false);
+    updateShowCatalogBackBtn(false);
     setCustomerData((customers) => [newAddedCustomer, ...customers]);
   };
 

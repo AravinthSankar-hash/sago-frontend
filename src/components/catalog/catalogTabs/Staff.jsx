@@ -91,6 +91,7 @@ const Staff = () => {
   const onStaffSave = (newAddedStaff) => {
     invokeToaster();
     updateShowStaffNewForm(false);
+    updateShowCatalogBackBtn(false);
     setStaffData((staffs) => [newAddedStaff, ...staffs]);
   };
 
