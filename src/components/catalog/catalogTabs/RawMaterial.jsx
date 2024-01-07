@@ -48,7 +48,7 @@ const RawMaterial = () => {
   useEffect(() => {
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.RAWMATERIALS)
       .then((response) => {
-        setRawMaterialData(response.data);
+        setRawMaterialData(response?.data?.data);
       })
       .catch((error) => {
         console.log('Error in getting customer data', error);
