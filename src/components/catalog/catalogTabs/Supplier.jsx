@@ -106,6 +106,7 @@ const Supplier = () => {
 
   const onSupplierSave = (newAddedSupplier) => {
     invokeToaster();
+    updateShowCatalogBackBtn(false);
     setSupplierData((suppliers) => [newAddedSupplier, ...suppliers]);
   };
 

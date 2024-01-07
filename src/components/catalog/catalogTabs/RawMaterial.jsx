@@ -108,6 +108,7 @@ const RawMaterial = () => {
   const onRawMaterialSave = (newAddedRawMaterial) => {
     invokeToaster();
     updateShowRawMaterialNewForm(false);
+    updateShowCatalogBackBtn(false);
     setRawMaterialData((rawMaterials) => [newAddedRawMaterial, ...rawMaterials]);
   };
 
