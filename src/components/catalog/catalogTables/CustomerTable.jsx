@@ -103,6 +103,7 @@ const CustomerTable = (props) => {
     hanldePageChange(0, parseInt(event.target.value));
   };
 
+  // Sorting
   const [sortOrder, setSortOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState(null);
   const handleSortRequest = (property) => {
@@ -110,10 +111,13 @@ const CustomerTable = (props) => {
     setSortOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
-  const sortData = (data, order, orderByProperty) => {
+  const sortData = (data, order, orderByColumn) => {
+    if (!['customer_name', 'phone', 'customer_type'].includes(orderByColumn)) {
+      return data;
+    }
     return data.sort((a, b) => {
-      let aData = a[orderByProperty];
-      let bData = b[orderByProperty];
+      let aData = a[orderByColumn];
+      let bData = b[orderByColumn];
 
       if (aData < bData) {
         return order === 'asc' ? -1 : 1;
@@ -141,7 +145,8 @@ const CustomerTable = (props) => {
                     key={index}
                     sortDirection={orderBy === headerObj.sortKey ? sortDirection : false}>
                     <TableSortLabel
-                      active={headerObj.sortEnabled || false}
+                      hideSortIcon={headerObj?.sortEnabled ? false : true}
+                      active={headerObj?.sortEnabled ? true : false}
                       direction={orderBy === headerObj.sortKey ? sortOrder : 'asc'}
                       onClick={() => handleSortRequest(headerObj.sortKey)}>
                       {headerObj.headerKey}

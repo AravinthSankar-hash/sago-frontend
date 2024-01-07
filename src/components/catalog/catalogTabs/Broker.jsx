@@ -12,7 +12,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import BrokerTable from '../catalogTables/BrokerTable';
-import { brokerTableHeaders, brokerTableColumns, RESPONSE_MSG } from '../catalog.const';
+import { brokerTableHeadersSample, brokerTableColumns, RESPONSE_MSG } from '../catalog.const';
 import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 import Toaster from '../../helper/Snackbar.jsx';
@@ -250,7 +250,7 @@ const Broker = () => {
                     {brokerData.length ? (
                       <BrokerTable
                         tableData={brokerData}
-                        tableHeaders={brokerTableHeaders}
+                        tableHeaders={brokerTableHeadersSample}
                         tableColumns={brokerTableColumns}
                         totalBrokerDataCount={totalBrokerDataCount}
                         hanldePageChange={brokerPageChanged}

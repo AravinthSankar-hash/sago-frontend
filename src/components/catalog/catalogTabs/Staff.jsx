@@ -49,7 +49,7 @@ const Staff = () => {
   useEffect(() => {
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.STAFFS)
       .then((response) => {
-        setStaffData(response.data);
+        setStaffData(response.data.data);
       })
       .catch((error) => {
         console.log('Error in getting customer data', error);

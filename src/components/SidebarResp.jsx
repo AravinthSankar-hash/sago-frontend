@@ -33,6 +33,16 @@ function SidebarResp(props) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  const v1footer = {
+    position: 'absolute',
+    bottom: '5%',
+    'margin-left': '25%',
+    'font-weight': 'bolder',
+    'letter-spacing': '0.1em',
+    'font-family': 'Roboto',
+    'font-size': '12px',
+    color: '#00b7ff'
+  };
   const drawer = (
     <div className="w-100 h-100">
       <div style={{ height: '100%' }}>
@@ -98,6 +108,7 @@ function SidebarResp(props) {
           </p>
         </div> */}
         {/* </div> */}
+        <div style={v1footer}>Version 0.1</div>
       </div>
     </div>
   );

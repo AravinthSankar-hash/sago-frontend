@@ -48,7 +48,7 @@ const Product = () => {
   useEffect(() => {
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.PRODUCTS)
       .then((response) => {
-        setProductData(response.data);
+        setProductData(response.data.data);
       })
       .catch((error) => {
         console.log('Error in getting customer data', error);
