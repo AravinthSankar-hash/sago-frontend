@@ -31,6 +31,7 @@ const useStore = create((set) => ({
   showTPPurchaseNewForm: false,
   showTPPurchaseDetails: false,
   showTPBackBtn: false,
+  showTPBrokerReportDetails: false,
   activeTPTabComponent: <Purchases />,
 
   // Sales
@@ -120,7 +121,9 @@ const useStore = create((set) => ({
   updateShowTPPurchaseDetails: (value) => {
     set({ showTPPurchaseDetails: value });
   },
-
+  updateShowTPBrokerReportDetails: (value) => {
+    set({ showTPBrokerReportDetails: value });
+  },
   updateShowTPBackBtn: (value) => {
     set({ showTPBackBtn: value });
   },
@@ -245,17 +248,17 @@ export const useUpdateShowSupplierNewForm = () =>
 export const useActiveTPTabComponent = () => useStore((state) => state.activeTPTabComponent);
 export const useUpdateActiveTPTabComponent = () =>
   useStore((state) => state.updateActiveTPTabComponent);
-// back Button
 export const useShowTPBackBtn = () => useStore((state) => state.showTPBackBtn);
 export const useUpdateShowTPBackBtn = () => useStore((state) => state.updateShowTPBackBtn);
-
 export const useShowTPPurchaseNewForm = () => useStore((state) => state.showTPPurchaseNewForm);
 export const useUpdateShowTPPurchaseNewForm = () =>
   useStore((state) => state.updateShowTPPurchaseNewForm);
-
 export const useShowPurhcaseDetails = () => useStore((state) => state.showTPPurchaseDetails);
 export const useUpdateShowPurhcaseDetails = () =>
   useStore((state) => state.updateShowTPPurchaseDetails);
+export const useShowTPBrokerReportDetails = () => useStore((state) => state.showTPBrokerReportDetails);
+export const useUpdateShowTPBrokerReportDetails = () =>
+  useStore((state) => state.updateShowTPBrokerReportDetails);
 
 // Sales
 export const useActiveSalesTabComponent = () => useStore((state) => state.activeSalesTabComponent);

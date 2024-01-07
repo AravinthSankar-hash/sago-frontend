@@ -9,7 +9,8 @@ import {
   useShowTPBackBtn,
   useUpdateShowTPBackBtn,
   useUpdateShowPurhcaseDetails,
-  useUpdateShowTPPurchaseNewForm
+  useUpdateShowTPPurchaseNewForm,
+  useUpdateShowTPBrokerReportDetails
 } from '../../store/store.js';
 import Purchases from './PurchasesTab.jsx';
 import BrokerReports from './BrokerReportsTab.jsx';
@@ -23,10 +24,13 @@ function TapicoPurchase() {
   const updateActiveTPTabComponent = useUpdateActiveTPTabComponent(); // Method to update the active component, whenver the tab is clicked
   const updateShowPurhcaseDetails = useUpdateShowPurhcaseDetails();
   const updateShowTPPurchaseNewForm = useUpdateShowTPPurchaseNewForm();
+  const updateShowTPBrokerReportDetails = useUpdateShowTPBrokerReportDetails();
   const onBackBtnClick = () => {
     updateShowTPBackBtn(false);
     updateShowTPPurchaseNewForm(false);
     updateShowPurhcaseDetails(false);
+    updateShowTPBrokerReportDetails(false);
+    updateActiveTPTabComponent(<Purchases />);
   };
 
   const renderTabComponent = (tabName) => {
@@ -36,6 +40,7 @@ function TapicoPurchase() {
       case 'brokerreports':
         return <BrokerReports />;
       case 'reports':
+        updateShowTPBackBtn(true);
         return <Reports />;
       default:
         return <div>Coming soon...</div>;

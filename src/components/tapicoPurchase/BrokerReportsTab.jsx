@@ -10,10 +10,20 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import { tableHeaders, tableColumns } from './tp.const';
+// Store
+import {
+  useUpdateShowTPBackBtn,
+  useShowTPBrokerReportDetails,
+  useUpdateShowTPBrokerReportDetails
+} from '../../store/store.js';
 
 function BrokerReports() {
   const [brokerReportsData, setBrokerReportsData] = useState([]);
   const [selectedBroker, setSelectedBroker] = useState();
+  // Store
+  const updateShowTPBackBtn = useUpdateShowTPBackBtn(); // Bool to show/hide the back TP btn
+  const showTPBrokerReportDetails = useShowTPBrokerReportDetails();
+  const updateShowTPBrokerReportDetails = useUpdateShowTPBrokerReportDetails();
 
   useEffect(() => {
     fetch('http://localhost:3001/broker-reports')
@@ -42,12 +52,12 @@ function BrokerReports() {
     setSelectedChips([]);
     setSelectedChips([label]);
   };
-  const [showBrokerReportDetails, setShowBrokerReportDetails] = useState(false);
 
   const onTableRowClick = (clickedRow) => {
     setSelectedBroker(clickedRow);
-    console.log(clickedRow, 'clickedrow');
-    setShowBrokerReportDetails(true);
+    updateShowTPBrokerReportDetails(true);
+    // Show back button
+    updateShowTPBackBtn(true);
   };
 
   const fontHeader = { font: 'Roboto', color: '#62728D', fontSize: '14px' };
@@ -55,7 +65,7 @@ function BrokerReports() {
   return (
     <Container style={{ background: '#EBEEF0' }}>
       <Row style={{ padding: '0px 12px', margin: '0px 28px' }}>
-        {showBrokerReportDetails && selectedBroker && (
+        {showTPBrokerReportDetails && selectedBroker && (
           <Col lg={3} className="mt-3">
             <Row
               style={{
@@ -119,7 +129,7 @@ function BrokerReports() {
           </Col>
         )}
         <Col
-          lg={showBrokerReportDetails ? 9 : 12}
+          lg={showTPBrokerReportDetails ? 9 : 12}
           className="d-flex flex-column justify-content-center">
           {/* Filters */}
           <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
