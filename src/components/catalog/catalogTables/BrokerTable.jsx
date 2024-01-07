@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   styled,
   TableCell,
@@ -11,9 +12,19 @@ import {
   tableCellClasses
 } from '@mui/material';
 import '../../../css/index.css';
+import { TABLE_ROW_SIZE_OPTIONS } from '../catalog.const.js';
 
 const BrokerTable = (props) => {
-  const { tableData, tableHeaders, tableColumns, hanldePageChange, tableRowClicked } = props;
+  const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_SIZE_OPTIONS[0]);
+  const [page, setPage] = useState(0);
+  const {
+    tableData,
+    tableHeaders,
+    tableColumns,
+    hanldePageChange,
+    tableRowClicked,
+    totalBrokerDataCount
+  } = props;
 
   const Wrapper = styled('div')({
     display: 'flex',
@@ -76,6 +87,20 @@ const BrokerTable = (props) => {
     zIndex: 2
   }));
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+    // Invoke parent
+    hanldePageChange(newPage, rowsPerPage);
+  };
+
+  // This will be invoked whenver we change size of the page in the table
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value));
+    setPage(0);
+    // Invoke parent
+    hanldePageChange(0, parseInt(event.target.value));
+  };
+
   return (
     <Wrapper>
       <TableContainer component={Paper} style={{ borderRadius: '15px' }}>
@@ -104,14 +129,15 @@ const BrokerTable = (props) => {
           </TableBody>
           <TableBody>
             <StyledTablePaginationRow>
-              <TableCell colSpan={10}>
+              <TableCell colSpan={tableHeaders.length}>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
+                  rowsPerPageOptions={TABLE_ROW_SIZE_OPTIONS}
                   component="div"
-                  count={100}
-                  rowsPerPage={5}
-                  page={0}
-                  onPageChange={hanldePageChange}
+                  count={totalBrokerDataCount}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </TableCell>
             </StyledTablePaginationRow>

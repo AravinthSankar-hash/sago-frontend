@@ -1,25 +1,34 @@
 export const customerTableHeaders = [
   {
-
-    headerKey: 'Customer Name', sortKey: 'customer_name', sortEnabled: true,
+    headerKey: 'Customer Name',
+    sortKey: 'customer_name',
+    sortEnabled: true
   },
   {
-    headerKey: 'Phone', sortKey: 'phone', sortEnabled: true,
+    headerKey: 'Phone',
+    sortKey: 'phone',
+    sortEnabled: true
   },
   {
-    headerKey: 'Email', sortKey: 'email'
+    headerKey: 'Email',
+    sortKey: 'email'
   },
   {
-    headerKey: 'Type', sortKey: 'customer_type', sortEnabled: true,
+    headerKey: 'Type',
+    sortKey: 'customer_type',
+    sortEnabled: true
   },
   {
-    headerKey: 'City', sortKey: 'city',
+    headerKey: 'City',
+    sortKey: 'city'
   },
   {
-    headerKey: 'State', sortKey: 'state',
+    headerKey: 'State',
+    sortKey: 'state'
   },
   {
-    headerKey: 'Aadhar', sortKey: 'aadhar'
+    headerKey: 'Aadhar',
+    sortKey: 'aadhar'
   }
 ];
 
@@ -30,7 +39,7 @@ export const customerTableColumns = [
   'customer_type',
   'city',
   'aadhar',
-  'aadhar',
+  'aadhar'
 ];
 
 export const rawMaterialTableHeaders = ['Name', 'Description'];
@@ -52,7 +61,7 @@ export const brokerTableColumns = [
   'commission_percent',
   'bank_name',
   'open_balance',
-  'city',
+  'city'
 ];
 
 export const supplierTableHeaders = [
@@ -98,11 +107,10 @@ export const staffTableHeaders = ['Staffs Name', 'Address', 'Phone no.', 'Work']
 
 export const staffTableColumns = ['name', 'address', 'phone', 'designation'];
 
-
 export const RESPONSE_MSG = {
   INVALID_SEARCH_TEXT: 'Invalid Search Text',
   NO_DATA_FOUND: 'No Data Found',
-  DATA_FETCHED_SUCCESSFULLY: 'Data Fetched Successfully',
-}
+  DATA_FETCHED_SUCCESSFULLY: 'Data Fetched Successfully'
+};
 
-export const TABLE_ROW_SIZE_OPTIONS = [5, 10, 25, 50, 100];
+export const TABLE_ROW_SIZE_OPTIONS = [10, 25, 100];

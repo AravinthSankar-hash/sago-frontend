@@ -48,7 +48,7 @@ const Customer = () => {
   const [toasterMsg, setToasterMsg] = useState('Customer data saved');
   const [searchPayload, setSearchPayload] = useState({});
   const [totalCustomerDataCount, setTotalCustomerDataCount] = useState(0);
-  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(5);
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
 
   const buttonStyle = {
     borderColor: '#00B7FF',

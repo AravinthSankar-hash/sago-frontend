@@ -26,6 +26,11 @@ import {
 } from '../../../store/store.js';
 
 const Broker = () => {
+  useEffect(() => {
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, []);
+
   const [selectedChips, setSelectedChips] = useState([]);
   const [showFields, setShowFields] = useState(true);
   const [brokerData, setBrokerData] = useState([]);
@@ -34,6 +39,10 @@ const Broker = () => {
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [toasterMsg, setToasterMsg] = useState('Broker data saved');
   const [toasterBackground, setToasterBackground] = useState(null);
+  const [totalBrokerDataCount, setTotalBrokerDataCount] = useState(0);
+  const [searchPayload, setSearchPayload] = useState({});
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
+
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
   const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
@@ -46,7 +55,7 @@ const Broker = () => {
         setBrokerData(response.data.data);
       })
       .catch((error) => {
-        console.log('Error in getting customer data', error);
+        console.log('Error in getting Broker data', error);
       });
   }, []);
 
@@ -96,13 +105,30 @@ const Broker = () => {
       setSelectedChips((prevSelectedChips) => [prevSelectedChips, label]);
     }
   };
-  const brokerPageChanged = () => {
-    console.log('page changed');
+  const brokerPageChanged = (currentPageNo, rowsPerPage) => {
+    setCurrentRowsPerPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
   };
 
-  const onBrokerSave = (newAddedCustomer) => {
+  const invokeSearchAPI = (payload, query = null) => {
+    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.BROKER, payload, query)
+      .then((response) => {
+        setBrokerData(response.data.data);
+        setTotalBrokerDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching Broker data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
+  const onBrokerSave = (newAddedBroker) => {
     invokeToaster();
-    setBrokerData((brokers) => [newAddedCustomer, ...brokers]);
+    setBrokerData((brokers) => [newAddedBroker, ...brokers]);
   };
 
   const onTableRowClick = (clickedRow) => {
@@ -118,17 +144,19 @@ const Broker = () => {
     const payload = {
       ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
     };
-    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.BROKER, payload)
-      .then((response) => {
-        setBrokerData(response.data.data);
-        if (response.data?.data.length === 0) {
-          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
-        }
-      })
-      .catch((error) => {
-        console.log('Error in searching customer data', error);
-        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
-      });
+    setSearchPayload(payload);
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+    // CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.BROKER, payload)
+    //   .then((response) => {
+    //     setBrokerData(response.data.data);
+    //     if (response.data?.data.length === 0) {
+    //       invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log('Error in searching Broker data', error);
+    //     invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+    //   });
   };
 
   // Just a generic method to invoke toaster
@@ -224,6 +252,7 @@ const Broker = () => {
                         tableData={brokerData}
                         tableHeaders={brokerTableHeaders}
                         tableColumns={brokerTableColumns}
+                        totalBrokerDataCount={totalBrokerDataCount}
                         hanldePageChange={brokerPageChanged}
                         tableRowClicked={onTableRowClick}
                         rowsPerPage={10}
