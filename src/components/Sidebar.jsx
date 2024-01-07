@@ -46,7 +46,7 @@ const SidebarHeader = styled.p`
   color: #5c9eb8;
   font-family: Roboto;
   margin: 13px 35px;
-  font-size: 10px;
+  font-size: 12px;
 `;
 const SidebarHeaderName = styled.p`
   margin: 0;
@@ -68,7 +68,7 @@ const SideBarItems = styled.div`
   text-align: center;
   transition: all 0.05s ease-in-out;
   margin: 0px 0;
-  font: 14px;
+  font-size: 14px;
   border-radius: 4px;
   &:hover {
     cursor: pointer;

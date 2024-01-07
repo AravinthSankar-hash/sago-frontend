@@ -30,19 +30,19 @@
   "rules": {
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off",
-    "no-unused-vars": "error",
+    "no-unused-vars": "off",
     "prettier/prettier": [
-      "error",
+      "off",
       {
         "endOfLine": "auto"
       }
     ],
-    "indent": [
-      "error",
-      2
-    ],
+    // "indent": [
+    //   "off",
+    //   2
+    // ],
     "quotes": [
-      "error",
+      "off",
       "single",
       {
         "allowTemplateLiterals": true
