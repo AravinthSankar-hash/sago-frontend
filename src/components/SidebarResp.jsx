@@ -94,20 +94,6 @@ function SidebarResp(props) {
             <Divider />
           </>
         ))}
-        {/* </div> */}
-        {/* <div>
-          <p
-            style={{
-              color: '#5C9EB8',
-              fontSize: '10px'
-              // alignItems: 'center',
-              // verticalAlign: 'end',
-              // height: '100%'
-            }}>
-            Version 0.1
-          </p>
-        </div> */}
-        {/* </div> */}
         <div style={v1footer}>Version 0.1</div>
       </div>
     </div>
