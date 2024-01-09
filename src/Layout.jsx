@@ -1,5 +1,3 @@
-import React from 'react';
-// import Sidebar from './components/Sidebar.jsx';
 import Header from './components/Header.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
@@ -7,35 +5,34 @@ import AppRoutes from './routes.jsx';
 import SidebarResp from 'components/SidebarResp.jsx';
 
 const headerStyle = {
-  height: '48px',
+  height: '65px',
   borderBottom: '1px solid #EBEEF0'
 };
 
 const zeroPaddings = {
-  padding: '0px',
+  padding: '0px'
 };
 
 const Layout = () => {
   return (
-    <div>
+    <>
       <Container fluid>
-        <div>
-          <div style={zeroPaddings} className='sidebar'>
-            {/* <Sidebar></Sidebar> */}
+        <Row>
+          <Col style={zeroPaddings} className="sidebar" lg={2}>
             <SidebarResp></SidebarResp>
-          </div>
+          </Col>
           {/* Considering full view port - header 56px as per figma and remaining for the dynamic routes*/}
-          <div className="main-container" style={{paddingLeft: '280px'}}>
+          <Col className="vh-100" lg={10}>
             <Row style={headerStyle}>
               <Header></Header>
             </Row>
-            <Row style={{ height: 'calc(100% - 56px)' }}>
+            <Row style={{ height: 'calc(100% - 65px)' }}>
               <AppRoutes />
             </Row>
-          </div>
-        </div>
+          </Col>
+        </Row>
       </Container>
-    </div>
+    </>
   );
 };
 
