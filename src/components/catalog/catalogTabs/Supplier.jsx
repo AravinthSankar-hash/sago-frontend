@@ -3,7 +3,6 @@ import { Col, Row } from 'react-bootstrap';
 import '../../../css/index.css';
 import CatalogNewSupplierForm from '../forms/CatalogNewSupplier.jsx';
 import CatalogSupplierDetails from '../CatalogSupplierDetails.jsx';
-import AgGridTable from '../../helper/AgGridTable.jsx';
 import SearchBox from '../../helper/SearchBox.jsx';
 import DateSelector from '../../helper/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
@@ -29,6 +28,11 @@ import {
 } from '../../../store/store.js';
 
 const Supplier = () => {
+  useEffect(() => {
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, []);
+
   const [selectedSupplier, setSelectedSupplier] = useState();
   const [selectedChips, setSelectedChips] = useState([]);
   const [showFields, setShowFields] = useState(true);
@@ -37,6 +41,9 @@ const Supplier = () => {
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [toasterMsg, setToasterMsg] = useState('Supplier data saved');
   const [toasterBackground, setToasterBackground] = useState(null);
+  const [totalSupplierDataCount, setTotalSupplierDataCount] = useState(0);
+  const [searchPayload, setSearchPayload] = useState({});
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
 
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
@@ -50,7 +57,7 @@ const Supplier = () => {
         setSupplierData(response.data.data);
       })
       .catch((error) => {
-        console.log('Error in getting customer data', error);
+        console.log('Error in getting Supplier data', error);
       });
   }, []);
 
@@ -86,16 +93,34 @@ const Supplier = () => {
     }
   };
 
-  const brokerPageChanged = () => {
-    console.log('page changed');
+  const supplierPageChanged = (currentPageNo, rowsPerPage) => {
+    setCurrentRowsPerPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
   };
+
+  const invokeSearchAPI = (payload, query = null) => {
+    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.SUPPLIER, payload, query)
+      .then((response) => {
+        setSupplierData(response.data.data);
+        setTotalSupplierDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching Supplier data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
   const showForm = (shouldShow) => {
     updateShowSupplierNewForm(shouldShow);
     // Show back btn - Store
     updateShowCatalogBackBtn(true);
     updateCatalogBackBtnTxt('Add Supplier');
   };
-  const addNewBroker = () => {
+  const addNewSupplier = () => {
     console.log('Supplier table SHOW FORM CLICKED');
     showForm(true);
   };
@@ -112,7 +137,6 @@ const Supplier = () => {
 
   const onTableRowClick = (clickedRow) => {
     setSelectedSupplier(clickedRow);
-    console.log(clickedRow);
     setShowSupplierDetailsSection(true);
     updateCatalogBackBtnTxt('Supplier Details');
   };
@@ -122,17 +146,8 @@ const Supplier = () => {
     const payload = {
       ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
     };
-    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.SUPPLIER, payload)
-      .then((response) => {
-        setSupplierData(response.data.data);
-        if (response.data?.data.length === 0) {
-          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
-        }
-      })
-      .catch((error) => {
-        console.log('Error in searching customer data', error);
-        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
-      });
+    setSearchPayload(payload);
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
 
   // Just a generic method to invoke toaster
@@ -193,7 +208,7 @@ const Supplier = () => {
                       <Col
                         lg={showSupplierDetailsSection ? 3 : 2}
                         className="d-flex justify-content-end">
-                        <Button sx={buttonStyle} variant="outlined" onClick={addNewBroker}>
+                        <Button sx={buttonStyle} variant="outlined" onClick={addNewSupplier}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
                           New Supplier
                         </Button>
@@ -228,7 +243,8 @@ const Supplier = () => {
                         tableData={supplierData}
                         tableHeaders={supplierTableHeaders}
                         tableColumns={supplierTableColumns}
-                        hanldePageChange={brokerPageChanged}
+                        totalSupplierDataCount={totalSupplierDataCount}
+                        hanldePageChange={supplierPageChanged}
                         tableRowClicked={onTableRowClick}
                         rowsPerPage={10}
                         page={5}></SupplierTable>
