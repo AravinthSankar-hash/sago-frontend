@@ -66,10 +66,6 @@ const Broker = () => {
     updateCatalogBackBtnTxt('Add Broker');
   };
 
-  const openDetails = () => {
-    setShowBrokerDetailsSection(true);
-  };
-
   const closeDetails = () => {
     setShowBrokerDetailsSection(false);
   };
@@ -148,17 +144,6 @@ const Broker = () => {
     };
     setSearchPayload(payload);
     invokeSearchAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
-    // CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.BROKER, payload)
-    //   .then((response) => {
-    //     setBrokerData(response.data.data);
-    //     if (response.data?.data.length === 0) {
-    //       invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log('Error in searching Broker data', error);
-    //     invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
-    //   });
   };
 
   // Just a generic method to invoke toaster

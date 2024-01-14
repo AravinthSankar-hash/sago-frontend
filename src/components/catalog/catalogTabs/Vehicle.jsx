@@ -30,6 +30,11 @@ import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 
 const Vehicle = () => {
+  useEffect(() => {
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, []);
+
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
   const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
@@ -44,6 +49,9 @@ const Vehicle = () => {
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [toasterMsg, setToasterMsg] = useState('Vehicle data saved');
   const [toasterBackground, setToasterBackground] = useState(null);
+  const [totalVehicleDataCount, setTotalVehicleDataCount] = useState(0);
+  const [searchPayload, setSearchPayload] = useState({});
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
 
   useEffect(() => {
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.VEHICLES)
@@ -51,7 +59,7 @@ const Vehicle = () => {
         setVehicleData(response.data.data);
       })
       .catch((error) => {
-        console.log('Error in getting customer data', error);
+        console.log('Error in getting Vehicle data', error);
       });
   }, []);
 
@@ -97,8 +105,28 @@ const Vehicle = () => {
     updateCatalogBackBtnTxt('Add Vehicle');
   };
 
+  const vehiclePageChanged = (currentPageNo, rowsPerPage) => {
+    setCurrentRowsPerPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  };
+
+  const invokeSearchAPI = (payload, query = null) => {
+    CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.VEHICLES, payload, query)
+      .then((response) => {
+        setVehicleData(response.data.data);
+        setTotalVehicleDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching Broker data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
   const onTableRowClick = (clickedRow) => {
-    console.log('Vehicle table row clicked');
     setSelectedVehicle(clickedRow);
 
     // Show details section - Store
@@ -108,9 +136,6 @@ const Vehicle = () => {
     updateCatalogBackBtnTxt('Vehicle Details');
   };
 
-  const vehiclePageChanged = () => {
-    console.log('page changed');
-  };
   const onVehicleSave = (newAddedVehicle) => {
     invokeToaster();
     updateShowCatalogBackBtn(false);
@@ -123,17 +148,8 @@ const Vehicle = () => {
     const payload = {
       ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
     };
-    CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.VEHICLES, payload)
-      .then((response) => {
-        setVehicleData(response.data.data);
-        if (response.data?.data.length === 0) {
-          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
-        }
-      })
-      .catch((error) => {
-        console.log('Error in searching customer data', error);
-        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
-      });
+    setSearchPayload(payload);
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
 
   // Just a generic method to invoke toaster
@@ -222,15 +238,20 @@ const Vehicle = () => {
                 </div>
                 <Row>
                   <Col className="d-flex flex-column justify-content-center">
-                    <VehicleTable
-                      tableData={vehicleData}
-                      tableHeaders={vehicleTableHeaders}
-                      tableColumns={vehicleTableColumns}
-                      hanldePageChange={vehiclePageChanged}
-                      tableRowClicked={onTableRowClick}
-                      rowsPerPage={10}
-                      page={5}
-                    />
+                    {vehicleData.length ? (
+                      <VehicleTable
+                        tableData={vehicleData}
+                        tableHeaders={vehicleTableHeaders}
+                        tableColumns={vehicleTableColumns}
+                        totalVehicleDataCount={totalVehicleDataCount}
+                        hanldePageChange={vehiclePageChanged}
+                        tableRowClicked={onTableRowClick}
+                        rowsPerPage={10}
+                        page={5}
+                      />
+                    ) : (
+                      <></>
+                    )}
                   </Col>
                 </Row>
               </div>{' '}

@@ -30,6 +30,10 @@ import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 
 const RawMaterial = () => {
+  useEffect(() => {
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, []);
   //State
   const [selectedChips, setSelectedChips] = useState([]);
   const [selectedRawMaterial, setSelectedRawMaterial] = useState();
@@ -37,6 +41,9 @@ const RawMaterial = () => {
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [toasterMsg, setToasterMsg] = useState('Raw-material data saved');
   const [toasterBackground, setToasterBackground] = useState(null);
+  const [totalRawmaterialsDataCount, setTotalRawmaterialsDataCount] = useState(0);
+  const [searchPayload, setSearchPayload] = useState({});
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
   const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
@@ -93,18 +100,35 @@ const RawMaterial = () => {
     updateCatalogBackBtnTxt('Add Raw-Material');
   };
 
+  const rawMaterialPageChanged = (currentPageNo, rowsPerPage) => {
+    setCurrentRowsPerPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  };
+
+  const invokeSearchAPI = (payload, query = null) => {
+    CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.RAWMATERIALS, payload, query)
+      .then((response) => {
+        setRawMaterialData(response.data.data);
+        setTotalRawmaterialsDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching Broker data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
   const onTableRowClick = (clickedRow) => {
     setSelectedRawMaterial(clickedRow);
     updateShowRawMaterialDetailsSection(true);
-    console.log(clickedRow);
     // Show back btn - Store
     updateShowCatalogBackBtn(true);
     updateCatalogBackBtnTxt('Raw-Materials Details');
   };
 
-  const rawMaterialPageChanged = () => {
-    console.log('page changed');
-  };
   const onRawMaterialSave = (newAddedRawMaterial) => {
     invokeToaster();
     updateShowRawMaterialNewForm(false);
@@ -119,17 +143,8 @@ const RawMaterial = () => {
     const payload = {
       ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
     };
-    CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.RAWMATERIALS, payload)
-      .then((response) => {
-        setRawMaterialData(response?.data?.data);
-        if (response.data?.data.length === 0) {
-          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
-        }
-      })
-      .catch((error) => {
-        console.log('Error in searching customer data', error);
-        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
-      });
+    setSearchPayload(payload);
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
 
   // Just a generic method to invoke toaster
@@ -212,15 +227,20 @@ const RawMaterial = () => {
                 </div>
                 <Row>
                   <Col className="d-flex flex-column justify-content-center">
-                    <RawMaterialTable
-                      tableData={rawMaterialData}
-                      tableHeaders={rawMaterialTableHeaders}
-                      tableColumns={rawMaterialTableColumns}
-                      hanldePageChange={rawMaterialPageChanged}
-                      tableRowClicked={onTableRowClick}
-                      rowsPerPage={10}
-                      page={5}
-                    />
+                    {rawMaterialData.length ? (
+                      <RawMaterialTable
+                        tableData={rawMaterialData}
+                        tableHeaders={rawMaterialTableHeaders}
+                        tableColumns={rawMaterialTableColumns}
+                        totalRawmaterialsDataCount={totalRawmaterialsDataCount}
+                        hanldePageChange={rawMaterialPageChanged}
+                        tableRowClicked={onTableRowClick}
+                        rowsPerPage={10}
+                        page={5}
+                      />
+                    ) : (
+                      <></>
+                    )}
                   </Col>
                 </Row>
               </div>
