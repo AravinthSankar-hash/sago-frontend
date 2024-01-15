@@ -1,34 +1,29 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import AppBar from '@mui/material/AppBar';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
-import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import { sideBarItems } from '../data/sidebar-items.const';
 import { useNavigate } from 'react-router-dom';
 import sago_logo from '../assets/images/sago_logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
+import { useLocation } from 'react-router-dom';
 
 const drawerWidth = 280;
 
 function SidebarResp(props) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -43,6 +38,7 @@ function SidebarResp(props) {
     'font-size': '12px',
     color: '#00b7ff'
   };
+
   const drawer = (
     <div className="w-100 h-100">
       <div style={{ height: '100%' }}>
@@ -67,21 +63,27 @@ function SidebarResp(props) {
           </Toolbar>
           {/* <Divider /> */}
         </div>
-        {/* <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            height: '100%'
-          }}> */}
-        {/* <div> */}
         {sideBarItems.map((itemSection, parentIdx) => (
           <>
             <List key={parentIdx} style={{ color: '#5C9EB8', padding: '24px', fontSize: '12px' }}>
               {itemSection.itemHeader}
 
               {itemSection.items.map((items, idx) => (
-                <ListItem key={idx} disablePadding style={{ color: 'white', fontSize: '14px' }}>
+                <ListItem
+                  key={idx}
+                  disablePadding
+                  style={
+                    location.pathname === items.route
+                      ? {
+                          backgroundColor: '#224958',
+                          borderLeft: '4px solid #00B7FF',
+                          fontSize: '14px',
+                          color: 'white',
+                          paddingLeft: '1px',
+                          borderRadius: '3px'
+                        }
+                      : { color: 'white', fontSize: '14px' }
+                  }>
                   <ListItemButton className="px-0" onClick={() => navigate(items?.route || '/')}>
                     <ListItemIcon style={{ color: 'white' }}>
                       <img src={items.src} alt="icon" />
@@ -137,13 +139,5 @@ function SidebarResp(props) {
     </Box>
   );
 }
-
-// SidebarResp.propTypes = {
-//   /**
-//    * Injected by the documentation to work in an iframe.
-//    * Remove this when copying and pasting into your project.
-//    */
-//   window: PropTypes.func
-// };
 
 export default SidebarResp;
