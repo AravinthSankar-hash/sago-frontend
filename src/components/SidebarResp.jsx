@@ -79,23 +79,12 @@ function SidebarResp(props) {
                           borderLeft: '4px solid #00B7FF',
                           fontSize: '14px',
                           color: 'white',
-                          paddingLeft: '1px'
+                          paddingLeft: '1px',
+                          borderRadius: '3px'
                         }
                       : { color: 'white', fontSize: '14px' }
-                  }
-                  // style={{ color: 'white', fontSize: '14px' }}
-                >
-                  <ListItemButton
-                    // style={
-                    //   location.pathname === items.route
-                    //     ? {
-                    //         backgroundColor: '#224958',
-                    //         borderLeft: '4px solid #00B7FF'
-                    //       }
-                    //     : {}
-                    // }
-                    className="px-0"
-                    onClick={() => navigate(items?.route || '/')}>
+                  }>
+                  <ListItemButton className="px-0" onClick={() => navigate(items?.route || '/')}>
                     <ListItemIcon style={{ color: 'white' }}>
                       <img src={items.src} alt="icon" />
                     </ListItemIcon>
