@@ -8,6 +8,8 @@ import AddSharpIcon from '@mui/icons-material/AddSharp';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import TpService from '../../services/purchase.api';
 import { useForm } from 'react-hook-form';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { IconButton } from '@mui/material';
 
 function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
   // let invoiceNumber;
@@ -195,6 +197,138 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
   //   </Row>
   // );
 
+  // DYNAMIC WEIGHTAGE ROWS - START
+
+  const staticWeightageFormGroup = (
+    <>
+      <FormControl
+        as={Col}
+        xs={2}
+        sx={{ m: 1, minWidth: 160, marginTop: '0px', backgroundColor: 'white' }}
+        size="small">
+        <Select style={{ width: 160 }}>
+          <MenuItem value="Wet Thippi">Wet Thippi</MenuItem>
+          <MenuItem value="Dry Thippi">Dry Thippi</MenuItem>
+        </Select>
+      </FormControl>
+      <Form.Group as={Col} xs={1}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={1}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={1}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={1}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={2}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={1}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={1}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+    </>
+  );
+
+  const [weightageRows, setWeightageRows] = useState([{ id: 1 }]);
+
+  const handleWeightageButtonClick = (index) => {
+    if (index === weightageRows.length - 1) {
+      // If it's the last row, add a new row
+      const newRow = { id: weightageRows.length + 1 };
+      setWeightageRows((prevRows) => [...prevRows, newRow]);
+    } else {
+      // If it's not the last row, delete the current row
+      setWeightageRows((prevRows) => {
+        return prevRows.filter((row, indexToDelete) => indexToDelete !== index);
+      });
+    }
+  };
+
+  // DYNAMIC WEIGHTAGE ROWS - END
+
+  // CHARGES DYNAMIC FORM - START
+
+  const staticChargesFormGroup = (
+    <>
+      <Form.Group as={Col} xs={2}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={1}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={1}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={1}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={1}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={1}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={2}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={2}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+    </>
+  );
+
+  const [chargesRows, setChargesRows] = useState([{ id: 1 }]);
+
+  const handleChargesButtonClick = (index) => {
+    if (index === chargesRows.length - 1) {
+      // If it's the last row, add a new row
+      const newRow = { id: chargesRows.length + 1 };
+      setChargesRows((prevRows) => [...prevRows, newRow]);
+    } else {
+      // If it's not the last row, delete the current row
+      setChargesRows((prevRows) => {
+        return prevRows.filter((row, indexToDelete) => indexToDelete !== index);
+      });
+    }
+  };
+
+  // CHARGES DYNAMIC FORM - END
+
+  // FARMER DYNAMIC FORM - START
+  const staticFarmerFormGroup = (
+    <>
+      <Form.Group as={Col} xs={3}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+      <Form.Group as={Col} xs={3}>
+        <Form.Control style={inputStyle}></Form.Control>
+      </Form.Group>
+    </>
+  );
+
+  const [farmerRows, setFarmerRows] = useState([{ id: 1 }]);
+
+  const handleFarmerButtonClick = (index) => {
+    if (index === farmerRows.length - 1) {
+      // If it's the last row, add a new row
+      const newRow = { id: farmerRows.length + 1 };
+      setFarmerRows((prevRows) => [...prevRows, newRow]);
+    } else {
+      // If it's not the last row, delete the current row
+      setFarmerRows((prevRows) => {
+        return prevRows.filter((row, indexToDelete) => indexToDelete !== index);
+      });
+    }
+  };
+
+  // FARMER DYNAMIC FORM - END
+
   return (
     <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -281,16 +415,44 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
             </Form.Group>
           </Row>
 
-          <Row className="m-3">
+          <Row className="m-3 mb-0">
             <Form.Group as={Col} xs={3}>
               <Form.Label>Farmer Details</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
             </Form.Group>
             <Form.Group as={Col} xs={3}>
               <Form.Label>Farmer Aadhar No.</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
             </Form.Group>
           </Row>
+
+          {farmerRows.map((row, index) => (
+            <Row className="m-3  mt-0" key={index}>
+              {staticFarmerFormGroup}
+              <Form.Group as={Col} xs={1}>
+                <div
+                  style={{
+                    height: '40px',
+                    width: '42px',
+                    background:
+                      farmerRows.length === 1 || index === farmerRows.length - 1
+                        ? '#00B7FF'
+                        : '#BF2600',
+                    color: 'white',
+                    display: 'flex',
+                    borderRadius: '8px',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <IconButton onClick={() => handleFarmerButtonClick(index)}>
+                    {index === farmerRows.length - 1 ? (
+                      <AddSharpIcon style={{ color: 'white' }} />
+                    ) : (
+                      <DeleteOutlineOutlinedIcon style={{ color: 'white' }} />
+                    )}
+                  </IconButton>
+                </div>
+              </Form.Group>
+            </Row>
+          ))}
         </div>
 
         <div style={formGrpStyle}>
@@ -322,128 +484,127 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
               <Form.Label>Tonnage</Form.Label>
             </Form.Group>
           </Row>
-          <Row className="m-3 mb-0">
-            <FormControl
-              as={Col}
-              xs={2}
-              sx={{ m: 1, minWidth: 160, marginTop: '0px', backgroundColor: 'white' }}
-              size="small">
-              <Select style={{ width: 160 }}>
-                <MenuItem value="Wet Thippi">Wet Thippi</MenuItem>
-                <MenuItem value="Dry Thippi">Dry Thippi</MenuItem>
-              </Select>
-            </FormControl>
-            <Form.Group as={Col} xs={1}>
-              <Form.Control style={inputStyle}></Form.Control>
-            </Form.Group>
-            <Form.Group as={Col} xs={1}>
-              <Form.Control style={inputStyle}></Form.Control>
-            </Form.Group>
-            <Form.Group as={Col} xs={1}>
-              <Form.Control style={inputStyle}></Form.Control>
-            </Form.Group>
-            <Form.Group as={Col} xs={1}>
-              <Form.Control style={inputStyle}></Form.Control>
-            </Form.Group>
-            <Form.Group as={Col} xs={2}>
-              <Form.Control style={inputStyle}></Form.Control>
-            </Form.Group>
-            <Form.Group as={Col} xs={1}>
-              <Form.Control style={inputStyle}></Form.Control>
-            </Form.Group>
-            <Form.Group as={Col} xs={1}>
-              <Form.Control style={inputStyle}></Form.Control>
-            </Form.Group>
-            <Form.Group as={Col} xs={1}>
-              <div
-                // onClick={addItemRow}
-                style={{
-                  height: '40px',
-                  width: '42px',
-                  background: '#00B7FF',
-                  color: 'white',
-                  display: 'flex',
-                  borderRadius: '8px',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                <AddSharpIcon />
-              </div>
-            </Form.Group>
-          </Row>
+          {weightageRows.map((row, index) => (
+            <Row className="m-3 mb-0" key={index}>
+              {staticWeightageFormGroup}
+              <Form.Group as={Col} xs={1}>
+                <div
+                  style={{
+                    height: '40px',
+                    width: '42px',
+                    background:
+                      weightageRows.length === 1 || index === weightageRows.length - 1
+                        ? '#00B7FF'
+                        : '#BF2600',
+                    color: 'white',
+                    display: 'flex',
+                    borderRadius: '8px',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <IconButton onClick={() => handleWeightageButtonClick(index)}>
+                    {index === weightageRows.length - 1 ? (
+                      <AddSharpIcon style={{ color: 'white' }} />
+                    ) : (
+                      <DeleteOutlineOutlinedIcon style={{ color: 'white' }} />
+                    )}
+                  </IconButton>
+                </div>
+              </Form.Group>
+            </Row>
+          ))}
         </div>
 
         <div style={formGrpStyle}>
           <Form.Label className="m-4 mb-0">Charges details</Form.Label>
           <hr style={{ horizontalLine }} />
 
-          <Row className="m-3 mb-4">
+          <Row className="m-3 mb-0">
             <Form.Group as={Col} xs={2}>
               <Form.Label>Point 1</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
             </Form.Group>
             <Form.Group as={Col} xs={1}>
               <Form.Label>Point 2</Form.Label>
-
-              <Form.Control style={inputStyle}></Form.Control>
             </Form.Group>
             <Form.Group as={Col} xs={1}>
               <Form.Label>Point 3</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
             </Form.Group>
             <Form.Group as={Col} xs={1}>
               <Form.Label>Point 4</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
             </Form.Group>
             <Form.Group as={Col} xs={1}>
               <Form.Label>AP</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
             </Form.Group>
             <Form.Group as={Col} xs={1}>
               <Form.Label>TP</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
             </Form.Group>
             <Form.Group as={Col} xs={2}>
               <Form.Label>P.Rate</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
             </Form.Group>
             <Form.Group as={Col} xs={2}>
               <Form.Label>Total Rate</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
             </Form.Group>
           </Row>
-          <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
+          {chargesRows.map((row, index) => (
+            <Row className="m-3 mb-4" key={index}>
+              {staticChargesFormGroup}
+              <Form.Group as={Col} xs={1}>
+                <div
+                  style={{
+                    height: '40px',
+                    width: '42px',
+                    background:
+                      chargesRows.length === 1 || index === chargesRows.length - 1
+                        ? '#00B7FF'
+                        : '#BF2600',
+                    color: 'white',
+                    display: 'flex',
+                    borderRadius: '8px',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <IconButton onClick={() => handleChargesButtonClick(index)}>
+                    {index === chargesRows.length - 1 ? (
+                      <AddSharpIcon style={{ color: 'white' }} />
+                    ) : (
+                      <DeleteOutlineOutlinedIcon style={{ color: 'white' }} />
+                    )}
+                  </IconButton>
+                </div>
+              </Form.Group>
+            </Row>
+          ))}
           <Row>
             <Col xs={5}>
               <Row className="m-3">
                 <Form.Group as={Col}>
-                  <Form.Label>Farmer Details</Form.Label>
+                  <Form.Label>Tonnage Rate (₹)</Form.Label>
                   <Form.Control style={inputStyle}></Form.Control>
                 </Form.Group>
                 <Form.Group as={Col}>
-                  <Form.Label>Farmer Aadhar No.</Form.Label>
-                  <Form.Control style={inputStyle}></Form.Control>
-                </Form.Group>
-              </Row>
-
-              <Row className="m-3">
-                <Form.Group as={Col}>
-                  <Form.Label>Farmer Details</Form.Label>
-                  <Form.Control style={inputStyle}></Form.Control>
-                </Form.Group>
-                <Form.Group as={Col}>
-                  <Form.Label>Farmer Aadhar No.</Form.Label>
+                  <Form.Label>Labour Charges (₹)</Form.Label>
                   <Form.Control style={inputStyle}></Form.Control>
                 </Form.Group>
               </Row>
 
               <Row className="m-3">
                 <Form.Group as={Col}>
-                  <Form.Label>Farmer Details</Form.Label>
+                  <Form.Label>Vehicle Rent (₹)</Form.Label>
                   <Form.Control style={inputStyle}></Form.Control>
                 </Form.Group>
                 <Form.Group as={Col}>
-                  <Form.Label>Farmer Aadhar No.</Form.Label>
+                  <Form.Label>Other Charges (₹)</Form.Label>
+                  <Form.Control style={inputStyle}></Form.Control>
+                </Form.Group>
+              </Row>
+
+              <Row className="m-3">
+                <Form.Group as={Col}>
+                  <Form.Label>Weight + Kickback (₹)</Form.Label>
+                  <Form.Control style={inputStyle}></Form.Control>
+                </Form.Group>
+                <Form.Group as={Col}>
+                  <Form.Label>Round Off (₹)</Form.Label>
                   <Form.Control style={inputStyle}></Form.Control>
                 </Form.Group>
               </Row>
