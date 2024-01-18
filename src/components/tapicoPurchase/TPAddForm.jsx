@@ -1,7 +1,54 @@
-import { useMemo, useRef } from 'react';
-import { Container, Form, Row, Col, Dropdown } from 'react-bootstrap';
+import { useMemo, useRef, useState, useEffect } from 'react';
+import { Container, Form, Row, Col, Dropdown, Button, FormGroup, FormLabel } from 'react-bootstrap';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import AddSharpIcon from '@mui/icons-material/AddSharp';
+import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
+import TpService from '../../services/purchase.api';
+import { useForm } from 'react-hook-form';
 
-function TPAddForm() {
+function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
+  // let invoiceNumber;
+  // useEffect(() => {
+  //   TpService.getInvoiceNo('TP')
+  //     .then((response) => {
+  //       invoiceNumber = response.data.invoiceNumber;
+  //     })
+  //     .catch((error) => {
+  //       console.log('Error in getting customer data', error);
+  //     });
+  // }, []);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    console.log(321);
+    console.log(data, 'data');
+    console.log(123);
+    const newTP = {
+      invoice_number: data.staffname,
+      tapico_type: data.phone,
+      purchase_date: data.altphone,
+      broker_name: data.email,
+      commission: data.qualification,
+      payment_due_date: data.address,
+      vehicle_no: data.city,
+      weight_bill_no: data.pincode,
+      aadhar: data.aadhar,
+      pan: data.pan,
+      description: data.description,
+      designation: data.designation
+    };
+    await TpService.create({ type: 'TP', data: newTP });
+    tpAdded(newTP);
+  };
+
   const containerRef = useRef();
   const gridStyle = useMemo(
     () => ({
@@ -37,9 +84,120 @@ function TPAddForm() {
   const horizontalLine = {
     borderTopWidth: '0.75px'
   };
+
+  const buttonStyle = {
+    backgroundColor: '#00B7FF',
+    width: '140px',
+    border: 'none'
+  };
+
+  // const addItemRow = () => {
+  //   setItemRowCount((prevCount) => {
+  //     const newCount = prevCount + 1;
+
+  //     const currentArraySize = Array.from({ length: newCount });
+  //     const saleItemsRows = currentArraySize.map((ele, idx) => {
+  //       return (
+  //         <Row className="m-3 mb-0" key={idx + 1}>
+  //           {staticFormGroup}
+  //           <Form.Group as={Col} xs={1}>
+  //             <div
+  //               onClick={() => itemAddDeleteClicked(idx + 1 === currentArraySize.length, idx + 1)}
+  //               style={{
+  //                 height: '40px',
+  //                 width: '42px',
+  //                 background: idx + 1 === currentArraySize.length ? '#00B7FF' : '#BF2600',
+  //                 color: 'white',
+  //                 display: 'flex',
+  //                 borderRadius: '8px',
+  //                 justifyContent: 'center',
+  //                 alignItems: 'center'
+  //               }}>
+  //               {idx + 1 === currentArraySize.length ? (
+  //                 <AddSharpIcon />
+  //               ) : (
+  //                 <DeleteOutlineOutlinedIcon />
+  //               )}
+  //             </div>
+  //           </Form.Group>
+  //         </Row>
+  //       );
+  //     });
+
+  //     setInputsaleItems(saleItemsRows);
+
+  //     return newCount;
+  //   });
+  // };
+  // const staticFormGroup = (
+  //   <>
+  //     <Form.Group as={Col} xs={2}>
+  //       <Dropdown>
+  //         <Dropdown.Toggle
+  //           style={{
+  //             ...inputStyle,
+  //             backgroundColor: '#DFE1E6',
+  //             borderColor: '#DFE1E6',
+  //             color: '#7A869A',
+  //             width: '100%',
+  //             textAlign: 'left'
+  //           }}
+  //           id="dropdown-basic">
+  //           Choose Something
+  //         </Dropdown.Toggle>
+
+  //         <Dropdown.Menu>
+  //           <Dropdown.Item>Thippi</Dropdown.Item>
+  //           <Dropdown.Item>Action 2 Action 1 Action 1</Dropdown.Item>
+  //           <Dropdown.Item>Action 3</Dropdown.Item>
+  //         </Dropdown.Menu>
+  //       </Dropdown>
+  //     </Form.Group>
+  //     <Form.Group as={Col} xs={1}>
+  //       <Form.Control style={inputStyle}></Form.Control>
+  //     </Form.Group>
+  //     <Form.Group as={Col} xs={1}>
+  //       <Form.Control style={inputStyle}></Form.Control>
+  //     </Form.Group>
+  //     <Form.Group as={Col} xs={1}>
+  //       <Form.Control style={inputStyle}></Form.Control>
+  //     </Form.Group>
+  //     <Form.Group as={Col} xs={1}>
+  //       <Form.Control style={inputStyle}></Form.Control>
+  //     </Form.Group>
+  //     <Form.Group as={Col} xs={2}>
+  //       <Form.Control style={inputStyle}></Form.Control>
+  //     </Form.Group>
+  //     <Form.Group as={Col} xs={2}>
+  //       <Form.Control style={inputStyle}></Form.Control>
+  //     </Form.Group>
+  //   </>
+  // );
+  // const [inputSaleItems, setInputsaleItems] = useState(
+  //   <Row className="m-3 mb-0">
+  //     {staticFormGroup}
+  //     <Form.Group as={Col} xs={1}>
+  //       <div
+  //         onClick={addItemRow}
+  //         style={{
+  //           height: '40px',
+  //           width: '42px',
+  //           background: '#00B7FF',
+  //           color: 'white',
+  //           display: 'flex',
+  //           borderRadius: '8px',
+  //           justifyContent: 'center',
+  //           alignItems: 'center'
+  //         }}>
+  //         <AddSharpIcon />
+  //       </div>
+  //     </Form.Group>
+  //   </Row>
+  // );
+
   return (
     <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
-      <Form>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <div style={formGrpStyle}>
           <Form.Label className="m-4 mb-0">Basic Details</Form.Label>
           <hr style={{ horizontalLine }} />
@@ -47,12 +205,17 @@ function TPAddForm() {
           <Row className="m-3 mb-4">
             <Form.Group as={Col} xs={3}>
               <Form.Label>Purchase No.</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Control style={inputStyle} disabled value={tpInvoiceNo}></Form.Control>
             </Form.Group>
             <Form.Group as={Col} xs={3}>
               <Form.Label>Tapico Type</Form.Label>
-
-              <Dropdown>
+              <FormControl {...register('staffname', { required: 'This field is required' })} />
+              <Select style={{ width: 260 }} size="small">
+                <MenuItem value="Wet Thippi">Wet Thippi</MenuItem>
+                <MenuItem value="Dry Thippi">Dry Thippi</MenuItem>
+              </Select>
+              {/* </FormControl> */}
+              {/* <Dropdown>
                 <Dropdown.Toggle
                   style={{
                     ...inputStyle,
@@ -71,7 +234,7 @@ function TPAddForm() {
                   <Dropdown.Item>Action 2</Dropdown.Item>
                   <Dropdown.Item>Action 3</Dropdown.Item>
                 </Dropdown.Menu>
-              </Dropdown>
+              </Dropdown> */}
             </Form.Group>
             <Form.Group as={Col} xs={3}>
               <Form.Label>Purchase Date</Form.Label>
@@ -119,7 +282,7 @@ function TPAddForm() {
           </Row>
 
           <Row className="m-3">
-            <Form.Group as={Col} xs={5}>
+            <Form.Group as={Col} xs={3}>
               <Form.Label>Farmer Details</Form.Label>
               <Form.Control style={inputStyle}></Form.Control>
             </Form.Group>
@@ -133,36 +296,79 @@ function TPAddForm() {
         <div style={formGrpStyle}>
           <Form.Label className="m-4 mb-0">Weightage details</Form.Label>
           <hr style={{ horizontalLine }} />
-
-          <Row className="m-3 mb-4">
+          <Row className="m-3 mb-0">
             <Form.Group as={Col} xs={2}>
+              <Form.Label>Product Type</Form.Label>
+            </Form.Group>
+            <Form.Group as={Col} xs={1}>
               <Form.Label>Total Bags</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
-            </Form.Group>
-            <Form.Group as={Col} xs={2}>
-              <Form.Label>Total Weight</Form.Label>
-
-              <Form.Control style={inputStyle}></Form.Control>
-            </Form.Group>
-            <Form.Group as={Col} xs={2}>
-              <Form.Label>Vehicle Weight</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
             </Form.Group>
             <Form.Group as={Col} xs={1}>
-              <Form.Label>Net Weight</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Label>Total weight</Form.Label>
             </Form.Group>
-            <Form.Group as={Col} xs={2}>
-              <Form.Label>Sand Weight(%)</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+            <Form.Group as={Col} xs={1} style={{ width: 120 }}>
+              <Form.Label>Vehicle weight</Form.Label>
             </Form.Group>
             <Form.Group as={Col} xs={1}>
-              <Form.Label>Sand Weight</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Label>Net weight</Form.Label>
             </Form.Group>
             <Form.Group as={Col} xs={2}>
+              <Form.Label>Sand weight (%)</Form.Label>
+            </Form.Group>
+            <Form.Group as={Col} xs={1}>
+              <Form.Label>Sand weight</Form.Label>
+            </Form.Group>
+            <Form.Group as={Col} xs={1}>
               <Form.Label>Tonnage</Form.Label>
+            </Form.Group>
+          </Row>
+          <Row className="m-3 mb-0">
+            <FormControl
+              as={Col}
+              xs={2}
+              sx={{ m: 1, minWidth: 160, marginTop: '0px', backgroundColor: 'white' }}
+              size="small">
+              <Select style={{ width: 160 }}>
+                <MenuItem value="Wet Thippi">Wet Thippi</MenuItem>
+                <MenuItem value="Dry Thippi">Dry Thippi</MenuItem>
+              </Select>
+            </FormControl>
+            <Form.Group as={Col} xs={1}>
               <Form.Control style={inputStyle}></Form.Control>
+            </Form.Group>
+            <Form.Group as={Col} xs={1}>
+              <Form.Control style={inputStyle}></Form.Control>
+            </Form.Group>
+            <Form.Group as={Col} xs={1}>
+              <Form.Control style={inputStyle}></Form.Control>
+            </Form.Group>
+            <Form.Group as={Col} xs={1}>
+              <Form.Control style={inputStyle}></Form.Control>
+            </Form.Group>
+            <Form.Group as={Col} xs={2}>
+              <Form.Control style={inputStyle}></Form.Control>
+            </Form.Group>
+            <Form.Group as={Col} xs={1}>
+              <Form.Control style={inputStyle}></Form.Control>
+            </Form.Group>
+            <Form.Group as={Col} xs={1}>
+              <Form.Control style={inputStyle}></Form.Control>
+            </Form.Group>
+            <Form.Group as={Col} xs={1}>
+              <div
+                // onClick={addItemRow}
+                style={{
+                  height: '40px',
+                  width: '42px',
+                  background: '#00B7FF',
+                  color: 'white',
+                  display: 'flex',
+                  borderRadius: '8px',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                <AddSharpIcon />
+              </div>
             </Form.Group>
           </Row>
         </div>
@@ -295,6 +501,15 @@ function TPAddForm() {
                     <p style={{ textAlign: 'center', fontWeight: 'bolder' }}>₹ 10,944</p>
                   </div>
                 </Col>
+              </Row>
+              <Row>
+                <div style={{ color: '#62728D', textDecoration: 'Underline', marginTop: '0' }}>
+                  <LocalPrintshopOutlinedIcon />{' '}
+                  <span style={{ marginLeft: '5px' }}>Save & Print </span>
+                  <Button variant="primary" className="m-5" type="submit" style={buttonStyle}>
+                    Save
+                  </Button>
+                </div>
               </Row>
             </Col>
           </Row>
