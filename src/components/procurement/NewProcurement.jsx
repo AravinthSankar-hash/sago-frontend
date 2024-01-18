@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
@@ -9,6 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import { IconButton } from '@mui/material';
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
@@ -42,6 +43,114 @@ const NewProcurement = () => {
     textDecoration: 'underline',
     cursor: 'pointer'
   };
+
+  // Dynamic purchase item row - start
+  const staticPurchaseItemRow = (
+    <>
+      <td style={{ padding: '10px' }}>
+        <FormControl
+          sx={{
+            minWidth: 150,
+            marginTop: '0px',
+            color: '#DFE1E6',
+            background: '#FAFBFC',
+            border: '2px solid #FAFBFC'
+          }}
+          size="small">
+          <InputLabel id="demo-select-small-label" style={{ color: '#7A869A' }}>
+            Lorem ipsum
+          </InputLabel>
+          <Select labelId="demo-select-small-label" label="Select Work">
+            <MenuItem value={10}>Select</MenuItem>
+            <MenuItem value={20}>Lorem</MenuItem>
+            <MenuItem value={30}>Ipsum</MenuItem>
+          </Select>
+        </FormControl>
+      </td>
+      <td style={{ padding: '10px' }}>
+        <Form.Group as={Col}>
+          <Form.Control
+            style={{
+              background: '#F4F5F7',
+              color: '#A5ADBA',
+              border: 'none',
+              padding: '9px 12px'
+            }}
+            placehdefaultValueolder="Machinery"
+            disabled
+          />
+        </Form.Group>
+      </td>
+      <td style={{ padding: '10px' }}>
+        <Form.Group as={Col}>
+          <Form.Control
+            style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
+            defaultValue={10}
+            type="text"
+            //   disabled
+          />
+        </Form.Group>
+      </td>
+      <td style={{ padding: '10px' }}>
+        {' '}
+        <Form.Group as={Col}>
+          <Form.Control
+            style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
+            defaultValue="30,000"
+            type="text"
+            //   disabled
+          />
+        </Form.Group>
+      </td>
+      <td style={{ padding: '10px' }}>
+        {' '}
+        <Form.Group as={Col}>
+          <Form.Control
+            style={{
+              background: '#F4F5F7',
+              color: '#A5ADBA',
+              border: 'none',
+              padding: '9px 12px'
+            }}
+            defaultValue="Snacks"
+            disabled
+          />
+        </Form.Group>
+      </td>
+      <td style={{ padding: '10px' }}>
+        {' '}
+        <Form.Group as={Col}>
+          <Form.Control
+            style={{
+              background: '#F4F5F7',
+              color: '#A5ADBA',
+              border: 'none',
+              padding: '9px 12px'
+            }}
+            defaultValue="₹ 3,00,00,000"
+            disabled
+          />
+        </Form.Group>
+      </td>
+    </>
+  );
+
+  const [purchaseItemRows, setPurchaseItemRows] = useState([{ id: 1 }]);
+
+  const handlePurchaseItemRowsButtonClick = (index) => {
+    if (index === purchaseItemRows.length - 1) {
+      // If it's the last row, add a new row
+      const newRow = { id: purchaseItemRows.length + 1 };
+      setPurchaseItemRows((prevRows) => [...prevRows, newRow]);
+    } else {
+      // If it's not the last row, delete the current row
+      setPurchaseItemRows((prevRows) => {
+        return prevRows.filter((row, indexToDelete) => indexToDelete !== index);
+      });
+    }
+  };
+
+  // Dynamic purchase item row - end
 
   const fileInputRef = useRef(null);
 
@@ -159,210 +268,38 @@ const NewProcurement = () => {
               </tr>
             </thead>
 
-            <tbody style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C', padding: '20px' }}>
-              <tr>
-                <td style={{ padding: '10px' }}>
-                  <FormControl
-                    sx={{
-                      minWidth: 150,
-                      marginTop: '0px',
-                      color: '#DFE1E6',
-                      background: '#FAFBFC',
-                      border: '2px solid #FAFBFC'
-                    }}
-                    size="small">
-                    <InputLabel id="demo-select-small-label" style={{ color: '#7A869A' }}>
-                      Lorem ipsum
-                    </InputLabel>
-                    <Select labelId="demo-select-small-label" label="Select Work">
-                      <MenuItem value={10}>Select</MenuItem>
-                      <MenuItem value={20}>Lorem</MenuItem>
-                      <MenuItem value={30}>Ipsum</MenuItem>
-                    </Select>
-                  </FormControl>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  <Form.Group as={Col}>
-                    <Form.Control
+            {purchaseItemRows.map((row, index) => (
+              <tbody
+                key={index}
+                style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C', padding: '20px' }}>
+                <tr>
+                  {staticPurchaseItemRow}
+                  <td style={{ padding: '10px' }}>
+                    <div
                       style={{
-                        background: '#F4F5F7',
-                        color: '#A5ADBA',
-                        border: 'none',
-                        padding: '9px 12px'
-                      }}
-                      placehdefaultValueolder="Machinery"
-                      disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  <Form.Group as={Col}>
-                    <Form.Control
-                      style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
-                      defaultValue={10}
-                      type="text"
-                      //   disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  {' '}
-                  <Form.Group as={Col}>
-                    <Form.Control
-                      style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
-                      defaultValue="30,000"
-                      type="text"
-                      //   disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  {' '}
-                  <Form.Group as={Col}>
-                    <Form.Control
-                      style={{
-                        background: '#F4F5F7',
-                        color: '#A5ADBA',
-                        border: 'none',
-                        padding: '9px 12px'
-                      }}
-                      defaultValue="Snacks"
-                      disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  {' '}
-                  <Form.Group as={Col}>
-                    <Form.Control
-                      style={{
-                        background: '#F4F5F7',
-                        color: '#A5ADBA',
-                        border: 'none',
-                        padding: '9px 12px'
-                      }}
-                      defaultValue="₹ 3,00,00,000"
-                      disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  {' '}
-                  <div
-                    style={{
-                      height: '40px',
-                      width: '40px',
-                      background: '#BF2600',
-                      color: 'white',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}>
-                    <DeleteOutlineOutlinedIcon />
-                  </div>{' '}
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: '10px' }}>
-                  <FormControl
-                    sx={{
-                      minWidth: 150,
-                      marginTop: '0px',
-                      color: '#DFE1E6',
-                      background: '#FAFBFC',
-                      border: '2px solid #FAFBFC'
-                      //   width: '184px'
-                    }}
-                    size="small">
-                    <InputLabel id="demo-select-small-label" style={{ color: '#7A869A' }}>
-                      Lorem ipsum
-                    </InputLabel>
-                    <Select labelId="demo-select-small-label" label="Select Work">
-                      <MenuItem value={10}>Select</MenuItem>
-                      <MenuItem value={20}>Lorem</MenuItem>
-                      <MenuItem value={30}>Ipsum</MenuItem>
-                    </Select>
-                  </FormControl>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  <Form.Group as={Col}>
-                    <Form.Control
-                      style={{
-                        background: '#F4F5F7',
-                        color: '#A5ADBA',
-                        border: 'none',
-                        padding: '9px 12px'
-                      }}
-                      defaultValue="None"
-                      disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  <Form.Group as={Col}>
-                    <Form.Control
-                      style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
-                      type="text"
-                      //   disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  <Form.Group as={Col}>
-                    <Form.Control
-                      style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
-                      type="text"
-                      //   disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  {' '}
-                  <Form.Group as={Col}>
-                    <Form.Control
-                      style={{
-                        background: '#F4F5F7',
-                        color: '#A5ADBA',
-                        border: 'none',
-                        padding: '9px 12px'
-                      }}
-                      defaultValue="Unit"
-                      disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  {' '}
-                  <Form.Group as={Col}>
-                    <Form.Control
-                      style={{
-                        background: '#F4F5F7',
-                        color: '#A5ADBA',
-                        border: 'none',
-                        padding: '9px 12px'
-                      }}
-                      defaultValue="₹ 0"
-                      disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  {' '}
-                  <div
-                    style={{
-                      height: '40px',
-                      width: '40px',
-                      background: '#00B7FF',
-                      color: 'white',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}>
-                    <AddSharpIcon />
-                  </div>
-                </td>
-              </tr>
-            </tbody>
+                        height: '40px',
+                        width: '40px',
+                        background:
+                          purchaseItemRows.length === 1 || index === purchaseItemRows.length - 1
+                            ? '#00B7FF'
+                            : '#BF2600',
+                        color: 'white',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}>
+                      <IconButton onClick={() => handlePurchaseItemRowsButtonClick(index)}>
+                        {index === purchaseItemRows.length - 1 ? (
+                          <AddSharpIcon style={{ color: 'white' }} />
+                        ) : (
+                          <DeleteOutlineOutlinedIcon style={{ color: 'white' }} />
+                        )}
+                      </IconButton>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            ))}
           </table>
           {/* <div  className='float-end'> */}
           <table
