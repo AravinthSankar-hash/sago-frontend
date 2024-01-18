@@ -234,7 +234,11 @@ function NewDcSalesForm() {
                     alignItems: 'center'
                   }}>
                   <IconButton onClick={() => handleButtonClick(index)}>
-                    {index === rows.length - 1 ? <AddSharpIcon /> : <DeleteOutlineOutlinedIcon />}
+                    {index === rows.length - 1 ? (
+                      <AddSharpIcon style={{ color: 'white' }} />
+                    ) : (
+                      <DeleteOutlineOutlinedIcon style={{ color: 'white' }} />
+                    )}
                   </IconButton>
                 </div>
               </Form.Group>
