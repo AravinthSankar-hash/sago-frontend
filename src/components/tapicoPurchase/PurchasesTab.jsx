@@ -24,7 +24,7 @@ import {
 } from '../../store/store';
 import { tpTableHeaders, tpTableColumns, RESPONSE_MSG } from './tp.const.js';
 // API
-import TPService from 'services/tp.api.js';
+import TPService from 'services/purchase.api.js';
 import { isNumeric } from '../helper/helper.js';
 import Toaster from '../helper/Snackbar.jsx';
 import GenericService from '../../services/generic.api';
