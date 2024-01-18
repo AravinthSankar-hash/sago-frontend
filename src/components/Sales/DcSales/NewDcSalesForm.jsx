@@ -89,7 +89,9 @@ function NewDcSalesForm() {
       setRows((prevRows) => [...prevRows, newRow]);
     } else {
       // If it's not the last row, delete the current row
-      setRows((prevRows) => prevRows.filter((row, indexToDelete) => indexToDelete !== index));
+      setRows((prevRows) => {
+        return prevRows.filter((row, indexToDelete) => indexToDelete !== index);
+      });
     }
   };
 
@@ -216,7 +218,7 @@ function NewDcSalesForm() {
           </Row>
           {/* Dynamic Rows */}
           {rows.map((row, index) => (
-            <Row className="m-3 mb-0" key={row.id}>
+            <Row className="m-3 mb-0" key={index}>
               {staticFormGroup}
               <Form.Group as={Col} xs={1}>
                 <div
@@ -232,7 +234,11 @@ function NewDcSalesForm() {
                     alignItems: 'center'
                   }}>
                   <IconButton onClick={() => handleButtonClick(index)}>
-                    {index === rows.length - 1 ? <AddSharpIcon /> : <DeleteOutlineOutlinedIcon />}
+                    {index === rows.length - 1 ? (
+                      <AddSharpIcon style={{ color: 'white' }} />
+                    ) : (
+                      <DeleteOutlineOutlinedIcon style={{ color: 'white' }} />
+                    )}
                   </IconButton>
                 </div>
               </Form.Group>
@@ -244,7 +250,7 @@ function NewDcSalesForm() {
             <Col xs={5}>
               <Row className="m-3">
                 <Form.Group as={Col}>
-                  <Form.Label>GST (%)</Form.Label>
+                  <Form.Label>Discount (₹)</Form.Label>
                   <Form.Control style={inputStyle}></Form.Control>
                 </Form.Group>
                 <Form.Group as={Col}>
