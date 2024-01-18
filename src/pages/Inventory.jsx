@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import InventoryTable from 'components/inventory/InventoryTable.jsx';
-import { tableHeaders, tableColumns } from '../components/tapicoPurchase/tp.const.js';
+import { tpTableHeaders, tpTableColumns } from '../components/tapicoPurchase/tp.const.js';
 import sago_icon from '../assets/images/sago_inventory.svg';
 import broken_icon from '../assets/images/broken_inventory.svg';
 import starch_inventory from '../assets/images/starch_inventory.svg';
@@ -323,8 +323,8 @@ function Inventory() {
                   {inventoryData.length > 0 ? (
                     <InventoryTable
                       tableData={inventoryData}
-                      tableHeaders={tableHeaders}
-                      tableColumns={tableColumns}
+                      tableHeaders={tpTableHeaders}
+                      tableColumns={tpTableColumns}
                     />
                   ) : (
                     <Box sx={{ display: 'flex' }}>

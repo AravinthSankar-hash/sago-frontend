@@ -22,10 +22,34 @@ import {
   useUpdateShowTPBackBtn,
   useUpdateShowPurhcaseDetails
 } from '../../store/store';
+import { tpTableHeaders, tpTableColumns, RESPONSE_MSG } from './tp.const.js';
+// API
+import TPService from 'services/purchase.api.js';
+import { isNumeric } from '../helper/helper.js';
+import Toaster from '../helper/Snackbar.jsx';
+import GenericService from '../../services/generic.api';
 
 function Purchases() {
   const [tPData, setTPData] = useState([]);
-  const [rowData, setRowData] = useState({});
+  const [totalTpDataCount, setTotalTpDataCount] = useState(0);
+  // const [rowData, setRowData] = useState({});
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
+  const [selectedTP, setSelectedTP] = useState();
+  const [toasterBackground, setToasterBackground] = useState(null);
+  const [toasterMsg, setToasterMsg] = useState('Tp data saved');
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [invoiceNumber, setInvoiceNumber] = useState('');
+
+  useEffect(() => {
+    TPService.getData('TP')
+      .then((response) => {
+        setTPData(response.data);
+        console.log(response.data.length, 'eadataaaa');
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
 
   const buttonStyle = {
     borderColor: '#00B7FF',
@@ -37,34 +61,86 @@ function Purchases() {
     textTransform: 'none',
     fontWeight: 'bold'
   };
-  useEffect(() => {
-    fetch('http://localhost:3001/procurement')
-      .then((rawResponse) => rawResponse.json())
-      .then((response) => {
-        setTPData(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+
   // Store
   const showTPPurchaseNewForm = useShowTPPurchaseNewForm(); // Show TP Add form
   const updateShowTPPurchaseNewForm = useUpdateShowTPPurchaseNewForm();
   const updateShowTPBackBtn = useUpdateShowTPBackBtn(); // Bool to show/hide the back TP btn
   const showPurhcaseDetails = useShowPurhcaseDetails();
   const updateShowPurhcaseDetails = useUpdateShowPurhcaseDetails();
+
   const hanldeAddPurchaseFormClick = () => {
+    GenericService.getInvoiceNo('TP')
+      .then((response) => {
+        setInvoiceNumber(response.data.invoiceNumber);
+      })
+      .catch((error) => {
+        console.log('Error in getting customer data', error);
+      });
+
     updateShowTPPurchaseNewForm(true);
     updateShowTPBackBtn(true);
   };
-  const onTableRowClick = (rowData) => {
+
+  const showForm = (shouldShow) => {
+    console.log('staff table SHOW FORM CLICKED');
+
+    // Show Add staff form - Store
+    updateShowTPPurchaseNewForm(shouldShow);
+    // updateCatalogBackBtnTxt('Add Staff');
+    // Show back btn - Store
+    updateShowTPBackBtn(shouldShow);
+  };
+
+  const onTableRowClick = (clickedRow) => {
+    setSelectedTP(clickedRow);
     console.log('TP Purchase table row clicked');
     updateShowTPBackBtn(true);
-    setRowData(rowData);
     // Show details section - Store
     updateShowPurhcaseDetails(true);
     // Show back btn - Store
+  };
+
+  const tpPageChanged = (currentPageNo, rowsPerPage) => {
+    // setCurrentRowsPerPage(rowsPerPage);
+    // console.log('page changed - ', currentPageNo, rowsPerPage);
+    // invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  };
+
+  const onTPSave = (newAddedTp) => {
+    invokeToaster();
+    updateShowTPPurchaseNewForm(false);
+    updateShowTPBackBtn(false);
+    setTPData((tp) => [newAddedTp, ...tp]);
+  };
+
+  // const onSearchBoxValueChange = (currentInputValue) => {
+  //   const isPhoneNumberSearch = isNumeric(currentInputValue);
+  //   const payload = {
+  //     ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
+  //   };
+  //   TPService.getData('TP', payload)
+  //     .then((response) => {
+  //       setTPData(response.data);
+  //       if (response.data?.length === 0) {
+  //         invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log('Error in searching Purchase data', error);
+  //       invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+  //     });
+  // };
+
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = null) => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    if (backgroundClr) {
+      setToasterBackground(backgroundClr);
+    }
+    setShouldShowToaster(true);
   };
 
   return (
@@ -72,13 +148,13 @@ function Purchases() {
       {showTPPurchaseNewForm ? (
         <>
           <Col className="d-flex flex-column justify-content-center">
-            <TPAddForm />
+            <TPAddForm showForm={showForm} tpAdded={onTPSave} tpInvoiceNo={invoiceNumber} />
           </Col>
         </>
       ) : (
         <div>
           {showPurhcaseDetails ? (
-            <TPDetails rowData={rowData} />
+            <TPDetails tpDetails={selectedTP} />
           ) : (
             <>
               {/* <TPDashboard
@@ -140,10 +216,16 @@ function Purchases() {
                         </Row>
                       </div>
                       <div>
-                        {tPData.length > 0 ? (
+                        {tPData.length == 3 ? (
                           <TPPurchaseTable
                             tableData={tPData}
-                            hanleTableRowClick={onTableRowClick}
+                            tpTableHeaders={tpTableHeaders}
+                            tpTableColumns={tpTableColumns}
+                            totalTpDataCount={totalTpDataCount}
+                            hanldePageChange={tpPageChanged}
+                            tableRowClicked={onTableRowClick}
+                            rowsPerPage={10}
+                            page={5}
                           />
                         ) : (
                           <Box sx={{ display: 'flex' }}>
@@ -156,7 +238,11 @@ function Purchases() {
                 </Row>
               </Container>
             </>
-          )}
+          )}{' '}
+          <Toaster
+            shouldOpen={shouldShowToaster}
+            message={toasterMsg}
+            backgroundColor={toasterBackground}></Toaster>
         </div>
       )}
     </>
