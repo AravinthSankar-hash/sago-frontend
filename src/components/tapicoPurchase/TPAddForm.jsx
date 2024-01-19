@@ -22,7 +22,6 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
   //       console.log('Error in getting customer data', error);
   //     });
   // }, []);
-
   const {
     register,
     handleSubmit,
@@ -34,21 +33,23 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
     console.log(data, 'data');
     console.log(123);
     const newTP = {
-      invoice_number: data.staffname,
-      tapico_type: data.phone,
-      purchase_date: data.altphone,
-      broker_name: data.email,
-      commission: data.qualification,
-      payment_due_date: data.address,
-      vehicle_no: data.city,
-      weight_bill_no: data.pincode,
-      aadhar: data.aadhar,
-      pan: data.pan,
-      description: data.description,
-      designation: data.designation
+      invoice_number: tpInvoiceNo,
+      tapico_type: data.tapiocaType,
+      purchase_date: data.purchaseDate,
+      broker_name: data.brokerName,
+      commission: data.commission,
+      payment_due_date: data.paymentDueDate,
+      vehicle_no: data.vehicleNo,
+      weight_bill_no: data.weightBillNo
+      // aadhar: data.aadhar,
+      // pan: data.pan,
+      // description: data.description,
+      // designation: data.designation
     };
-    await TpService.create({ type: 'TP', data: newTP });
-    tpAdded(newTP);
+    // console.log(newTP, 'tpInvoiceNo22');
+
+    // await TpService.create({ type: 'TP', data: newTP });
+    // tpAdded(newTP);
   };
 
   const containerRef = useRef();
@@ -304,10 +305,36 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
   const staticFarmerFormGroup = (
     <>
       <Form.Group as={Col} xs={3}>
-        <Form.Control style={inputStyle}></Form.Control>
+        <Form.Control
+          style={inputStyle}
+          // eslint-disable-next-line no-undef
+          // {...register(`farmer_name${index}`, { required: 'This field is required' })}
+          // {...register('farmerDetails')}
+          // {
+          //   required: 'Farmer farmerDetails is required'
+          //   // Add more validation rules as needed
+          // })}
+        ></Form.Control>
+        {/* {errors.farmerDetails && (
+          <Form.Text className="text-danger">{errors.farmerDetails.message}</Form.Text>
+        )} */}
       </Form.Group>
       <Form.Group as={Col} xs={3}>
-        <Form.Control style={inputStyle}></Form.Control>
+        <Form.Control
+          style={inputStyle}
+          {...register('farmerAadharNo')}
+          // {
+          //   required: 'Farmer Aadhar No. is required',
+          //   pattern: {
+          //     value: /^[0-9]{12}$/, // Exactly 12 digits
+          //     message: 'Please enter a valid 12-digit Aadhar number'
+          //   }
+          //   // Add more validation rules as needed
+          // })}
+        ></Form.Control>
+        {/* {errors.farmerAadharNo && (
+          <Form.Text className="text-danger">{errors.farmerAadharNo.message}</Form.Text>
+        )} */}
       </Form.Group>
     </>
   );
@@ -339,40 +366,41 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
           <Row className="m-3 mb-4">
             <Form.Group as={Col} xs={3}>
               <Form.Label>Purchase No.</Form.Label>
-              <Form.Control style={inputStyle} disabled value={tpInvoiceNo}></Form.Control>
+              <Form.Control style={inputStyle} disabled value={tpInvoiceNo} />
             </Form.Group>
             <Form.Group as={Col} xs={3}>
               <Form.Label>Tapico Type</Form.Label>
-              <FormControl {...register('staffname', { required: 'This field is required' })} />
-              <Select style={{ width: 260 }} size="small">
-                <MenuItem value="Wet Thippi">Wet Thippi</MenuItem>
-                <MenuItem value="Dry Thippi">Dry Thippi</MenuItem>
-              </Select>
-              {/* </FormControl> */}
-              {/* <Dropdown>
-                <Dropdown.Toggle
-                  style={{
-                    ...inputStyle,
-                    backgroundColor: '#DFE1E6',
-                    borderColor: '#DFE1E6',
-                    color: '#7A869A',
-                    width: '100%',
-                    textAlign: 'left'
-                  }}
-                  id="dropdown-basic">
-                  Choose Something
-                </Dropdown.Toggle>
-
-                <Dropdown.Menu>
-                  <Dropdown.Item>Action 1 Action 1 Action 1</Dropdown.Item>
-                  <Dropdown.Item>Action 2</Dropdown.Item>
-                  <Dropdown.Item>Action 3</Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown> */}
+              <FormControl isInvalid={errors.tapiocaType}>
+                <Select
+                  style={{ width: 260 }}
+                  size="small"
+                  {...register('tapiocaType', { required: 'Please select Tapioca Type' })}>
+                  <MenuItem value="Wet Thippi">Wet Thippi</MenuItem>
+                  <MenuItem value="Dry Thippi">Dry Thippi</MenuItem>
+                </Select>
+                {errors.tapiocaType && (
+                  <Form.Text className="text-danger">{errors.tapiocaType.message}</Form.Text>
+                )}
+              </FormControl>
             </Form.Group>
             <Form.Group as={Col} xs={3}>
               <Form.Label>Purchase Date</Form.Label>
-              <Form.Control type="date" style={inputStyle}></Form.Control>
+              <Form.Control
+                type="date"
+                style={inputStyle}
+                {...register('purchaseDate', {
+                  required: 'Purchase Date is required',
+                  pattern: {
+                    value: /\d{4}-\d{2}-\d{2}/,
+                    message: 'Please enter a valid date (YYYY-MM-DD)'
+                  }
+                })}
+              />
+              {/* <Form.Control.Feedback type="invalid"> */}
+              {errors.purchaseDate && (
+                <Form.Text className="text-danger">{errors.purchaseDate.message}</Form.Text>
+              )}
+              {/* </Form.Control.Feedback> */}
             </Form.Group>
           </Row>
           <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
@@ -380,15 +408,61 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
           <Row className="m-3">
             <Form.Group as={Col} xs={3}>
               <Form.Label>Broker Name</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Control
+                style={inputStyle}
+                {...register('brokerName', {
+                  required: 'Broker Name is required',
+                  maxLength: {
+                    value: 50,
+                    message: 'Broker Name cannot exceed 50 characters'
+                  }
+                  // Add more validation rules as needed
+                })}></Form.Control>
+              {/* <Form.Control.Feedback type="invalid"> */}
+              {errors.brokerName && (
+                <Form.Text className="text-danger">{errors.brokerName.message}</Form.Text>
+              )}
+              {/* </Form.Control.Feedback> */}
             </Form.Group>
             <Form.Group as={Col} xs={3}>
               <Form.Label>Commission(%)</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Control
+                style={inputStyle}
+                {...register('commission', {
+                  required: 'Commission is required',
+                  pattern: {
+                    value: /^(\d*\.)?\d+$/, // Allows decimals
+                    message: 'Please enter a valid commission percentage'
+                  },
+                  max: {
+                    value: 100,
+                    message: 'Commission cannot exceed 100%'
+                  }
+                  // Add more validation rules as needed
+                })}></Form.Control>{' '}
+              {/* <Form.Control.Feedback type="invalid"> */}
+              {errors.commission && (
+                <Form.Text className="text-danger">{errors.commission.message}</Form.Text>
+              )}
+              {/* </Form.Control.Feedback> */}
             </Form.Group>
             <Form.Group as={Col} xs={3}>
               <Form.Label>Payment Due Date</Form.Label>
-              <Form.Control type="date" style={inputStyle}></Form.Control>
+              <Form.Control
+                type="date"
+                style={inputStyle}
+                {...register('paymentDueDate', {
+                  required: 'Payment Due Date is required',
+                  pattern: {
+                    value: /\d{4}-\d{2}-\d{2}/,
+                    message: 'Please enter a valid date (YYYY-MM-DD)'
+                  }
+                })}></Form.Control>
+              {/* <Form.Control.Feedback type="invalid"> */}
+              {errors.paymentDueDate && (
+                <Form.Text className="text-danger">{errors.paymentDueDate.message}</Form.Text>
+              )}
+              {/* </Form.Control.Feedback> */}
             </Form.Group>
           </Row>
 
@@ -407,11 +481,43 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
           <Row className="m-3">
             <Form.Group as={Col} xs={3}>
               <Form.Label>Vehicle No.</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Control
+                style={inputStyle}
+                {...register('vehicleNo', {
+                  required: 'Vehicle No. is required',
+                  pattern: {
+                    value: /^[A-Za-z0-9]+$/, // Alphanumeric characters only
+                    message: 'Please enter a valid vehicle number'
+                  },
+                  maxLength: {
+                    value: 10,
+                    message: 'Vehicle No. cannot exceed 10 characters'
+                  }
+                  // Add more validation rules as needed
+                })}></Form.Control>
+              {errors.vehicleNo && (
+                <Form.Text className="text-danger">{errors.vehicleNo.message}</Form.Text>
+              )}
             </Form.Group>
             <Form.Group as={Col} xs={3}>
               <Form.Label>Weight Bill No.</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Control
+                style={inputStyle}
+                {...register('weightBillNo', {
+                  required: 'Weight Bill No. is required',
+                  pattern: {
+                    value: /^[A-Za-z0-9]+$/, // Alphanumeric characters only
+                    message: 'Please enter a valid weight bill number'
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: 'Weight Bill No. cannot exceed 20 characters'
+                  }
+                  // Add more validation rules as needed
+                })}></Form.Control>
+              {errors.weightBillNo && (
+                <Form.Text className="text-danger">{errors.weightBillNo.message}</Form.Text>
+              )}
             </Form.Group>
           </Row>
 
