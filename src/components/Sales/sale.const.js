@@ -28,4 +28,26 @@ export const dcTableColumns = [
     'payment_due_date'
 ]
 
+export const tsTableHeaders = [
+    'Sales date',
+    'Invoice No',
+    'Customer Name',
+    'Top Rate',
+    'Amount',
+    'Status',
+    'Outstandings',
+    'Payment Due Date'
+]
+
+export const tsTableColumns = [
+    'sale_date',
+    'invoice_number',
+    'customer_name',
+    'top_rate',
+    'grand_total',
+    'payment_status',
+    'outstandings',
+    'payment_due_date'
+]
+
 export const TABLE_ROW_SIZE_OPTIONS = [5, 10, 25, 50, 100];
