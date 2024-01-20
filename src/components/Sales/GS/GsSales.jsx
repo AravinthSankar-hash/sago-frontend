@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 
 const GsSales = (props) => {
+  const { footerValues } = props;
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.white,
@@ -69,7 +70,7 @@ const GsSales = (props) => {
           <TableHead style={tableHead}>
             <TableRow>
               <StyledTableCell style={{ padding: '10px' }}>S.No</StyledTableCell>
-              {props.tableHeading.map((key, index) => (
+              {props?.tableHeading?.map((key, index) => (
                 <StyledTableCell key={index} style={{ padding: '16px', color: '#6B778C' }}>
                   {key}
                 </StyledTableCell>
@@ -81,29 +82,29 @@ const GsSales = (props) => {
               <StyledTableRow key={index} style={{ color: '#62728D' }}>
                 <StyledTableCell>{index + 1}</StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D' }}>
-                  {row['Product Details']}
+                  {row['item']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D' }}>
-                  {row['Product Type']}
+                  {row['hsn_sac']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D' }}>
-                  {row['Rate']}
+                  {row['bag_weight']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D' }}>
-                  {row['Quantity']}
+                  {row['qty']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D' }}>
-                  {row['Units']}
+                  {row['total_weight']}
+                </StyledTableCell>
+                <StyledTableCell key={index} style={{ color: '#62728D' }}>
+                  {row['rate_per_kg']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#191C24' }}>
-                  ₹ {row['Amount']}
+                  ₹ {row['rate']}
                 </StyledTableCell>
-                {/* {
-      tableHeading.map((heading, index) => {
-        {console.log(row[heading],'heding')}
-        <StyledTableCell key={index}>{row.heading}</StyledTableCell>
-      })
-    } */}
+                <StyledTableCell key={index} style={{ color: '#191C24' }}>
+                  ₹ {row['total_rate']}
+                </StyledTableCell>
               </StyledTableRow>
             ))}{' '}
           </TableBody>

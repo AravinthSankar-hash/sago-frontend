@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 
 const TsSales = (props) => {
+  const { footerValues } = props;
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.white,
@@ -69,7 +70,7 @@ const TsSales = (props) => {
           <TableHead style={tableHead}>
             <TableRow>
               <StyledTableCell style={{ padding: '10px' }}>S.No</StyledTableCell>
-              {props.tableHeading.map((key, index) => (
+              {props?.tableHeading?.map((key, index) => (
                 <StyledTableCell key={index} style={{ padding: '16px', color: '#6B778C' }}>
                   {key}
                 </StyledTableCell>
@@ -77,33 +78,30 @@ const TsSales = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.tableData.map((row, index) => (
+            {props?.tableData?.map((row, index) => (
               <StyledTableRow key={index} style={{ color: '#62728D' }}>
                 <StyledTableCell>{index + 1}</StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D' }}>
-                  {row['Product Details']}
+                  {row['item']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D' }}>
-                  {row['Product Type']}
+                  {row['hsn_sac']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D' }}>
-                  {row['Rate']}
+                  {row['bag_weight']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D' }}>
-                  {row['Quantity']}
+                  {row['qty']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D' }}>
-                  {row['Units']}
+                  {row['total_weight']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#191C24' }}>
-                  ₹ {row['Amount']}
+                  ₹ {row['rate']}
                 </StyledTableCell>
-                {/* {
-      tableHeading.map((heading, index) => {
-        {console.log(row[heading],'heding')}
-        <StyledTableCell key={index}>{row.heading}</StyledTableCell>
-      })
-    } */}
+                <StyledTableCell key={index} style={{ color: '#191C24' }}>
+                  ₹ {row['total_rate']}
+                </StyledTableCell>
               </StyledTableRow>
             ))}{' '}
           </TableBody>
@@ -113,7 +111,7 @@ const TsSales = (props) => {
         <div className="d-flex">
           <div style={{ marginTop: '10px', padding: '0 40px 0 10px' }}>
             <span style={{ color: '#5C9EB8' }}>Total Rate:</span>
-            <span> ₹ 5,689.25</span>
+            <span> ₹ {footerValues?.total_rate}</span>
           </div>
           <div
             style={{ borderRight: '1px solid #EBEEF0', marginTop: '10px', height: '20px' }}></div>
@@ -127,24 +125,24 @@ const TsSales = (props) => {
             <tbody>
               <tr>
                 <td style={tableBody}>Total Rate:</td>
-                <td>₹ 5,689.25</td>
+                <td>₹ {footerValues?.['total_rate']}</td>
               </tr>
               <tr>
                 <td style={tableBody}>Taxable Value:</td>
-                <td>₹ 600.25</td>
+                <td>₹ {footerValues?.['tax'] || 0}</td>
               </tr>
               <tr>
                 <td style={tableBody}>SGST (9%):</td>
-                <td>₹ 0</td>
+                <td>₹ {footerValues?.['sgst'] || 0}</td>
               </tr>
               <tr>
                 <td style={tableBody}>CGST (9%) :</td>
-                <td>₹ 0</td>
+                <td>₹ {footerValues?.['cgst'] || 0}</td>
               </tr>
               <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}></tr>
               <tr>
                 <td style={tableBody}>Grand Total :</td>
-                <td style={{ fontWeight: 'bold' }}>₹ 2,58,456.00</td>
+                <td style={{ fontWeight: 'bold' }}>₹ {footerValues?.['grand_total']}</td>
               </tr>
               <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}></tr>
               <tr>

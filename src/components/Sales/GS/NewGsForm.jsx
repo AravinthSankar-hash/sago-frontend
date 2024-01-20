@@ -88,7 +88,7 @@ function NewGsForm() {
       // Items
       itemDetails.push({
         item: data[`item_${index}`],
-        kg_rate_: +data[`kg_rate_${index}`],
+        rate_per_kg: +data[`kg_rate_${index}`],
         hsn_sac: +data[`hsn_sac_${index}`],
         bag_weight: +data[`bag_weight_${index}`],
         qty: +data[`qty_${index}`],

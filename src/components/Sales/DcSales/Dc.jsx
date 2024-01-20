@@ -119,6 +119,13 @@ const Dc = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to the first page when changing rows per page
   };
+
+  const onSearchBoxValueChange = (currentInputValue) => {
+    const payload = {
+      search_term: currentInputValue
+    };
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${10}`);
+  };
   return (
     <Container style={{ background: '#EBEEF0' }}>
       <Row>
@@ -135,7 +142,9 @@ const Dc = () => {
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                     <Row>
                       <Col lg="3">
-                        <SearchBox placeHolder={'Search here'}></SearchBox>
+                        <SearchBox
+                          placeHolder={'Search here'}
+                          inputValueChanged={onSearchBoxValueChange}></SearchBox>
                       </Col>
                       <Col lg="2">
                         <DateSelector size="smaller" customLabel="From"></DateSelector>
