@@ -160,7 +160,7 @@ function Purchases() {
       ) : (
         <div>
           {showPurhcaseDetails ? (
-            <TPDetails tpDetails={selectedTP} />
+            <TPDetails selectedTP={selectedTP} />
           ) : (
             <>
               {/* <TPDashboard
