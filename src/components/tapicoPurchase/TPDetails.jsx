@@ -9,21 +9,36 @@ import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import TabComponent from 'components/helper/TabComponent.jsx';
 
 function TPDetails(props) {
+  const { selectedTP } = props;
+  console.log(selectedTP, 'tppp');
   const [tableData, setTableData] = useState([]);
-  const [tableHeading, setTableHeading] = useState([]);
+  const [paymentFooterValues, setPaymentFooterValues] = useState([]);
+  const [paymentTableData, setPaymentTableData] = useState([]);
   const [showPurchase, setShowPurchase] = useState(true);
+  const [footerValues, setFooterValues] = useState([]);
+
+  const paymentTableHeaders = ['Date', 'Amount'];
 
   useEffect(() => {
-    fetch('http://localhost:3001/proPurchase')
-      .then((rawResponse) => rawResponse.json())
-      .then((response) => {
-        setTableHeading(Object.keys(response.data[0]));
-        setTableData(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+    let combinedTableData = [
+      { ...selectedTP.weightage_details[0], ...selectedTP.charges_details[0] }
+    ];
+    setTableData(combinedTableData);
+    setPaymentTableData(selectedTP.payments);
+    setPaymentFooterValues({ amount_paid: selectedTP.paid_amount });
+    setFooterValues({
+      total_weight: combinedTableData[0].total_weight,
+      vehicle_weight: combinedTableData[0].vehicle_weight,
+      net_weight: combinedTableData[0].net_weight,
+      sand_weight: combinedTableData[0].sand_weight,
+      labour_charges: selectedTP.labour_charges,
+      vehicle_rent: selectedTP.vehicle_rent,
+      commission: selectedTP.commission,
+      grand_total: selectedTP.grand_total
+    });
   }, []);
+
+  const tableHeading = ['Tapioca Type', 'AP', 'TP', 'P. Rate', 'Tonnage Rate', 'Bags', 'Amount'];
   const containerRef = useRef();
   const gridStyle = useMemo(
     () => ({
@@ -92,19 +107,19 @@ function TPDetails(props) {
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Purchase No.
               </p>
-              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase No']}</p>
+              <p style={{ fontSize: '12px' }}>{selectedTP['invoice_number']}</p>
             </div>
             <div className="p-2" style={{ marginRight: '30px' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Purchase Date
               </p>
-              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase date']}</p>
+              <p style={{ fontSize: '12px' }}>{selectedTP['purchase_date']}</p>
             </div>
             <div className="p-2" style={{ marginRight: '30px' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Payment due date :
               </p>
-              <p style={{ fontSize: '12px' }}>26 Oct 2022</p>
+              <p style={{ fontSize: '12px' }}>{selectedTP['payment_due_date']}</p>
             </div>
             <div className="p-2" style={{ marginRight: '30px' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
@@ -119,7 +134,7 @@ function TPDetails(props) {
                   fontWeight: 'bold',
                   padding: '0 4px'
                 }}>
-                UNPAID
+                {selectedTP['payment_status']}
               </p>
             </div>
           </div>
@@ -153,13 +168,17 @@ function TPDetails(props) {
               <Form.Label>Broker Name</Form.Label>
               <Form.Control
                 style={disabledInput}
-                defaultValue={props.rowData['Supplier Name']}
+                defaultValue={selectedTP['broker_name']}
                 disabled
               />
             </Form.Group>
             <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '20%' }}>
               <Form.Label>Commision %</Form.Label>
-              <Form.Control style={disabledInput} defaultValue="20" disabled />
+              <Form.Control
+                style={disabledInput}
+                defaultValue={selectedTP['commission']}
+                disabled
+              />
             </Form.Group>
           </div>
           <div className="m-3 mb-0 d-flex">
@@ -167,13 +186,13 @@ function TPDetails(props) {
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Address
               </p>
-              <p>22/13 Bajanai koil 2nd street, Choolaimedu chennai-94</p>
+              <p>{selectedTP['address']}</p>
             </div>
             <div style={{ marginRight: '20px', width: '20%' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Phone No.
               </p>
-              <p>1234567890</p>
+              <p>{selectedTP['phone']}</p>
             </div>
           </div>
         </div>
@@ -181,11 +200,19 @@ function TPDetails(props) {
           <div className="m-3 d-flex">
             <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '60%' }}>
               <Form.Label>Vehicle No.</Form.Label>
-              <Form.Control style={disabledInput} defaultValue="TN06AR4567" disabled />
+              <Form.Control
+                style={disabledInput}
+                defaultValue={selectedTP['vehicle_no']}
+                disabled
+              />
             </Form.Group>
             <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '60%' }}>
               <Form.Label>Weight Bill No.</Form.Label>
-              <Form.Control style={disabledInput} defaultValue="8941555367" disabled />
+              <Form.Control
+                style={disabledInput}
+                defaultValue={selectedTP['weight_bill_no']}
+                disabled
+              />
             </Form.Group>
           </div>
           <div>
@@ -200,16 +227,16 @@ function TPDetails(props) {
               <tbody className="mb-1">
                 <tr>
                   <td style={tableRow}>Total Bill Amount :</td>
-                  <td>₹ 10,000.00</td>
+                  <td>{selectedTP['grand_total']}</td>
                 </tr>
                 <tr>
                   <td style={tableRow}>Total Paid:</td>
-                  <td style={{ color: '#00875A' }}>₹ 2,000.00</td>
+                  <td style={{ color: '#00875A' }}>{selectedTP['paid_amount']}</td>
                 </tr>
                 <tr style={{ borderBottom: '2px solid #EBEEF0', color: '#EBEEF0' }}></tr>
                 <tr>
                   <td style={tableRow}>Outstandings :</td>
-                  <td style={{ color: '#DE350B' }}>₹ 8,000.00/-</td>
+                  <td style={{ color: '#DE350B' }}>{selectedTP['outstandings']}/-</td>
                 </tr>
               </tbody>
             </table>
@@ -219,12 +246,26 @@ function TPDetails(props) {
 
       {tableData.length > 0 && tableHeading.length > 0 ? (
         <Container ref={containerRef} className="ag-theme-alpine mt-3" style={tableContainer}>
-          <TabComponent showTab={showTab} showPurchase={showPurchase} tabName={'Expense'} />
+          <TabComponent
+            showTab={showTab}
+            showPurchase={showPurchase}
+            tabName={'Purchase'}
+            paymentCategory="tp"
+            paymentRefId={selectedTP.item_id}
+          />
           <Container style={gridStyle}>
             {showPurchase ? (
-              <TPPurchases tableHeading={tableHeading} tableData={tableData} />
+              <TPPurchases
+                tableHeading={tableHeading}
+                tableData={tableData}
+                footerValues={footerValues}
+              />
             ) : (
-              <TPPayments />
+              <TPPayments
+                tableHeaders={paymentTableHeaders}
+                tableData={paymentTableData}
+                footerValues={paymentFooterValues}
+              />
             )}
           </Container>
         </Container>

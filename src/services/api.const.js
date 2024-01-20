@@ -26,6 +26,9 @@ const SERVICES = {
       TP: '/tp',
       BROKERREPORT: '/broker-purchases',
       REPORT: '/report'
+    },
+    QUERY_PARAMS: {
+      TP: '/tp-invoices'
     }
   },
   SALE: {
@@ -33,10 +36,10 @@ const SERVICES = {
       BASE_ROUTE: '/sales'
     },
     SALE_TYPES: {
-      'dc': 'dc',
-      'general': 'general',
-      'tippi': 'tippi',
-      'all': 'all'
+      dc: 'dc',
+      general: 'general',
+      tippi: 'tippi',
+      all: 'all'
     }
   },
   GENERIC: {

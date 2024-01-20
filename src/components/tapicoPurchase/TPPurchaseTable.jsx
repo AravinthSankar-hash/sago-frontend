@@ -115,27 +115,31 @@ const TPPurchaseTable = (props) => {
                       );
                     } else if (columnKey === 'approval_status') {
                       // Logic for the "Approval Status" column
-                      const approvalStatus = tableRow[columnKey].toLowerCase();
+                      const approvalStatus = tableRow[columnKey];
                       switch (approvalStatus) {
-                        case 'approved':
+                        case 'APPROVED':
                           approvalStyle = {
                             backgroundColor: '#00875A',
                             color: '#FFFFFF'
                           };
                           break;
-                        case 'pending':
+                        case 'PENDING':
                           approvalStyle = {
                             backgroundColor: '#00B7FF',
                             color: '#FFFFFF'
                           };
                           break;
-                        case 'rejected':
+                        case 'REJECTED':
                           approvalStyle = {
                             backgroundColor: '#DE350B',
                             color: '#FFFFFF'
                           };
                           break;
                         default:
+                          approvalStyle = {
+                            backgroundColor: '#00B7FF',
+                            color: '#FFFFFF'
+                          };
                           break;
                       }
                       cellContent = (
@@ -149,7 +153,7 @@ const TPPurchaseTable = (props) => {
                             fontSize: 11,
                             ...approvalStyle
                           }}>
-                          {tableRow[columnKey]}
+                          {tableRow[columnKey] ? tableRow[columnKey] : 'PENDING'}
                         </div>
                       );
                     } else {
