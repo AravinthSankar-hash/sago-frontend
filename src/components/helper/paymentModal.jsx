@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
@@ -12,6 +11,7 @@ import FormControl from '@mui/material/FormControl';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import AddSharpIcon from '@mui/icons-material/AddSharp';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -23,12 +23,11 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const PaymentModal = ({ visible, onSave, onClose }) => {
-  const [cleared, setCleared] = React.useState(false);
+  const [cleared, setCleared] = useState(false);
   const [date, setDate] = useState('');
   const [amount, setAmount] = useState('');
-  const [itemRowCount, setItemRowCount] = useState(1);
-  const [inputPaymentList, setInputPaymentList] = useState([]);
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (cleared) {
       const timeout = setTimeout(() => {
         setCleared(false);
@@ -48,136 +47,23 @@ const PaymentModal = ({ visible, onSave, onClose }) => {
     color: 'white',
     borderRadius: '5px',
     width: '100%',
-    // paddingBottom: '30px',
     margin: '3px'
-    // marginBottom: '20px'
   };
-  // const horizontalLine = {
-  //   borderTopWidth: '0.75px'
-  // }
 
-  const itemAddDeleteClicked = (isAdd, rowKey) => {
-    if (isAdd) {
-      addItemRow();
-      return;
+  const [rows, setRows] = useState([{ id: 1 }]);
+
+  const handleButtonClick = (index) => {
+    if (index === rows.length - 1) {
+      // If it's the last row, add a new row
+      const newRow = { id: rows.length + 1 };
+      setRows((prevRows) => [...prevRows, newRow]);
     } else {
-      // let slicedPaymentRows = JSON.parse(inputPaymentList).splice(rowKey, 1);
-      // setInputPaymentList(JSON.stringify(slicedPaymentRows));
-      // console.log('delete clicked', inputPaymentItems);
-      // setInputPaymentItems(slicedPaymentRows);
-      // // setInputPaymentItems(inputPaymentItems.splice(rowKey, 1));
-      console.log('row deleted successfully...');
-    }
-    // deleteItemRow(rowKey);
-  };
-
-  const addItemRow = () => {
-    setItemRowCount((prevCount) => {
-      const newCount = prevCount + 1;
-
-      const currentArraySize = Array.from({ length: newCount });
-      const salePaymentRows = currentArraySize.map((ele, idx) => {
-        return (
-          <>
-            <tbody style={{ color: '#6B778C' }}>
-              {' '}
-              <tr>
-                {' '}
-                <td style={{ padding: '10px' }}>
-                  <FormControl size="small">{idx + 1}</FormControl>
-                </td>
-                {staticFormGroup}
-                {idx + 1 === currentArraySize.length ? (
-                  <td
-                    style={{ padding: '10px', color: '#00B7FF', cursor: 'pointer' }}
-                    onClick={() =>
-                      itemAddDeleteClicked(idx + 1 === currentArraySize.length, idx + 1)
-                    }>
-                    Add row
-                  </td>
-                ) : (
-                  <td
-                    style={{ padding: '10px', color: 'black', cursor: 'pointer' }}
-                    onClick={() =>
-                      itemAddDeleteClicked(idx + 1 === currentArraySize.length, idx + 1)
-                    }>
-                    <DeleteOutlineOutlinedIcon color="black" />
-                  </td>
-                )}
-              </tr>
-            </tbody>
-          </>
-        );
+      // If it's not the last row, delete the current row
+      setRows((prevRows) => {
+        return prevRows.filter((row, indexToDelete) => indexToDelete !== index);
       });
-      console.log('salePaymentRows', salePaymentRows);
-
-      setInputPaymentItems(salePaymentRows);
-      // setInputPaymentList(JSON.stringify(salePaymentRows));
-
-      return newCount;
-    });
+    }
   };
-
-  const staticFormGroup = (
-    <>
-      <td style={{ padding: '10px' }}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            sx={{ width: 180 }}
-            slotProps={{
-              textField: { size: 'small' },
-              field: { clearable: true, onClear: () => setCleared(true) }
-            }}
-          />
-        </LocalizationProvider>
-      </td>
-      <td style={{ padding: '10px' }}>
-        <Form.Group as={Col}>
-          <FormControl
-            sx={{
-              minWidth: 150,
-              marginTop: '0px',
-              color: '#DFE1E6',
-              background: '#FAFBFC',
-              border: '4px solid #FAFBFC'
-            }}
-            size="small">
-            <Select>
-              <MenuItem value={10}>Cash</MenuItem>
-              <MenuItem value={20}>UPI</MenuItem>
-              <MenuItem value={30}>Card</MenuItem>
-            </Select>
-          </FormControl>
-        </Form.Group>
-      </td>
-      <td style={{ padding: '10px' }}>
-        <Form.Group as={Col}>
-          <Form.Control
-            style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
-            type="text"
-          />
-        </Form.Group>
-      </td>
-    </>
-  );
-
-  const [inputPaymentItems, setInputPaymentItems] = useState([
-    <>
-      <tbody style={{ color: '#6B778C' }}>
-        {' '}
-        <tr>
-          <td style={{ padding: '10px' }}>
-            <FormControl size="small">1</FormControl>
-          </td>
-          {staticFormGroup}
-          <td style={{ padding: '10px', color: '#00B7FF', cursor: 'pointer' }} onClick={addItemRow}>
-            {' '}
-            Add row
-          </td>
-        </tr>
-      </tbody>
-    </>
-  ]);
 
   return (
     <BootstrapDialog
@@ -209,11 +95,71 @@ const PaymentModal = ({ visible, onSave, onClose }) => {
               <th style={{ padding: '0 10px 10px 10px', textAlign: 'center' }}>Amount</th>
             </tr>
           </thead>
-          {inputPaymentItems.map((item, idx) => {
-            console.log(item, 'itemmmmm');
-            return item;
-          })}
-          {/* {inputPaymentItems} */}
+          {rows.map((row, index) => (
+            <tbody key={index}>
+              <tr>
+                <td style={{ padding: '10px' }}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      sx={{ width: 180 }}
+                      slotProps={{
+                        textField: { size: 'small' },
+                        field: { clearable: true, onClear: () => setCleared(true) }
+                      }}
+                    />
+                  </LocalizationProvider>
+                </td>
+                <td style={{ padding: '10px' }}>
+                  <Form.Group as={Col}>
+                    <FormControl
+                      sx={{
+                        minWidth: 150,
+                        marginTop: '0px',
+                        color: '#DFE1E6',
+                        background: '#FAFBFC',
+                        border: '4px solid #FAFBFC'
+                      }}
+                      size="small">
+                      <Select>
+                        <MenuItem value={10}>Cash</MenuItem>
+                        <MenuItem value={20}>UPI</MenuItem>
+                        <MenuItem value={30}>Card</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Form.Group>
+                </td>
+                <td style={{ padding: '10px' }}>
+                  <Form.Group as={Col}>
+                    <Form.Control
+                      style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
+                      type="text"
+                    />
+                  </Form.Group>
+                </td>
+                <td style={{ padding: '10px' }}>
+                  <div
+                    style={{
+                      height: '40px',
+                      width: '40px',
+                      background:
+                        rows.length === 1 || index === rows.length - 1 ? '#00B7FF' : '#BF2600',
+                      color: 'white',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}>
+                    <IconButton onClick={() => handleButtonClick(index)}>
+                      {index === rows.length - 1 ? (
+                        <AddSharpIcon style={{ color: 'white' }} />
+                      ) : (
+                        <DeleteOutlineOutlinedIcon style={{ color: 'white' }} />
+                      )}
+                    </IconButton>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          ))}
         </table>
       </DialogContent>
       <div className="d-flex" style={{ fontSize: '12px' }}>
