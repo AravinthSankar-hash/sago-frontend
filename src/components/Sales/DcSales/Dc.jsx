@@ -21,13 +21,23 @@ import {
   useShowDCDetails,
   useUpdateShowDCDetails
 } from '../../../store/store.js';
+import Toaster from '../../helper/Snackbar.jsx';
+import { RESPONSE_MSG, dcTableHeaders, dcTableColumns } from '../sale.const.js';
+// API services
+import SaleService from 'services/sale.api.js';
+import { SERVICES } from 'services/api.const.js';
 
 const Dc = () => {
-  const [procurementData, setProcurementData] = useState([]);
+  const [salesInvoices, setsalesInvoices] = useState([]);
+  const [totalInvoicesDataCount, setTotalInvoicesDataCount] = useState(0);
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [toasterBackground, setToasterBackground] = useState(null);
+  const [toasterMsg, setToasterMsg] = useState('Customer data saved');
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
-  const [rowData, setRowData] = useState({});
+  const [selectedRowData, setSelectedRowData] = useState({});
+  const [totalDataCount, setTotalDataCount] = useState(0);
 
   // Store
   const updateShowSalesBackBtn = useUpdateShowSalesBackBtn(); // Method to update bool, if back btn is clicked
@@ -37,16 +47,33 @@ const Dc = () => {
   const updateShowDCDetails = useUpdateShowDCDetails(); // Show DC Details Dashboard
 
   useEffect(() => {
-    fetch('http://localhost:3001/procurement')
-      .then((rawResponse) => rawResponse.json())
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI({}, `page=${0 + 1}&limit=${10}`);
+  }, []);
+
+  const invokeSearchAPI = (payload, query = null) => {
+    SaleService.getSales(SERVICES.SALE.SALE_TYPES.dc, payload, query)
       .then((response) => {
-        setProcurementData(response.data);
-        console.log(response.data);
+        setsalesInvoices(response.data.data);
+        setTotalInvoicesDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.log('Error in searching sale invoices', error);
+        invokeToaster(RESPONSE_MSG.FAILED, 'red');
       });
-  }, []);
+  };
+
+  const invokeToaster = (msg, backgroundClr = '#4BB543') => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    setToasterBackground(backgroundClr);
+    setShouldShowToaster(Math.random());
+  };
+
   const showForm = (shouldShow) => {
     // Show back btn - Store
     updateShowSalesBackBtn(true);
@@ -55,12 +82,14 @@ const Dc = () => {
     updateShowDCSalesNewForm(true);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const dcPageChanged = (currentPageNo, rowsPerPage) => {
+    setPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokeSearchAPI({}, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
   };
 
-  const handleShowDetails = (shouldShow, rowData) => {
-    setRowData(rowData);
+  const onTableRowClick = (clickedRow) => {
+    setSelectedRowData(clickedRow);
 
     // Show back btn - Store
     updateShowSalesBackBtn(true);
@@ -100,7 +129,7 @@ const Dc = () => {
             <>
               {' '}
               {showDCDetails ? (
-                <DcDetails rowData={rowData} />
+                <DcDetails selectedRowData={selectedRowData} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
@@ -169,32 +198,23 @@ const Dc = () => {
                     </Row>
                   </div>
                   <div>
-                    {procurementData.length > 0 ? (
+                    {salesInvoices.length > 0 ? (
                       <DcTable
-                        tableData={procurementData}
+                        tableData={salesInvoices}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        tableHeaders={dcTableHeaders}
+                        tableColumns={dcTableColumns}
+                        totalDataCount={totalDataCount}
+                        hanldePageChange={dcPageChanged}
+                        tableRowClicked={onTableRowClick}
                         rowsPerPage={rowsPerPage}
                         page={page}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        handleShowDetails={handleShowDetails}
                       />
                     ) : (
                       <Box sx={{ display: 'flex' }}>
                         <CircularProgress />
                       </Box>
                     )}
-
-                    {/* <AgGridTable
-            columnDefs={[
-              { field: 'Purchase date' },
-              { field: 'Purchase No' },
-              { field: 'Supplier Name' },
-              { field: 'Outstandings' },
-              { field: 'Last payment date' },
-              { field: 'Approval Status' }
-            ]}
-            rowData={procurementData}
-          /> */}
                   </div>
                 </div>
               )}
@@ -202,6 +222,10 @@ const Dc = () => {
           )}
         </Col>
       </Row>
+      <Toaster
+        shouldOpen={shouldShowToaster}
+        message={toasterMsg}
+        backgroundColor={toasterBackground}></Toaster>
     </Container>
   );
 };

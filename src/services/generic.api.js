@@ -1,5 +1,5 @@
 import request from './request.js';
-import { HTTP_METHODS, SERVICES } from './api.const.js';
+import { SERVICES } from './api.const.js';
 
 const { ROUTES } = SERVICES.GENERIC;
 
@@ -10,8 +10,18 @@ function getInvoiceNo(type, data = {}) {
     data: data
   });
 }
+
+function addPayment(data) {
+  return request({
+    url: `${ROUTES.PAYMENTS}`,
+    method: 'POST',
+    data: data
+  });
+}
+
 const GeneralService = {
-  getInvoiceNo
+  getInvoiceNo,
+  addPayment
 };
 
 export default GeneralService;
