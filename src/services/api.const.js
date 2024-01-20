@@ -42,7 +42,11 @@ const SERVICES = {
   GENERIC: {
     ROUTES: {
       BASE_ROUTE: '/invoice',
-      TP: '/tp'
+      TP: '/tp',
+      PAYMENTS: "payments"
+    },
+    PAYMENT_CATEGORY: {
+      TIPPI: 'tippi'
     }
   }
 };

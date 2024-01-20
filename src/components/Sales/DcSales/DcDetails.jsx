@@ -239,7 +239,13 @@ const DcDetails = (props) => {
       </Container>
 
       <Container ref={containerRef} className="ag-theme-alpine mt-4" style={tableContainer}>
-        <TabComponent showTab={showTab} showPurchase={showPurchase} tabName={'Sales'} />
+        <TabComponent
+          showTab={showTab}
+          paymentCategory="dc"
+          paymentRefId={selectedRowData.itemId}
+          showPurchase={showPurchase}
+          tabName={'Sales'}
+        />
         <Container style={gridStyle}>
           {showPurchase ? (
             <DcSales
