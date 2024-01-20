@@ -28,6 +28,28 @@ export const dcTableColumns = [
     'payment_due_date'
 ]
 
+export const generalTableHeaders = [
+    'Sales date',
+    'Invoice No',
+    'Customer Name',
+    'Top Rate',
+    'Amount',
+    'Status',
+    'Outstandings',
+    'Payment Due Date'
+]
+
+export const generalTableColumns = [
+    'sale_date',
+    'invoice_number',
+    'customer_name',
+    'top_rate',
+    'grand_total',
+    'payment_status',
+    'outstandings',
+    'payment_due_date'
+]
+
 export const tsTableHeaders = [
     'Sales date',
     'Invoice No',

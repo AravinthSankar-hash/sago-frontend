@@ -9,20 +9,38 @@ import GsSales from './GsSales';
 import GsPayment from './GsPayment';
 
 const GsDetails = (props) => {
+  const { selectedRowData } = props;
+  const [itemTableData, setItemTableData] = useState([]);
+  const [footerValues, setFooterValues] = useState([]);
   const [tableData, setTableData] = useState([]);
+  const [paymentFooterValues, setPaymentFooterValues] = useState([]);
+  const [paymentTableData, setPaymentTableData] = useState([]);
   const [tableHeading, setTableHeading] = useState([]);
   const [showPurchase, setShowPurchase] = useState(true);
 
+  const itemTableHeaders = [
+    'Item Details',
+    'HSN/SAC',
+    'Bag Weight(Kgs)',
+    'Quantity',
+    'Total Weight(Kgs)',
+    'Kg/Rate',
+    'Rate',
+    'Total Rate'
+  ];
+  const paymentTableHeaders = ['Date', 'Amount'];
+
   useEffect(() => {
-    fetch('http://localhost:3001/proPurchase')
-      .then((rawResponse) => rawResponse.json())
-      .then((response) => {
-        setTableHeading(Object.keys(response.data[0]));
-        setTableData(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+    setItemTableData(selectedRowData?.items);
+    setFooterValues({
+      total_rate: selectedRowData.total_rate_sum,
+      tax: selectedRowData.tax_value,
+      sgst: selectedRowData.sgst_value,
+      cgst: selectedRowData.cgst_value,
+      grand_total: selectedRowData.grand_total
+    });
+    setPaymentTableData(selectedRowData.payments);
+    setPaymentFooterValues({ amount_paid: selectedRowData.paid_amount });
   }, []);
 
   const containerRef = useRef();
@@ -81,19 +99,19 @@ const GsDetails = (props) => {
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Invoice No.
               </p>
-              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase No']}</p>
+              <p style={{ fontSize: '12px' }}>{selectedRowData?.['invoice_number']}</p>
             </div>
             <div className="p-2" style={{ marginRight: '30px' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Sales Date
               </p>
-              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase date']}</p>
+              <p style={{ fontSize: '12px' }}>{selectedRowData?.['sale_date']}</p>
             </div>
             <div className="p-2" style={{ marginRight: '30px' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Payment due date :
               </p>
-              <p style={{ fontSize: '12px' }}>26 Oct 2022</p>
+              <p style={{ fontSize: '12px' }}>{selectedRowData?.['payment_due_date']}</p>
             </div>
             <div className="p-2" style={{ marginRight: '30px' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
@@ -108,7 +126,7 @@ const GsDetails = (props) => {
                   fontWeight: 'bold',
                   padding: '0 4px'
                 }}>
-                UNPAID
+                <p style={{ fontSize: '12px' }}>{selectedRowData?.['payment_status']}</p>
               </p>
             </div>
           </div>
@@ -132,13 +150,17 @@ const GsDetails = (props) => {
               <Form.Label>Customer Name</Form.Label>
               <Form.Control
                 style={disabledInput}
-                defaultValue={props.rowData['Supplier Name']}
+                defaultValue={selectedRowData?.['customer_name']}
                 disabled
               />
             </Form.Group>
             <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '20%' }}>
               <Form.Label>GSTIN</Form.Label>
-              <Form.Control style={disabledInput} defaultValue="BAG7869874" disabled />
+              <Form.Control
+                style={disabledInput}
+                defaultValue={selectedRowData?.['gst_in']}
+                disabled
+              />
             </Form.Group>
           </div>
           <div className="m-3 d-flex">
@@ -146,59 +168,79 @@ const GsDetails = (props) => {
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Address
               </p>
-              <p>22/13 Bajanai koil 2nd street, Choolaimedu chennai-94</p>
+              <p style={{ fontSize: '12px' }}>{selectedRowData?.['address']}</p>
             </div>
             <div style={{ marginRight: '20px', width: '20%' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Phone No.
               </p>
-              <p>1234567890</p>
+              <p style={{ fontSize: '12px' }}>{selectedRowData?.['phone']}</p>
             </div>
           </div>
         </div>
         <div className="m-3 d-flex" style={{ borderBottom: '1px solid #EBEEF0' }}>
           <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '20%' }}>
             <Form.Label>Distance</Form.Label>
-            <Form.Control style={disabledInput} defaultValue="360 kms" disabled />
+            <Form.Control
+              style={disabledInput}
+              defaultValue={selectedRowData?.['distance']}
+              disabled
+            />
           </Form.Group>
           <Form.Group
             as={Col}
             xs={3}
             style={{ marginRight: '20px', width: '20%', marginBottom: '26px' }}>
             <Form.Label>Place of Supply</Form.Label>
-            <Form.Control style={disabledInput} defaultValue="Chennai" disabled />
+            <Form.Control
+              style={disabledInput}
+              defaultValue={selectedRowData?.['supply_location']}
+              disabled
+            />
           </Form.Group>
         </div>
         <div className="m-3 d-flex" style={{ borderBottom: '1px solid #EBEEF0' }}>
           <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '20%' }}>
             <Form.Label>Vehicle No.</Form.Label>
-            <Form.Control style={disabledInput} defaultValue="TV54PD6789" disabled />
+            <Form.Control
+              style={disabledInput}
+              defaultValue={selectedRowData?.['vehicle_no']}
+              disabled
+            />
           </Form.Group>
           <Form.Group
             as={Col}
             xs={3}
             style={{ marginRight: '20px', width: '20%', marginBottom: '26px' }}>
             <Form.Label>Driver Name</Form.Label>
-            <Form.Control style={disabledInput} defaultValue="Ramu" disabled />
+            <Form.Control
+              style={disabledInput}
+              defaultValue={selectedRowData?.['driver_name']}
+              disabled
+            />
           </Form.Group>
           <Form.Group
             as={Col}
             xs={3}
             style={{ marginRight: '20px', width: '20%', marginBottom: '26px' }}>
             <Form.Label>Driver Phone No.</Form.Label>
-            <Form.Control style={disabledInput} defaultValue="1234567890" disabled />
+            <Form.Control
+              style={disabledInput}
+              defaultValue={selectedRowData?.['driver_phone']}
+              disabled
+            />
           </Form.Group>
         </div>
         <div className="d-flex justify-content-between">
           <div className="m-3 d-flex">
             <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '60%' }}>
               <Form.Label>E-WaY bILL nO.</Form.Label>
-              <Form.Control style={disabledInput} defaultValue="TV54PD6789" disabled />
+              <Form.Control
+                style={disabledInput}
+                defaultValue={selectedRowData?.['eway_bill']}
+                disabled
+              />
             </Form.Group>
-            {/* <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '60%' }}>
-              <Form.Label>Place of Supply</Form.Label>
-              <Form.Control style={disabledInput} defaultValue="AAA" disabled />
-            </Form.Group> */}
           </div>
           <div>
             <table
@@ -212,16 +254,16 @@ const GsDetails = (props) => {
               <tbody className="mb-1">
                 <tr>
                   <td style={tableRow}>Total Bill Amount :</td>
-                  <td>₹ 10,000.00</td>
+                  <td>₹ {selectedRowData?.['grand_total']}</td>
                 </tr>
                 <tr>
                   <td style={tableRow}>Total Paid:</td>
-                  <td style={{ color: '#00875A' }}>₹ 2,000.00</td>
+                  <td style={{ color: '#00875A' }}>₹ {selectedRowData?.['paid_amount']}</td>
                 </tr>
                 <tr style={{ borderBottom: '2px solid #EBEEF0', color: '#EBEEF0' }}></tr>
                 <tr>
                   <td style={tableRow}>Outstandings :</td>
-                  <td style={{ color: '#DE350B' }}>₹ 8,000.00/-</td>
+                  <td style={{ color: '#DE350B' }}>₹ {selectedRowData?.['outstandings']}/-</td>
                 </tr>
               </tbody>
             </table>
@@ -230,14 +272,28 @@ const GsDetails = (props) => {
         {/* </Form> */}
       </Container>
 
-      {tableData.length > 0 && tableHeading.length > 0 ? (
+      {itemTableData.length ? (
         <Container ref={containerRef} className="ag-theme-alpine mt-4" style={tableContainer}>
-          <TabComponent showTab={showTab} showPurchase={showPurchase} tabName={'Sales'} />
+          <TabComponent
+            showTab={showTab}
+            paymentCategory="general"
+            paymentRefId={selectedRowData.itemId}
+            showPurchase={showPurchase}
+            tabName={'Sales'}
+          />
           <Container style={gridStyle}>
             {showPurchase ? (
-              <GsSales tableHeading={tableHeading} tableData={tableData} />
+              <GsSales
+                tableHeading={itemTableHeaders}
+                tableData={itemTableData}
+                footerValues={footerValues}
+              />
             ) : (
-              <GsPayment />
+              <GsPayment
+                tableHeaders={paymentTableHeaders}
+                tableData={paymentTableData}
+                footerValues={paymentFooterValues}
+              />
             )}
           </Container>
         </Container>
