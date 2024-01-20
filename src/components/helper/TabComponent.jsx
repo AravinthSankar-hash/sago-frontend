@@ -4,7 +4,6 @@ import Tab from '@mui/material/Tab';
 import '../../css/index.css';
 import Toaster from '../helper/Snackbar.jsx';
 import { Button } from '@mui/material';
-import GeneralService from '../../services/generic.api.js';
 import PaymentModel from './paymentModal.jsx';
 import { RESPONSE_MSG } from '../sales/sale.const.js';
 
@@ -25,29 +24,6 @@ const TabComponent = (props) => {
     marginLeft: '3px'
   };
 
-  const handleDialogSave = (date, mode, amount) => {
-    setDialogVisible(false);
-    invokePaymentSaveAPI({
-      category_type: paymentCategory,
-      payment_ref_id: paymentRefId,
-      payment_date: date,
-      amount_paid: amount
-    });
-  };
-
-  const invokePaymentSaveAPI = (payload) => {
-    GeneralService.addPayment(payload)
-      .then((response) => {
-        if (response) {
-          invokeToaster('Payment added successfully');
-        }
-      })
-      .catch((error) => {
-        console.log('Error in adding Payment', error);
-        invokeToaster(RESPONSE_MSG.FAILED, 'red');
-      });
-  };
-
   const invokeToaster = (msg, backgroundClr = '#4BB543') => {
     if (msg) {
       setToasterMsg(msg);
@@ -56,44 +32,54 @@ const TabComponent = (props) => {
     setShouldShowToaster(Math.random());
   };
 
-  const handleDialogClose = () => setDialogVisible(false);
+  const handleDialogClose = (isPaymentAdded) => {
+    setDialogVisible(false);
+    if (isPaymentAdded) {
+      invokeToaster('Payment added successfully');
+      return;
+    }
+    invokeToaster(RESPONSE_MSG.FAILED, 'red');
+  };
 
   return (
-    <div className="d-flex justify-content-between" style={{ background: 'rgb(235, 238, 240)' }}>
-      <div>
-        <Tabs sx={{ textTransform: 'none' }} indicatorColor="primary">
-          <Tab
-            value="purchase"
-            sx={{ textTransform: 'none' }}
-            tabIndex={0}
-            label={props.tabName}
-            style={purchaseTab}
-            onClick={() => props.showTab(true)}
+    <>
+      <div className="d-flex justify-content-between" style={{ background: 'rgb(235, 238, 240)' }}>
+        <div>
+          <Tabs sx={{ textTransform: 'none' }} indicatorColor="primary">
+            <Tab
+              value="purchase"
+              sx={{ textTransform: 'none' }}
+              tabIndex={0}
+              label={props.tabName}
+              style={purchaseTab}
+              onClick={() => props.showTab(true)}
+            />
+            <Tab
+              value="payments"
+              sx={{ textTransform: 'none' }}
+              label="Payments"
+              style={paymentTab}
+              onClick={() => props.showTab(false)}
+            />
+          </Tabs>
+        </div>
+        <Button style={{ color: '#00B7FF' }} onClick={() => setDialogVisible(true)}>
+          + Add Amount
+        </Button>
+        {dialogVisible && (
+          <PaymentModel
+            paymentCategory={paymentCategory}
+            paymentRefId={paymentRefId}
+            visible={dialogVisible}
+            onClose={handleDialogClose}
           />
-          <Tab
-            value="payments"
-            sx={{ textTransform: 'none' }}
-            label="Payments"
-            style={paymentTab}
-            onClick={() => props.showTab(false)}
-          />
-        </Tabs>
+        )}
       </div>
-      <Button style={{ color: '#00B7FF' }} onClick={() => setDialogVisible(true)}>
-        + Add Amount
-      </Button>
-      {dialogVisible && (
-        <PaymentModel
-          visible={dialogVisible}
-          onSave={handleDialogSave}
-          onClose={handleDialogClose}
-        />
-      )}
       <Toaster
         shouldOpen={shouldShowToaster}
         message={toasterMsg}
         backgroundColor={toasterBackground}></Toaster>
-    </div>
+    </>
   );
 };
 

@@ -3,13 +3,11 @@ import { useForm, Controller } from 'react-hook-form';
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import GeneralService from '../../services/generic.api.js';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Form, Col } from 'react-bootstrap';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import FormControl from '@mui/material/FormControl';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -24,7 +22,8 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   }
 }));
 
-const PaymentModal = ({ visible, onSave, onClose }) => {
+const PaymentModal = (props) => {
+  const { paymentCategory, paymentRefId, onClose } = props;
   const {
     register,
     control,
@@ -45,7 +44,31 @@ const PaymentModal = ({ visible, onSave, onClose }) => {
   }, [cleared]);
 
   const handleSave = (formData) => {
-    onSave(formData.selectedDate, formData.mode, +formData.amount);
+    const paymentPayload = [];
+    rows.forEach((row, index) => {
+      // Payments
+      paymentPayload.push({
+        category_type: paymentCategory,
+        payment_ref_id: paymentRefId,
+        payment_date: formData[`selectedDate_${index}`],
+        mode: formData[`mode_${index}`],
+        amount_paid: +formData[`amount_${index}`]
+      });
+    });
+    invokePaymentSaveAPI(paymentPayload);
+  };
+
+  const invokePaymentSaveAPI = (payload) => {
+    GeneralService.addPayment(payload)
+      .then((response) => {
+        if (response) {
+          onClose(true);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in adding Payment', error);
+        onClose(false);
+      });
   };
 
   const btnStyle = {
@@ -110,7 +133,7 @@ const PaymentModal = ({ visible, onSave, onClose }) => {
                   <td style={{ padding: '10px' }}>{index + 1}</td>
                   <td style={{ padding: '10px' }}>
                     <Controller
-                      name="selectedDate"
+                      name={`selectedDate_${index}`}
                       control={control}
                       defaultValue={null}
                       render={({ field }) => (
@@ -142,7 +165,7 @@ const PaymentModal = ({ visible, onSave, onClose }) => {
                           border: '4px solid #FAFBFC'
                         }}
                         size="small"
-                        {...register('mode', {})}>
+                        {...register(`mode_${index}`, {})}>
                         <option value="Cash">Cash</option>
                         <option value="UPI">UPI</option>
                         <option value="Card">Card</option>
@@ -152,7 +175,7 @@ const PaymentModal = ({ visible, onSave, onClose }) => {
                   <td style={{ padding: '10px' }}>
                     <Form.Group as={Col}>
                       <Form.Control
-                        {...register('amount', {
+                        {...register(`amount_${index}`, {
                           required: 'Required'
                         })}
                         style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
