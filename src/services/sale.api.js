@@ -5,7 +5,7 @@ const { ROUTES, SALE_TYPES } = SERVICES.SALE;
 
 function getSales(type, data = {}, query = null) {
     return request({
-        url: `${ROUTES.BASE_ROUTE}${SALE_TYPES[type]}`,
+        url: `${ROUTES.BASE_ROUTE}/${SALE_TYPES[type]}`,
         method: 'POST',
         data: data
     });

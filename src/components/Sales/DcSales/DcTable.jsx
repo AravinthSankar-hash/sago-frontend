@@ -11,9 +11,20 @@ import {
   tableCellClasses
 } from '@mui/material';
 import '../../../css/index.css';
+import { useState } from 'react';
+import { TABLE_ROW_SIZE_OPTIONS } from '../sale.const.js';
 
 const DcTable = (props) => {
-  const { tableData, rowsPerPage, page, handleChangePage, handleChangeRowsPerPage } = props;
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
+  const {
+    tableData,
+    tableHeaders,
+    tableColumns,
+    hanldePageChange,
+    tableRowClicked,
+    totalDataCount
+  } = props;
 
   const Wrapper = styled('div')({
     display: 'flex',
@@ -76,60 +87,56 @@ const DcTable = (props) => {
     zIndex: 2
   }));
 
+  // This will be invoked whenver we change size of the page in the table
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value));
+    setPage(0);
+    // Invoke parent
+    hanldePageChange(0, parseInt(event.target.value));
+  };
+
   return (
     <Wrapper>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead style={{ position: 'sticky', top: 0, zIndex: 2 }}>
             <TableRow>
-              {Object.keys(tableData[0]).map((key, index) => (
+              {tableHeaders.map((key, index) => (
                 <StyledTableCell key={index}>{key}</StyledTableCell>
-              ))}{' '}
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData.map((row, index) => (
-              <StyledTableRow key={index} onClick={() => props.handleShowDetails(true, row)}>
-                <StyledTableCell align="left">{row['Purchase date']}</StyledTableCell>
-                <StyledTableCell align="left" style={{ color: 'black' }}>
-                  {row['Purchase No']}
-                </StyledTableCell>
-                <StyledTableCell align="left" style={{ color: 'black' }}>
-                  {row['Supplier Name']}
-                </StyledTableCell>
-                <StyledTableCell align="left" style={{ color: 'black' }}>
-                  ₹ {row['amount']}
-                </StyledTableCell>
-                <StyledTableCell align="left" Outstandings={row['Outstandings']}>
-                  {' '}
-                  {row['Outstandings'] < 0 ? '₹ ' : ''}
-                  {row['Outstandings']}
-                </StyledTableCell>
-                <StyledTableCell align="left">{row['Last payment date']}</StyledTableCell>
-                <StyledTableCell
-                  align="left"
-                  className={`approval-status ${row['Approval Status'].toLowerCase()}`}>
-                  {row['Approval Status'].toUpperCase()}
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}{' '}
+            {tableData.map((tableRow, RowIdx) => {
+              return (
+                <StyledTableRow key={RowIdx} onClick={() => tableRowClicked(tableRow)}>
+                  {tableColumns.map((columnKey, colIdx) => {
+                    return (
+                      <StyledTableCell key={colIdx} align="left">
+                        {tableRow[columnKey]}
+                      </StyledTableCell>
+                    );
+                  })}
+                </StyledTableRow>
+              );
+            })}
           </TableBody>
           <TableBody>
             {' '}
             <StyledTablePaginationRow>
-              <TableCell colSpan={Object.keys(tableData[0]).length}>
+              <TableCell colSpan={tableHeaders.length}>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
+                  rowsPerPageOptions={TABLE_ROW_SIZE_OPTIONS}
                   component="div"
-                  count={tableData.length}
+                  count={totalDataCount}
                   rowsPerPage={rowsPerPage}
                   page={page}
-                  onPageChange={handleChangePage}
+                  onPageChange={hanldePageChange}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </TableCell>
             </StyledTablePaginationRow>
-          </TableBody>{' '}
+          </TableBody>
         </Table>
       </TableContainer>
     </Wrapper>

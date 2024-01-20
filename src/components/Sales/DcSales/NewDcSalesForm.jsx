@@ -76,6 +76,30 @@ function NewDcSalesForm() {
   const { SALE } = SERVICES;
 
   const onSubmit = (data) => {
+    const itemDetails = [];
+    // Footer variables
+    let total_rate_sum = 0;
+    let round_off = 0;
+    let vehicle_rent = 0;
+
+    rows.forEach((row, index) => {
+      // Items
+      itemDetails.push({
+        item: data[`item_${index}`],
+        hsn_sac: +data[`hsn_sac_${index}`],
+        bag_weight: +data[`bag_weight_${index}`],
+        qty: +data[`qty_${index}`],
+        total_weight: +data[`total_weight_${index}`],
+        rate: +data[`rate_${index}`],
+        total_rate: +data[`total_rate_${index}`]
+      });
+      // Footer calculations
+      total_rate_sum += +data[`total_rate_${index}`];
+    });
+
+    // Footer variables
+    let grand_total = total_rate_sum + round_off + vehicle_rent;
+
     const formData = {
       invoice_number: data.invoice_number,
       sale_date: data.sale_date,
@@ -95,15 +119,12 @@ function NewDcSalesForm() {
       supply_location: data.supply_location,
       discount: data.discount,
       top_rate: Number(data.top_rate),
-      items: rows.map((row, index) => ({
-        item: data[`item_${index}`],
-        hsn_sac: +data[`hsn_sac_${index}`],
-        bag_weight: +data[`bag_weight_${index}`],
-        qty: +data[`qty_${index}`],
-        total_weight: +data[`total_weight_${index}`],
-        rate: +data[`rate_${index}`],
-        total_rate: +data[`total_rate_${index}`]
-      }))
+      items: itemDetails,
+      // Footer data
+      total_rate_sum: total_rate_sum,
+      round_off: round_off,
+      vehicle_rent: vehicle_rent,
+      grand_total: grand_total
     };
 
     invokeCreateAPI(SALE.SALE_TYPES.dc, formData);
@@ -221,7 +242,6 @@ function NewDcSalesForm() {
             <Form.Group as={Col} xs={3}>
               <Form.Label>Phone No.</Form.Label>
               <Form.Control
-                type="date"
                 style={inputStyle}
                 {...register('phone', {
                   required: 'Required'
@@ -284,6 +304,7 @@ function NewDcSalesForm() {
                 <Form.Check
                   inline
                   label="Rental"
+                  value="Rental"
                   name="freight_mode"
                   type="radio"
                   {...register('freight_mode', {
@@ -293,6 +314,7 @@ function NewDcSalesForm() {
                 <Form.Check
                   inline
                   label="Company Owned"
+                  value="Company Owned"
                   name="freight_mode"
                   type="radio"
                   {...register('freight_mode', {
@@ -302,6 +324,7 @@ function NewDcSalesForm() {
                 <Form.Check
                   inline
                   label="Parcel"
+                  value="Parcel"
                   name="freight_mode"
                   type="radio"
                   {...register('freight_mode', {
