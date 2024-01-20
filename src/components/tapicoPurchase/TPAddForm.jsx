@@ -10,8 +10,12 @@ import TpService from '../../services/purchase.api';
 import { useForm } from 'react-hook-form';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { IconButton } from '@mui/material';
+import { RESPONSE_MSG } from './tp.const.js';
+import Toaster from '../helper/Snackbar.jsx';
 
 function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
+  const [farmerRows, setFarmerRows] = useState([{ id: 1 }]);
+  const [rows, setRows] = useState([{ id: 1 }]);
   // let invoiceNumber;
   // useEffect(() => {
   //   TpService.getInvoiceNo('TP')
@@ -27,29 +31,85 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
     handleSubmit,
     formState: { errors }
   } = useForm();
+  let total_rate_sum = 0;
+  let grand_total = 0;
+  let vehicle_rent = 0;
+  let weight_kickback = 0;
+  let other_charges = 0;
+  let round_off = 0;
+  let commission = 0;
 
   const onSubmit = async (data) => {
-    console.log(321);
+    let charges_details = [];
+
+    chargesRows.map((row, index) => {
+      charges_details.push({
+        point_1: Number(data[`point_1_${index}`]),
+        point_2: Number(data[`point_2_${index}`]),
+        point_3: Number(data[`point_3_${index}`]),
+        point_4: Number(data[`point_4_${index}`]),
+        ap: Number(data[`ap_${index}`]),
+        tp: Number(data[`tp_${index}`]),
+        p_rate: Number(data[`p_rate_${index}`]),
+        total_rate: Number(data[`total_rate_${index}`])
+      });
+      total_rate_sum += +data[`total_rate_${index}`];
+    });
+    grand_total =
+      total_rate_sum +
+      Number(data.vehicle_rent) +
+      Number(data.weight_kickback) +
+      Number(data.other_charges) +
+      Number(data.round_off) +
+      Number(data.commission);
+
+    vehicle_rent = Number(data.vehicle_rent);
+    weight_kickback = Number(data.weight_kickback);
+    other_charges = Number(data.other_charges);
+    round_off = Number(data.round_off);
+    commission = Number(data.commission);
+    // Get the address from the form field
+    console.log(7868, 'address');
     console.log(data, 'data');
     console.log(123);
-    const newTP = {
+    const formData = {
       invoice_number: tpInvoiceNo,
-      tapico_type: data.tapiocaType,
-      purchase_date: data.purchaseDate,
-      broker_name: data.brokerName,
+      address: data.address,
+      phone: data.phone,
+      tapico_type: data.tapico_type,
+      purchase_date: data.purchase_date,
+      broker_name: data.broker_name,
       commission: data.commission,
-      payment_due_date: data.paymentDueDate,
-      vehicle_no: data.vehicleNo,
-      weight_bill_no: data.weightBillNo
-      // aadhar: data.aadhar,
-      // pan: data.pan,
-      // description: data.description,
-      // designation: data.designation
+      payment_due_date: data.payment_due_date,
+      vehicle_no: data.vehicle_no,
+      weight_bill_no: data.weight_bill_no,
+      farmer_details: farmerRows.map((row, index) => ({
+        name: data[`name_${index}`],
+        aadhar: data[`aadhar_${index}`]
+      })),
+      weightage_details: weightageRows.map((row, index) => ({
+        product_name: data[`product_name_${index}`],
+        total_bags: Number(data[`total_bags_${index}`]),
+        total_weight: Number(data[`total_weight_${index}`]),
+        vehicle_weight: Number(data[`vehicle_weight_${index}`]),
+        net_weight: Number(data[`net_weight_${index}`]),
+        sand_weight_percentage: Number(data[`sand_weight_percentage_${index}`]),
+        sand_weight: Number(data[`sand_weight_${index}`]),
+        tonnage: Number(data[`tonnage_${index}`])
+      })),
+      charges_details: charges_details,
+      tonnage_rate: Number(data.tonnage_rate),
+      vehicle_rent: Number(data.vehicle_rent),
+      weight_kickback: Number(data.weight_kickback),
+      labour_charges: Number(data.labour_charges),
+      other_charges: Number(data.other_charges),
+      round_off: Number(data.round_off),
+      grand_total: grand_total,
+      payment_status: 'PENDING'
     };
-    // console.log(newTP, 'tpInvoiceNo22');
-
-    // await TpService.create({ type: 'TP', data: newTP });
-    // tpAdded(newTP);
+    console.log(formData, 'tpInvoiceNo22');
+    await TpService.create({ type: 'TP', data: formData });
+    tpAdded(formData);
   };
 
   const containerRef = useRef();
@@ -94,148 +154,6 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
     border: 'none'
   };
 
-  // const addItemRow = () => {
-  //   setItemRowCount((prevCount) => {
-  //     const newCount = prevCount + 1;
-
-  //     const currentArraySize = Array.from({ length: newCount });
-  //     const saleItemsRows = currentArraySize.map((ele, idx) => {
-  //       return (
-  //         <Row className="m-3 mb-0" key={idx + 1}>
-  //           {staticFormGroup}
-  //           <Form.Group as={Col} xs={1}>
-  //             <div
-  //               onClick={() => itemAddDeleteClicked(idx + 1 === currentArraySize.length, idx + 1)}
-  //               style={{
-  //                 height: '40px',
-  //                 width: '42px',
-  //                 background: idx + 1 === currentArraySize.length ? '#00B7FF' : '#BF2600',
-  //                 color: 'white',
-  //                 display: 'flex',
-  //                 borderRadius: '8px',
-  //                 justifyContent: 'center',
-  //                 alignItems: 'center'
-  //               }}>
-  //               {idx + 1 === currentArraySize.length ? (
-  //                 <AddSharpIcon />
-  //               ) : (
-  //                 <DeleteOutlineOutlinedIcon />
-  //               )}
-  //             </div>
-  //           </Form.Group>
-  //         </Row>
-  //       );
-  //     });
-
-  //     setInputsaleItems(saleItemsRows);
-
-  //     return newCount;
-  //   });
-  // };
-  // const staticFormGroup = (
-  //   <>
-  //     <Form.Group as={Col} xs={2}>
-  //       <Dropdown>
-  //         <Dropdown.Toggle
-  //           style={{
-  //             ...inputStyle,
-  //             backgroundColor: '#DFE1E6',
-  //             borderColor: '#DFE1E6',
-  //             color: '#7A869A',
-  //             width: '100%',
-  //             textAlign: 'left'
-  //           }}
-  //           id="dropdown-basic">
-  //           Choose Something
-  //         </Dropdown.Toggle>
-
-  //         <Dropdown.Menu>
-  //           <Dropdown.Item>Thippi</Dropdown.Item>
-  //           <Dropdown.Item>Action 2 Action 1 Action 1</Dropdown.Item>
-  //           <Dropdown.Item>Action 3</Dropdown.Item>
-  //         </Dropdown.Menu>
-  //       </Dropdown>
-  //     </Form.Group>
-  //     <Form.Group as={Col} xs={1}>
-  //       <Form.Control style={inputStyle}></Form.Control>
-  //     </Form.Group>
-  //     <Form.Group as={Col} xs={1}>
-  //       <Form.Control style={inputStyle}></Form.Control>
-  //     </Form.Group>
-  //     <Form.Group as={Col} xs={1}>
-  //       <Form.Control style={inputStyle}></Form.Control>
-  //     </Form.Group>
-  //     <Form.Group as={Col} xs={1}>
-  //       <Form.Control style={inputStyle}></Form.Control>
-  //     </Form.Group>
-  //     <Form.Group as={Col} xs={2}>
-  //       <Form.Control style={inputStyle}></Form.Control>
-  //     </Form.Group>
-  //     <Form.Group as={Col} xs={2}>
-  //       <Form.Control style={inputStyle}></Form.Control>
-  //     </Form.Group>
-  //   </>
-  // );
-  // const [inputSaleItems, setInputsaleItems] = useState(
-  //   <Row className="m-3 mb-0">
-  //     {staticFormGroup}
-  //     <Form.Group as={Col} xs={1}>
-  //       <div
-  //         onClick={addItemRow}
-  //         style={{
-  //           height: '40px',
-  //           width: '42px',
-  //           background: '#00B7FF',
-  //           color: 'white',
-  //           display: 'flex',
-  //           borderRadius: '8px',
-  //           justifyContent: 'center',
-  //           alignItems: 'center'
-  //         }}>
-  //         <AddSharpIcon />
-  //       </div>
-  //     </Form.Group>
-  //   </Row>
-  // );
-
-  // DYNAMIC WEIGHTAGE ROWS - START
-
-  const staticWeightageFormGroup = (
-    <>
-      <FormControl
-        as={Col}
-        xs={2}
-        sx={{ m: 1, minWidth: 160, marginTop: '0px', backgroundColor: 'white' }}
-        size="small">
-        <Select style={{ width: 160 }}>
-          <MenuItem value="Wet Thippi">Wet Thippi</MenuItem>
-          <MenuItem value="Dry Thippi">Dry Thippi</MenuItem>
-        </Select>
-      </FormControl>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={2}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-    </>
-  );
-
   const [weightageRows, setWeightageRows] = useState([{ id: 1 }]);
 
   const handleWeightageButtonClick = (index) => {
@@ -255,35 +173,6 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
 
   // CHARGES DYNAMIC FORM - START
 
-  const staticChargesFormGroup = (
-    <>
-      <Form.Group as={Col} xs={2}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={2}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={2}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-    </>
-  );
-
   const [chargesRows, setChargesRows] = useState([{ id: 1 }]);
 
   const handleChargesButtonClick = (index) => {
@@ -298,48 +187,55 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
       });
     }
   };
+  const ddInputStyle = {
+    backgroundImage:
+      "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23000' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E\")",
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right .75rem center',
+    backgroundSize: '8px 10px',
+    paddingRight: '2rem'
+  };
 
   // CHARGES DYNAMIC FORM - END
 
-  // FARMER DYNAMIC FORM - START
-  const staticFarmerFormGroup = (
-    <>
-      <Form.Group as={Col} xs={3}>
-        <Form.Control
-          style={inputStyle}
-          // eslint-disable-next-line no-undef
-          // {...register(`farmer_name${index}`, { required: 'This field is required' })}
-          // {...register('farmerDetails')}
-          // {
-          //   required: 'Farmer farmerDetails is required'
-          //   // Add more validation rules as needed
-          // })}
-        ></Form.Control>
-        {/* {errors.farmerDetails && (
-          <Form.Text className="text-danger">{errors.farmerDetails.message}</Form.Text>
-        )} */}
-      </Form.Group>
-      <Form.Group as={Col} xs={3}>
-        <Form.Control
-          style={inputStyle}
-          {...register('farmerAadharNo')}
-          // {
-          //   required: 'Farmer Aadhar No. is required',
-          //   pattern: {
-          //     value: /^[0-9]{12}$/, // Exactly 12 digits
-          //     message: 'Please enter a valid 12-digit Aadhar number'
-          //   }
-          //   // Add more validation rules as needed
-          // })}
-        ></Form.Control>
-        {/* {errors.farmerAadharNo && (
-          <Form.Text className="text-danger">{errors.farmerAadharNo.message}</Form.Text>
-        )} */}
-      </Form.Group>
-    </>
-  );
-
-  const [farmerRows, setFarmerRows] = useState([{ id: 1 }]);
+  // // FARMER DYNAMIC FORM - START
+  // const staticFarmerFormGroup = (
+  //   <>
+  //     <Form.Group as={Col} xs={3}>
+  //       <Form.Control
+  //         style={inputStyle}
+  //         // eslint-disable-next-line no-undef
+  //         {...register(`farmerName${index}`, { required: 'This field is required' })}
+  //         // {...register('farmerDetails')}
+  //         // {
+  //         //   required: 'Farmer farmerDetails is required'
+  //         //   // Add more validation rules as needed
+  //         // })}
+  //       ></Form.Control>
+  //       {errors.farmerName && (
+  //         <Form.Text className="text-danger">{errors.farmerName.message}</Form.Text>
+  //       )}
+  //     </Form.Group>
+  //     <Form.Group as={Col} xs={3}>
+  //       <Form.Control
+  //         style={inputStyle}
+  //         {...register(`farmerAadhar${index}`, { required: 'This field is required' })}
+  //         // {...register('farmerAadharNo')}
+  //         // {
+  //         //   required: 'Farmer Aadhar No. is required',
+  //         //   pattern: {
+  //         //     value: /^[0-9]{12}$/, // Exactly 12 digits
+  //         //     message: 'Please enter a valid 12-digit Aadhar number'
+  //         //   }
+  //         //   // Add more validation rules as needed
+  //         // })}
+  //       ></Form.Control>
+  //       {errors.farmerAadhar && (
+  //         <Form.Text className="text-danger">{errors.farmerAadhar.message}</Form.Text>
+  //       )}
+  //     </Form.Group>
+  //   </>
+  // );
 
   const handleFarmerButtonClick = (index) => {
     if (index === farmerRows.length - 1) {
@@ -370,16 +266,16 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
             </Form.Group>
             <Form.Group as={Col} xs={3}>
               <Form.Label>Tapico Type</Form.Label>
-              <FormControl isInvalid={errors.tapiocaType}>
+              <FormControl isInvalid={errors.tapico_type}>
                 <Select
                   style={{ width: 260 }}
                   size="small"
-                  {...register('tapiocaType', { required: 'Please select Tapioca Type' })}>
+                  {...register('tapico_type', { required: 'Please select Tapioca Type' })}>
                   <MenuItem value="Wet Thippi">Wet Thippi</MenuItem>
                   <MenuItem value="Dry Thippi">Dry Thippi</MenuItem>
                 </Select>
-                {errors.tapiocaType && (
-                  <Form.Text className="text-danger">{errors.tapiocaType.message}</Form.Text>
+                {errors.tapico_type && (
+                  <Form.Text className="text-danger">{errors.tapico_type.message}</Form.Text>
                 )}
               </FormControl>
             </Form.Group>
@@ -388,7 +284,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
               <Form.Control
                 type="date"
                 style={inputStyle}
-                {...register('purchaseDate', {
+                {...register('purchase_date', {
                   required: 'Purchase Date is required',
                   pattern: {
                     value: /\d{4}-\d{2}-\d{2}/,
@@ -397,8 +293,8 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                 })}
               />
               {/* <Form.Control.Feedback type="invalid"> */}
-              {errors.purchaseDate && (
-                <Form.Text className="text-danger">{errors.purchaseDate.message}</Form.Text>
+              {errors.purchase_date && (
+                <Form.Text className="text-danger">{errors.purchase_date.message}</Form.Text>
               )}
               {/* </Form.Control.Feedback> */}
             </Form.Group>
@@ -410,7 +306,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
               <Form.Label>Broker Name</Form.Label>
               <Form.Control
                 style={inputStyle}
-                {...register('brokerName', {
+                {...register('broker_name', {
                   required: 'Broker Name is required',
                   maxLength: {
                     value: 50,
@@ -419,8 +315,8 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                   // Add more validation rules as needed
                 })}></Form.Control>
               {/* <Form.Control.Feedback type="invalid"> */}
-              {errors.brokerName && (
-                <Form.Text className="text-danger">{errors.brokerName.message}</Form.Text>
+              {errors.broker_name && (
+                <Form.Text className="text-danger">{errors.broker_name.message}</Form.Text>
               )}
               {/* </Form.Control.Feedback> */}
             </Form.Group>
@@ -451,7 +347,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
               <Form.Control
                 type="date"
                 style={inputStyle}
-                {...register('paymentDueDate', {
+                {...register('payment_due_date', {
                   required: 'Payment Due Date is required',
                   pattern: {
                     value: /\d{4}-\d{2}-\d{2}/,
@@ -459,21 +355,43 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                   }
                 })}></Form.Control>
               {/* <Form.Control.Feedback type="invalid"> */}
-              {errors.paymentDueDate && (
-                <Form.Text className="text-danger">{errors.paymentDueDate.message}</Form.Text>
+              {errors.payment_due_date && (
+                <Form.Text className="text-danger">{errors.payment_due_date.message}</Form.Text>
               )}
               {/* </Form.Control.Feedback> */}
             </Form.Group>
           </Row>
 
           <Row className="m-3">
-            <Form.Group as={Col} xs={3}>
+            {/* <Form.Group as={Col} xs={3}>
               <Form.Label>Address</Form.Label>
               <p>22/13 Bajanai koil 2nd street, Choolaimedu chennai-94</p>
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group as={Col} xs={3}>
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                style={inputStyle}
+                {...register('address', {
+                  required: 'address is required'
+                })}></Form.Control>
+              {errors.address && (
+                <Form.Text className="text-danger">{errors.address.message}</Form.Text>
+              )}
+            </Form.Group>
+            {/* <Form.Group as={Col} xs={3}>
               <Form.Label>Phone No.</Form.Label>
               <p>1234567890</p>
+            </Form.Group> */}
+            <Form.Group as={Col} xs={3}>
+              <Form.Label>Phone</Form.Label>
+              <Form.Control
+                style={inputStyle}
+                {...register('phone', {
+                  required: 'phone is required'
+                })}></Form.Control>
+              {errors.phone && (
+                <Form.Text className="text-danger">{errors.phone.message}</Form.Text>
+              )}
             </Form.Group>
           </Row>
           <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
@@ -483,7 +401,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
               <Form.Label>Vehicle No.</Form.Label>
               <Form.Control
                 style={inputStyle}
-                {...register('vehicleNo', {
+                {...register('vehicle_no', {
                   required: 'Vehicle No. is required',
                   pattern: {
                     value: /^[A-Za-z0-9]+$/, // Alphanumeric characters only
@@ -495,28 +413,29 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                   }
                   // Add more validation rules as needed
                 })}></Form.Control>
-              {errors.vehicleNo && (
-                <Form.Text className="text-danger">{errors.vehicleNo.message}</Form.Text>
+              {errors.vehicle_no && (
+                <Form.Text className="text-danger">{errors.vehicle_no.message}</Form.Text>
               )}
             </Form.Group>
             <Form.Group as={Col} xs={3}>
               <Form.Label>Weight Bill No.</Form.Label>
               <Form.Control
                 style={inputStyle}
-                {...register('weightBillNo', {
-                  required: 'Weight Bill No. is required',
-                  pattern: {
-                    value: /^[A-Za-z0-9]+$/, // Alphanumeric characters only
-                    message: 'Please enter a valid weight bill number'
-                  },
-                  maxLength: {
-                    value: 20,
-                    message: 'Weight Bill No. cannot exceed 20 characters'
-                  }
+                type="text"
+                {...register('weight_bill_no', {
+                  required: 'Weight Bill No. is required'
+                  // pattern: {
+                  //   value: /^[A-Za-z0-9]+$/, // Alphanumeric characters only
+                  //   message: 'Please enter a valid weight bill number'
+                  // },
+                  // maxLength: {
+                  //   value: 20,
+                  //   message: 'Weight Bill No. cannot exceed 20 characters'
+                  // }
                   // Add more validation rules as needed
                 })}></Form.Control>
-              {errors.weightBillNo && (
-                <Form.Text className="text-danger">{errors.weightBillNo.message}</Form.Text>
+              {errors.weight_bill_no && (
+                <Form.Text className="text-danger">{errors.weight_bill_no.message}</Form.Text>
               )}
             </Form.Group>
           </Row>
@@ -532,7 +451,31 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
 
           {farmerRows.map((row, index) => (
             <Row className="m-3  mt-0" key={index}>
-              {staticFarmerFormGroup}
+              <Form.Group as={Col} xs={3}>
+                <Form.Control
+                  style={inputStyle}
+                  {...register(`name_${index}`, {
+                    required: 'This field is required'
+                  })}></Form.Control>
+                {errors[`name_${index}`] && (
+                  <Form.Text className="text-danger">{errors[`name_${index}`].message}</Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={3}>
+                <Form.Control
+                  style={inputStyle}
+                  {...register(`aadhar_${index}`, {
+                    required: 'Farmer Aadhar No. is required',
+                    pattern: {
+                      value: /^[0-9]{12}$/, // Exactly 12 digits
+                      message: 'Please enter a valid 12-digit Aadhar number'
+                    }
+                    // Add more validation rules as needed
+                  })}></Form.Control>
+                {errors[`aadhar_${index}`] && (
+                  <Form.Text className="text-danger">{errors[`aadhar_${index}`].message}</Form.Text>
+                )}
+              </Form.Group>
               <Form.Group as={Col} xs={1}>
                 <div
                   style={{
@@ -566,7 +509,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
           <hr style={{ horizontalLine }} />
           <Row className="m-3 mb-0">
             <Form.Group as={Col} xs={2}>
-              <Form.Label>Product Type</Form.Label>
+              <Form.Label>Product Name</Form.Label>
             </Form.Group>
             <Form.Group as={Col} xs={1}>
               <Form.Label>Total Bags</Form.Label>
@@ -592,7 +535,112 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
           </Row>
           {weightageRows.map((row, index) => (
             <Row className="m-3 mb-0" key={index}>
-              {staticWeightageFormGroup}
+              <Form.Group as={Col} xs={2}>
+                <Form.Select
+                  style={{ ...inputStyle, ...ddInputStyle }}
+                  {...register(`product_name_${index}`, {
+                    required: 'Select an item'
+                  })}>
+                  <option value="Wet Thippi">Wet Thippi</option>
+                  <option value="Dry Thippi">Dry Thippi</option>
+                </Form.Select>
+                {errors[`product_name_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`product_name_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`total_bags_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`total_bags_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`total_bags_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`total_weight_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`total_weight_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`total_weight_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`vehicle_weight_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`vehicle_weight_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`vehicle_weight_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`net_weight_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`net_weight_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`net_weight_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={2}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`sand_weight_percentage_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`sand_weight_percentage_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`sand_weight_percentage_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`sand_weight_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`sand_weight_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`sand_weight_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`tonnage_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`tonnage_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`tonnage_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
               <Form.Group as={Col} xs={1}>
                 <div
                   style={{
@@ -653,7 +701,104 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
           </Row>
           {chargesRows.map((row, index) => (
             <Row className="m-3 mb-4" key={index}>
-              {staticChargesFormGroup}
+              <Form.Group as={Col} xs={2}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`point_1_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`point_1_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`point_1_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`point_2_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`point_2_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`point_2_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`point_3_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`point_3_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`point_3_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`point_4_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`point_4_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`point_4_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`ap_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`ap_${index}`] && (
+                  <Form.Text className="text-danger">{errors[`ap_${index}`].message}</Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`tp_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`tp_${index}`] && (
+                  <Form.Text className="text-danger">{errors[`tp_${index}`].message}</Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={2}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`p_rate_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`p_rate_${index}`] && (
+                  <Form.Text className="text-danger">{errors[`p_rate_${index}`].message}</Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={2}>
+                <Form.Control
+                  style={inputStyle}
+                  type="number"
+                  {...register(`total_rate_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`total_rate_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`total_rate_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
               <Form.Group as={Col} xs={1}>
                 <div
                   style={{
@@ -685,33 +830,85 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
               <Row className="m-3">
                 <Form.Group as={Col}>
                   <Form.Label>Tonnage Rate (₹)</Form.Label>
-                  <Form.Control style={inputStyle}></Form.Control>
+                  <Form.Control
+                    style={inputStyle}
+                    type="number"
+                    {...register(`tonnage_rate`, {
+                      required: 'Required'
+                    })}></Form.Control>
+                  {errors[`tonnage_rate`] && (
+                    <Form.Text className="text-danger">{errors[`tonnage_rate`].message}</Form.Text>
+                  )}
                 </Form.Group>
                 <Form.Group as={Col}>
                   <Form.Label>Labour Charges (₹)</Form.Label>
-                  <Form.Control style={inputStyle}></Form.Control>
+                  <Form.Control
+                    style={inputStyle}
+                    type="number"
+                    {...register(`vehicle_rent`, {
+                      required: 'Required'
+                    })}></Form.Control>
+                  {errors[`vehicle_rent`] && (
+                    <Form.Text className="text-danger">{errors[`vehicle_rent`].message}</Form.Text>
+                  )}
                 </Form.Group>
               </Row>
 
               <Row className="m-3">
                 <Form.Group as={Col}>
                   <Form.Label>Vehicle Rent (₹)</Form.Label>
-                  <Form.Control style={inputStyle}></Form.Control>
+                  <Form.Control
+                    style={inputStyle}
+                    type="number"
+                    {...register(`weight_kickback`, {
+                      required: 'Required'
+                    })}></Form.Control>
+                  {errors[`weight_kickback`] && (
+                    <Form.Text className="text-danger">
+                      {errors[`weight_kickback`].message}
+                    </Form.Text>
+                  )}
                 </Form.Group>
                 <Form.Group as={Col}>
                   <Form.Label>Other Charges (₹)</Form.Label>
-                  <Form.Control style={inputStyle}></Form.Control>
+                  <Form.Control
+                    style={inputStyle}
+                    type="number"
+                    {...register(`labour_charges`, {
+                      required: 'Required'
+                    })}></Form.Control>
+                  {errors[`labour_charges`] && (
+                    <Form.Text className="text-danger">
+                      {errors[`labour_charges`].message}
+                    </Form.Text>
+                  )}
                 </Form.Group>
               </Row>
 
               <Row className="m-3">
                 <Form.Group as={Col}>
                   <Form.Label>Weight + Kickback (₹)</Form.Label>
-                  <Form.Control style={inputStyle}></Form.Control>
+                  <Form.Control
+                    style={inputStyle}
+                    type="number"
+                    {...register(`other_charges`, {
+                      required: 'Required'
+                    })}></Form.Control>
+                  {errors[`other_charges`] && (
+                    <Form.Text className="text-danger">{errors[`other_charges`].message}</Form.Text>
+                  )}
                 </Form.Group>
                 <Form.Group as={Col}>
                   <Form.Label>Round Off (₹)</Form.Label>
-                  <Form.Control style={inputStyle}></Form.Control>
+                  <Form.Control
+                    style={inputStyle}
+                    type="number"
+                    {...register(`round_off`, {
+                      required: 'Required'
+                    })}></Form.Control>
+                  {errors[`round_off`] && (
+                    <Form.Text className="text-danger">{errors[`round_off`].message}</Form.Text>
+                  )}
                 </Form.Group>
               </Row>
             </Col>
@@ -727,37 +924,37 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                       <tr>
                         <td style={summaztionFooterRows}>Total Rate</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 1,000</td>
+                        <td>{total_rate_sum ? total_rate_sum : 0}</td>
                       </tr>
                       <tr>
                         <td style={summaztionFooterRows}>Vehicle Rent</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8,944</td>
+                        <td>{vehicle_rent ? vehicle_rent : 0}</td>
                       </tr>
                       <tr>
                         <td style={summaztionFooterRows}>Weight + Kickback</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8,944</td>
+                        <td>{weight_kickback ? weight_kickback : 0}</td>
                       </tr>
                       <tr>
                         <td style={summaztionFooterRows}>Commission</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8,944</td>
+                        <td>{other_charges ? other_charges : 0}</td>
                       </tr>
                       <tr>
                         <td style={summaztionFooterRows}>Other Charges</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8,944</td>
+                        <td>{round_off ? round_off : 0}</td>
                       </tr>
                       <tr>
                         <td style={summaztionFooterRows}>Round-Off</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8,944</td>
+                        <td>{commission ? commission : 0}</td>
                       </tr>
                       <tr style={{ borderTop: '0.5px solid #62728D' }}>
                         <td style={summaztionFooterRows}>Total Amount</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8,944</td>
+                        <td>{grand_total ? grand_total : 0}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -765,7 +962,9 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                 <Col className="d-flex align-items-center">
                   <div>
                     <p style={{ paddingLeft: '30px' }}>Grand Amount(₹)</p>
-                    <p style={{ textAlign: 'center', fontWeight: 'bolder' }}>₹ 10,944</p>
+                    <p style={{ textAlign: 'center', fontWeight: 'bolder' }}>
+                      {grand_total ? grand_total : 0}
+                    </p>
                   </div>
                 </Col>
               </Row>
