@@ -9,7 +9,7 @@ import '../../css/index.css';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import IosShareIcon from '@mui/icons-material/IosShare';
-import { tableHeaders, tableColumns } from './tp.const';
+import { tpTableHeaders, tpTableColumns } from './tp.const';
 // Store
 import {
   useUpdateShowTPBackBtn,
@@ -178,8 +178,8 @@ function BrokerReports() {
             {brokerReportsData.length > 0 ? (
               <BrokerReportsTable
                 tableData={brokerReportsData}
-                tableHeaders={tableHeaders}
-                tableColumns={tableColumns}
+                tableHeaders={tpTableHeaders}
+                tableColumns={tpTableColumns}
                 tableRowClicked={onTableRowClick}
               />
             ) : (

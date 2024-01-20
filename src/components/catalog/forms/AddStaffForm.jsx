@@ -79,28 +79,11 @@ const StaffForm = ({ showForm, staffAdded }) => {
       <Form className="m-4" onSubmit={handleSubmit(onSubmit)}>
         <Row className="mb-3 mt-3">
           <Form.Group controlId="NewStaffFormProfilePic">
-            {/* <Form.Label style={{ display: 'flex', justifyContent: 'space-between' }}>
-              Profile Picture <span style={{ color: 'red' }}>*</span>
-            </Form.Label>
-            <Form.Control type="file" /> */}
             <Avatar
               alt="Upload"
               sx={{ width: 100, height: 100, cursor: 'pointer', border: '2px solid #DFE1E6' }}>
               <AddAPhotoIcon />
             </Avatar>
-            {/* <Form.File
-            {...register('profilePic', { required: 'Please upload a profile picture' })}
-            /> */}
-            {/* <Form.File
-            className={focusedInput === 'profilePic' ? 'circular-profile-pic' : ''}
-            style={getInputStyle('profilePic')} // Adjust styling if needed
-            {...register('profilePic', { required: 'Please upload a profile picture' })}
-            onFocus={() => handleFocus('profilePic')}
-            onBlur={handleBlur}
-          /> */}
-            {/* {errors.profilePic && (
-              <Form.Text className="text-danger">{errors.profilePic.message}</Form.Text>
-            )} */}
           </Form.Group>
         </Row>
 
@@ -160,10 +143,6 @@ const StaffForm = ({ showForm, staffAdded }) => {
               style={inputStyle}
               type="text"
               {...register('designation', {
-                // pattern: {
-                //   value: /[2-9]{1}[0-9]{3}[0-9]{4}[0-9]{4}/,
-                //   message: 'Enter a valid Aadhar number'
-                // },
                 required: 'This field is required'
               })}
             />

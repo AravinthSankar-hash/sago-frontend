@@ -33,6 +33,11 @@ import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 
 const Staff = () => {
+  useEffect(() => {
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, []);
+
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn(); // Bool to show/hide back button
   const updateCatalogBackBtnTxt = useUpdateCatalogBackBtnTxt(); // Back Button Text
@@ -45,6 +50,9 @@ const Staff = () => {
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [toasterBackground, setToasterBackground] = useState(null);
   const [toasterMsg, setToasterMsg] = useState('Staff data saved');
+  const [totalStaffDataCount, setTotalStaffDataCount] = useState(0);
+  const [searchPayload, setSearchPayload] = useState({});
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
 
   useEffect(() => {
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.STAFFS)
@@ -76,17 +84,33 @@ const Staff = () => {
     updateShowCatalogBackBtn(shouldShow);
   };
 
+  const invokeSearchAPI = (payload, query = null) => {
+    CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.STAFFS, payload, query)
+      .then((response) => {
+        setStaffData(response.data.data);
+        setTotalStaffDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching Broker data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
   const onTableRowClick = (clickedRow) => {
     setSelectedStaff(clickedRow);
-    console.log('staff table row clicked');
     // Show details section - Store
     updateShowStaffDetailsSection(true);
     updateCatalogBackBtnTxt('Staff Details');
     // Show back btn - Store
     updateShowCatalogBackBtn(true);
   };
-  const staffPageChanged = () => {
-    console.log('page changed');
+  const staffPageChanged = (currentPageNo, rowsPerPage) => {
+    setCurrentRowsPerPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
   };
   const onStaffSave = (newAddedStaff) => {
     invokeToaster();
@@ -100,17 +124,8 @@ const Staff = () => {
     const payload = {
       ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
     };
-    CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.STAFFS, payload)
-      .then((response) => {
-        setStaffData(response.data.data);
-        if (response.data?.data.length === 0) {
-          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
-        }
-      })
-      .catch((error) => {
-        console.log('Error in searching customer data', error);
-        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
-      });
+    setSearchPayload(payload);
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
 
   // Just a generic method to invoke toaster
@@ -181,15 +196,20 @@ const Staff = () => {
                 </div>
                 <Row>
                   <Col className="d-flex flex-column justify-content-center">
-                    <StaffTable
-                      tableData={staffData}
-                      tableHeaders={staffTableHeaders}
-                      tableColumns={staffTableColumns}
-                      hanldePageChange={staffPageChanged}
-                      tableRowClicked={onTableRowClick}
-                      rowsPerPage={10}
-                      page={5}
-                    />
+                    {staffData.length ? (
+                      <StaffTable
+                        tableData={staffData}
+                        tableHeaders={staffTableHeaders}
+                        tableColumns={staffTableColumns}
+                        totalStaffDataCount={totalStaffDataCount}
+                        hanldePageChange={staffPageChanged}
+                        tableRowClicked={onTableRowClick}
+                        rowsPerPage={10}
+                        page={5}
+                      />
+                    ) : (
+                      <></>
+                    )}
                   </Col>
                 </Row>
               </div>{' '}

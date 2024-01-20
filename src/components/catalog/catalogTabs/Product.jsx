@@ -30,6 +30,11 @@ import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 
 const Product = () => {
+  useEffect(() => {
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, []);
+
   // Store
   const updateShowCatalogBackBtn = useUpdateShowCatalogBackBtn();
   const showProductNewForm = useShowProductNewForm(); // Show Add Product form
@@ -38,12 +43,15 @@ const Product = () => {
   const updateShowProductNewForm = useUpdateShowProductNewForm(); // Show Product Dashboard
   const updateShowProductDetailsSection = useUpdateShowProductDetailsSection(); // Show Product Dashboard
   const [productData, setProductData] = useState([]);
+  const [totalProductDataCount, setTotalProductDataCount] = useState(0);
   const [selectedChips, setSelectedChips] = useState([]);
   const [showFields, setShowFields] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState();
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [toasterMsg, setToasterMsg] = useState('Product data saved');
   const [toasterBackground, setToasterBackground] = useState(null);
+  const [searchPayload, setSearchPayload] = useState({});
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
 
   useEffect(() => {
     CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.PRODUCTS)
@@ -51,7 +59,7 @@ const Product = () => {
         setProductData(response.data.data);
       })
       .catch((error) => {
-        console.log('Error in getting customer data', error);
+        console.log('Error in getting product data', error);
       });
   }, []);
 
@@ -87,8 +95,25 @@ const Product = () => {
     }
   };
 
-  const productPageChanged = () => {
-    console.log('page changed');
+  const productPageChanged = (currentPageNo, rowsPerPage) => {
+    setCurrentRowsPerPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  };
+
+  const invokeSearchAPI = (payload, query = null) => {
+    CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.PRODUCTS, payload, query)
+      .then((response) => {
+        setProductData(response.data.data);
+        setTotalProductDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
+      })
+      .catch((error) => {
+        console.log('Error in searching Product data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
   };
 
   const showForm = (shouldShow) => {
@@ -122,17 +147,8 @@ const Product = () => {
     const payload = {
       ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
     };
-    CatalogService.getItems(SERVICES.CATALOG.QUERY_PARAMS.PRODUCTS, payload)
-      .then((response) => {
-        setProductData(response.data.data);
-        if (response.data?.data.length === 0) {
-          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
-        }
-      })
-      .catch((error) => {
-        console.log('Error in searching customer data', error);
-        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
-      });
+    setSearchPayload(payload);
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
 
   // Just a generic method to invoke toaster
@@ -221,15 +237,20 @@ const Product = () => {
                 </div>
                 <Row>
                   <Col className="d-flex flex-column justify-content-center">
-                    <ProductTable
-                      tableData={productData}
-                      tableHeaders={productTableHeaders}
-                      tableColumns={productTableColumns}
-                      hanldePageChange={productPageChanged}
-                      tableRowClicked={onTableRowClick}
-                      rowsPerPage={10}
-                      page={5}
-                    />
+                    {productData.length ? (
+                      <ProductTable
+                        tableData={productData}
+                        tableHeaders={productTableHeaders}
+                        tableColumns={productTableColumns}
+                        totalProductDataCount={totalProductDataCount}
+                        hanldePageChange={productPageChanged}
+                        tableRowClicked={onTableRowClick}
+                        rowsPerPage={10}
+                        page={5}
+                      />
+                    ) : (
+                      <></>
+                    )}
                   </Col>
                 </Row>
               </div>{' '}
