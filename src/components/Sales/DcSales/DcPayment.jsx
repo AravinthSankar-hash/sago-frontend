@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import '../../../css/catalogNewCust.css';
 import {
   styled,
@@ -10,20 +9,8 @@ import {
   tableCellClasses
 } from '@mui/material';
 
-const DcPayment = () => {
-  const [tableData, setTableData] = useState([]);
-  const [tableHeading, setTableHeading] = useState([]);
-  useEffect(() => {
-    fetch('http://localhost:3001/proPayment')
-      .then((rawResponse) => rawResponse.json())
-      .then((response) => {
-        setTableHeading(Object.keys(response.data[0]));
-        setTableData(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+const DcPayment = (props) => {
+  const { tableHeaders, tableData, footerValues } = props;
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -68,12 +55,6 @@ const DcPayment = () => {
     color: '#5C9EB8'
   };
 
-  const approvalStatus = {
-    borderTop: '2px solid #EBEEF0',
-    textAlign: 'right',
-    paddingRight: '10px'
-  };
-
   const tableHeadingCell = {
     padding: '16px',
     color: '#6B778C',
@@ -86,7 +67,7 @@ const DcPayment = () => {
           <TableHead style={tableHead}>
             <TableRow>
               <StyledTableCell style={{ padding: '10px' }}>S.No</StyledTableCell>
-              {tableHeading.map((key, index) => (
+              {tableHeaders?.map((key, index) => (
                 <StyledTableCell key={index} style={tableHeadingCell}>
                   {key}
                 </StyledTableCell>
@@ -94,21 +75,15 @@ const DcPayment = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData.map((row, index) => (
+            {tableData?.map((row, index) => (
               <StyledTableRow key={index} style={{ color: '#62728D' }}>
                 <StyledTableCell>{index + 1}</StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D', textAlign: 'right' }}>
-                  {row['Date']}
+                  {row['payment_date']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D', textAlign: 'right' }}>
-                  ₹ {row['Amount']}
+                  ₹ {row['amount_paid']}
                 </StyledTableCell>
-                {/* {
-          tableHeading.map((heading, index) => {
-            {console.log(row[heading],'heding')}
-            <StyledTableCell key={index}>{row.heading}</StyledTableCell>
-          })
-        } */}
               </StyledTableRow>
             ))}{' '}
           </TableBody>
@@ -125,7 +100,7 @@ const DcPayment = () => {
         <tbody>
           <tr>
             <td style={tableBody}>Invoice Total :</td>
-            <td style={{ fontWeight: 'bold' }}>₹ 2,58,456.00</td>
+            <td style={{ fontWeight: 'bold' }}>₹ {footerValues.amount_paid}</td>
           </tr>
         </tbody>
       </table>
