@@ -3,8 +3,21 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import { Container, Form, Row, Col, Dropdown, Button } from 'react-bootstrap';
 import { useRef, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { IconButton } from '@mui/material';
+import '../../../css/index.css';
+import Toaster from '../../helper/Snackbar.jsx';
+// API Service
+import SaleService from '../../../services/sale.api.js';
+import { SERVICES } from '../../../services/api.const.js';
+import { RESPONSE_MSG } from '../sale.const.js';
 
 function NewTsForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm();
   const containerRef = useRef();
   const gridStyle = useMemo(
     () => ({
@@ -34,163 +47,228 @@ function NewTsForm() {
     background: 'linear-gradient(0deg, #FAFBFC, #FAFBFC), linear-gradient(0deg, #DFE1E6, #DFE1E6)'
   };
 
-  const [itemRowCount, setItemRowCount] = useState(1);
-  const itemAddDeleteClicked = (isAdd, rowKey) => {
-    if (isAdd) {
-      addItemRow();
-      return;
-    }
-    deleteItemRow(rowKey);
+  // For arrow
+  const ddInputStyle = {
+    backgroundImage:
+      "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%23000' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E\")",
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right .75rem center',
+    backgroundSize: '8px 10px',
+    paddingRight: '2rem'
   };
-  const deleteItemRow = (rowKey) => {
-    // console.log(inputSaleItems);
-    /* const updatedInputItems = inputSaleItems.filter((saleItemElement) => {
-      saleItemElement.key !== rowKey;
-    });
-    setInputsaleItems(updatedInputItems); */
-  };
-  const addItemRow = () => {
-    setItemRowCount((prevCount) => {
-      const newCount = prevCount + 1;
 
-      const currentArraySize = Array.from({ length: newCount });
-      const saleItemsRows = currentArraySize.map((ele, idx) => {
-        return (
-          <Row className="m-3 mb-0" key={idx + 1}>
-            {staticFormGroup}
-            <Form.Group as={Col} xs={1}>
-              <div
-                onClick={() => itemAddDeleteClicked(idx + 1 === currentArraySize.length, idx + 1)}
-                style={{
-                  height: '40px',
-                  width: '42px',
-                  background: idx + 1 === currentArraySize.length ? '#00B7FF' : '#BF2600',
-                  color: 'white',
-                  display: 'flex',
-                  borderRadius: '8px',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                {idx + 1 === currentArraySize.length ? (
-                  <AddSharpIcon />
-                ) : (
-                  <DeleteOutlineOutlinedIcon />
-                )}
-              </div>
-            </Form.Group>
-          </Row>
-        );
+  const [rows, setRows] = useState([{ id: 1 }]);
+
+  const handleButtonClick = (index) => {
+    if (index === rows.length - 1) {
+      // If it's the last row, add a new row
+      const newRow = { id: rows.length + 1 };
+      setRows((prevRows) => [...prevRows, newRow]);
+    } else {
+      // If it's not the last row, delete the current row
+      setRows((prevRows) => {
+        return prevRows.filter((row, indexToDelete) => indexToDelete !== index);
       });
-
-      setInputsaleItems(saleItemsRows);
-
-      return newCount;
-    });
+    }
   };
-  const staticFormGroup = (
-    <>
-      <Form.Group as={Col} xs={2}>
-        <Dropdown>
-          <Dropdown.Toggle
-            style={{
-              ...inputStyle,
-              backgroundColor: '#DFE1E6',
-              borderColor: '#DFE1E6',
-              color: '#7A869A',
-              width: '100%',
-              textAlign: 'left'
-            }}
-            id="dropdown-basic">
-            Choose Something
-          </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item>Thippi</Dropdown.Item>
-            <Dropdown.Item>Action 2 Action 1 Action 1</Dropdown.Item>
-            <Dropdown.Item>Action 3</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={1}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={2}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-      <Form.Group as={Col} xs={2}>
-        <Form.Control style={inputStyle}></Form.Control>
-      </Form.Group>
-    </>
-  );
-  const [inputSaleItems, setInputsaleItems] = useState(
-    <Row className="m-3 mb-0">
-      {staticFormGroup}
-      <Form.Group as={Col} xs={1}>
-        <div
-          onClick={addItemRow}
-          style={{
-            height: '40px',
-            width: '42px',
-            background: '#00B7FF',
-            color: 'white',
-            display: 'flex',
-            borderRadius: '8px',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}>
-          <AddSharpIcon />
-        </div>
-      </Form.Group>
-    </Row>
-  );
+  const { SALE } = SERVICES;
+
+  const onSubmit = (data) => {
+    const formData = {
+      invoice_number: data.invoice_number,
+      sale_date: data.sale_date,
+      customer_name: data.customer_name,
+      gst_in: data.gst_in,
+      payment_due_date: data.payment_due_date,
+      address: data.address,
+      phone: data.phone,
+      broker_name: data.broker_name,
+      broker_address: data.broker_address,
+      broker_phone: data.broker_phone,
+      freight_mode: data.freight_mode,
+      transit_mode: data.transit_mode,
+      supply_location: data.supply_location,
+      vehicle_no: data.vehicle_no,
+      driver_name: data.driver_name,
+      time: data.time,
+      discount: data.discount,
+      top_rate: Number(data.top_rate),
+      items: rows.map((row, index) => ({
+        item: data[`item_${index}`],
+        hsn_sac: +data[`hsn_sac_${index}`],
+        bag_weight: +data[`bag_weight_${index}`],
+        qty: +data[`qty_${index}`],
+        total_weight: +data[`total_weight_${index}`],
+        rate: +data[`rate_${index}`],
+        total_rate: +data[`total_rate_${index}`]
+      }))
+    };
+    invokeCreateAPI(SALE.SALE_TYPES.tippi, formData);
+  };
+
+  const invokeCreateAPI = (type, data) => {
+    SaleService.createSale({ type, data })
+      .then((response) => {
+        invokeToaster(RESPONSE_MSG.SALE_CREATED_SUCCESSFULLY);
+      })
+      .catch((error) => {
+        console.log('Error in creating sale', error);
+        invokeToaster(RESPONSE_MSG.FAILED, 'red');
+      });
+  };
+
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [toasterBackground, setToasterBackground] = useState(null);
+  const [toasterMsg, setToasterMsg] = useState('Customer data saved');
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = '#4BB543') => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    setToasterBackground(backgroundClr);
+    setShouldShowToaster(Math.random());
+  };
 
   return (
     <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
-      <Form>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <div style={formGrpStyle}>
           <Form.Label className="m-4 mb-0">Basic Details</Form.Label>
           <hr style={{ horizontalLine }} />
           <Row className="m-3 mb-4">
             <Form.Group as={Col} xs={3}>
               <Form.Label>Invoice No.</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Control
+                style={inputStyle}
+                {...register('invoice_number', {
+                  required: 'Required'
+                })}
+              />
+              {errors.invoice_number && (
+                <Form.Text className="text-danger">{errors.invoice_number.message}</Form.Text>
+              )}
             </Form.Group>
+
             <Form.Group as={Col} xs={2}>
               <Form.Label>Sales Date</Form.Label>
-              <Form.Control type="date" style={inputStyle}></Form.Control>
+              <Form.Control type="date" style={inputStyle} {...register('sale_date', {})} />
             </Form.Group>
           </Row>
+
           <Row className="m-3">
             <Form.Group as={Col} xs={3}>
               <Form.Label>Customer Name</Form.Label>
-              <Form.Control placeholder="Search Name/Ph. No" style={inputStyle}></Form.Control>
+              <Form.Control
+                placeholder="Search Name/Ph. No"
+                style={inputStyle}
+                {...register('customer_name', {
+                  required: 'Required'
+                })}
+              />
+              {errors.customer_name && (
+                <Form.Text className="text-danger">{errors.customer_name.message}</Form.Text>
+              )}
             </Form.Group>
+
             <Form.Group as={Col} xs={3}>
               <Form.Label>GSTIN</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Control
+                style={inputStyle}
+                {...register('gst_in', {
+                  pattern: {
+                    value: /^[A-Za-z0-9]{15}$/i,
+                    message: 'Invalid GSTIN'
+                  }
+                })}
+              />
+              {errors.gst_in && (
+                <Form.Text className="text-danger">{errors.gst_in.message}</Form.Text>
+              )}
             </Form.Group>
+
             <Form.Group as={Col} xs={2}>
               <Form.Label>Payment Due Date</Form.Label>
-              <Form.Control type="date" style={inputStyle}></Form.Control>
+              <Form.Control
+                type="date"
+                style={inputStyle}
+                {...register('payment_due_date', {
+                  required: 'Required'
+                })}
+              />
+              {errors.payment_due_date && (
+                <Form.Text className="text-danger">{errors.payment_due_date.message}</Form.Text>
+              )}
             </Form.Group>
           </Row>
+
           <Row className="m-3">
             <Form.Group as={Col} xs={3}>
               <Form.Label>Address</Form.Label>
-              <p>22/13 Bajanai koil 2nd street, AECS Layout, Choolaimedu chennai-94</p>
+              <Form.Control
+                style={inputStyle}
+                {...register('address', {
+                  required: 'Required'
+                })}
+              />
+              {errors.address && (
+                <Form.Text className="text-danger">{errors.address.message}</Form.Text>
+              )}
             </Form.Group>
+
             <Form.Group as={Col} xs={3}>
               <Form.Label>Phone No.</Form.Label>
-              <p>1234567890</p>
+              <Form.Control
+                type="date"
+                style={inputStyle}
+                {...register('phone', {
+                  required: 'Required'
+                })}
+              />
+              {errors.phone && (
+                <Form.Text className="text-danger">{errors.phone.message}</Form.Text>
+              )}
+            </Form.Group>
+          </Row>
+
+          <Row className="m-3">
+            <Form.Group as={Col} xs={3}>
+              <Form.Label>Broker Name</Form.Label>
+              <Form.Control
+                style={inputStyle}
+                {...register('broker_name', {
+                  required: 'Required'
+                })}
+              />
+              {errors.broker_name && (
+                <Form.Text className="text-danger">{errors.broker_name.message}</Form.Text>
+              )}
+            </Form.Group>
+
+            <Form.Group as={Col} xs={3}>
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                style={inputStyle}
+                {...register('broker_address', {
+                  required: 'Required'
+                })}
+              />
+              {errors.broker_address && (
+                <Form.Text className="text-danger">{errors.broker_address.message}</Form.Text>
+              )}
+            </Form.Group>
+
+            <Form.Group as={Col} xs={2}>
+              <Form.Label>Phone No</Form.Label>
+              <Form.Control
+                style={inputStyle}
+                {...register('broker_phone', {
+                  required: 'Required'
+                })}
+              />
+              {errors.broker_phone && (
+                <Form.Text className="text-danger">{errors.broker_phone.message}</Form.Text>
+              )}
             </Form.Group>
           </Row>
         </div>
@@ -198,37 +276,111 @@ function NewTsForm() {
           <Form.Label className="m-4 mb-0">Transit Details</Form.Label>
           <hr style={{ horizontalLine }} />
           <Row className="m-3 mb-4">
-            <Form.Group as={Col} xs={3}>
+            <Form.Group as={Col} xs={4}>
               <Form.Label>Freight Mode</Form.Label>
               <div className="mt-1" style={{ display: 'flex', alignItems: 'center' }}>
-                <Form.Check inline label="Rental" name="group1" type="radio" />
-                <Form.Check inline label="Company Owned" name="group1" type="radio" />
-                <Form.Check inline label="Parcel" type="radio" />
+                <Form.Check
+                  inline
+                  label="Rental"
+                  name="freight_mode"
+                  type="radio"
+                  {...register('freight_mode', {
+                    required: 'Select a Freight Mode'
+                  })}
+                />
+                <Form.Check
+                  inline
+                  label="Company Owned"
+                  name="freight_mode"
+                  type="radio"
+                  {...register('freight_mode', {
+                    required: 'Select a Freight Mode'
+                  })}
+                />
+                <Form.Check
+                  inline
+                  label="Parcel"
+                  name="freight_mode"
+                  type="radio"
+                  {...register('freight_mode', {
+                    required: 'Select a Freight Mode'
+                  })}
+                />
               </div>
+              {errors.freight_mode && (
+                <Form.Text className="text-danger">{errors.freight_mode.message}</Form.Text>
+              )}
             </Form.Group>
+
             <Form.Group as={Col} xs={3}>
               <Form.Label>Transit Mode</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Control
+                style={inputStyle}
+                {...register('transit_mode', {
+                  required: 'Required'
+                })}
+              />
+              {errors.transit_mode && (
+                <Form.Text className="text-danger">{errors.transit_mode.message}</Form.Text>
+              )}
             </Form.Group>
           </Row>
+
           <Row className="m-3">
             <Form.Group as={Col} xs={3}>
-              <Form.Label>Vechile No.</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Label>Vehicle No.</Form.Label>
+              <Form.Control
+                style={inputStyle}
+                {...register('vehicle_no', {
+                  required: 'Required'
+                })}
+              />
+              {errors.vehicle_no && (
+                <Form.Text className="text-danger">{errors.vehicle_no.message}</Form.Text>
+              )}
             </Form.Group>
+
+            <Form.Group as={Col} xs={1}></Form.Group>
+
             <Form.Group as={Col} xs={3}>
               <Form.Label>Driver Name</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Control
+                style={inputStyle}
+                {...register('driver_name', {
+                  required: 'Required'
+                })}
+              />
+              {errors.driver_name && (
+                <Form.Text className="text-danger">{errors.driver_name.message}</Form.Text>
+              )}
             </Form.Group>
           </Row>
+
           <Row className="m-3">
             <Form.Group as={Col} xs={3}>
               <Form.Label>Time</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Control
+                style={inputStyle}
+                {...register('time', {
+                  required: 'Required'
+                })}
+              />
+              {errors.time && <Form.Text className="text-danger">{errors.time.message}</Form.Text>}
             </Form.Group>
+
+            <Form.Group as={Col} xs={1}></Form.Group>
+
             <Form.Group as={Col} xs={3}>
               <Form.Label>Place of Supply</Form.Label>
-              <Form.Control style={inputStyle}></Form.Control>
+              <Form.Control
+                style={inputStyle}
+                {...register('supply_location', {
+                  required: 'Required'
+                })}
+              />
+              {errors.supply_location && (
+                <Form.Text className="text-danger">{errors.supply_location.message}</Form.Text>
+              )}
             </Form.Group>
           </Row>
         </div>
@@ -258,18 +410,160 @@ function NewTsForm() {
               <Form.Label>Total Rate</Form.Label>
             </Form.Group>
           </Row>
-          {inputSaleItems}
+          {/* Dynamic Rows */}
+          {rows.map((row, index) => (
+            <Row className="m-3 mb-0" key={index}>
+              <Form.Group as={Col} xs={2}>
+                <Form.Select
+                  style={{ ...inputStyle, ...ddInputStyle }}
+                  {...register(`item_${index}`, {
+                    required: 'Select an item'
+                  })}>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </Form.Select>
+                {errors[`item_${index}`] && (
+                  <Form.Text className="text-danger">{errors[`item_${index}`].message}</Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  type="number"
+                  style={inputStyle}
+                  {...register(`hsn_sac_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`hsn_sac_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`hsn_sac_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  type="number"
+                  style={inputStyle}
+                  {...register(`bag_weight_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`bag_weight_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`bag_weight_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  type="number"
+                  style={inputStyle}
+                  {...register(`qty_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`qty_${index}`] && (
+                  <Form.Text className="text-danger">{errors[`qty_${index}`].message}</Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <Form.Control
+                  type="number"
+                  style={inputStyle}
+                  {...register(`total_weight_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`total_weight_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`total_weight_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={2}>
+                <Form.Control
+                  type="number"
+                  style={inputStyle}
+                  {...register(`rate_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`rate_${index}`] && (
+                  <Form.Text className="text-danger">{errors[`rate_${index}`].message}</Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={2}>
+                <Form.Control
+                  type="number"
+                  style={inputStyle}
+                  {...register(`total_rate_${index}`, {
+                    required: 'Required'
+                  })}></Form.Control>
+                {errors[`total_rate_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`total_rate_${index}`].message}
+                  </Form.Text>
+                )}
+              </Form.Group>
+              <Form.Group as={Col} xs={1}>
+                <div
+                  style={{
+                    height: '40px',
+                    width: '42px',
+                    background:
+                      rows.length === 1 || index === rows.length - 1 ? '#00B7FF' : '#BF2600',
+                    color: 'white',
+                    display: 'flex',
+                    borderRadius: '8px',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <IconButton onClick={() => handleButtonClick(index)}>
+                    {index === rows.length - 1 ? (
+                      <AddSharpIcon style={{ color: 'white' }} />
+                    ) : (
+                      <DeleteOutlineOutlinedIcon style={{ color: 'white' }} />
+                    )}
+                  </IconButton>
+                </div>
+              </Form.Group>
+            </Row>
+          ))}
+          {/* Dynamic Rows */}
           <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
           <Row>
             <Col xs={5}>
               <Row className="m-3">
                 <Form.Group as={Col}>
-                  <Form.Label>GST (%)</Form.Label>
-                  <Form.Control style={inputStyle}></Form.Control>
+                  <Form.Label>Discount (₹)</Form.Label>
+                  <Form.Control
+                    type="number"
+                    style={inputStyle}
+                    {...register('discount', {
+                      required: 'Required',
+                      pattern: {
+                        value: /^[0-9]+$/,
+                        message: 'Invalid discount amount'
+                      }
+                    })}
+                  />
+                  {errors.discount && (
+                    <Form.Text className="text-danger">{errors.discount.message}</Form.Text>
+                  )}
                 </Form.Group>
+
                 <Form.Group as={Col}>
                   <Form.Label>Top Rate</Form.Label>
-                  <Form.Control style={inputStyle}></Form.Control>
+                  <Form.Control
+                    type="number"
+                    style={inputStyle}
+                    {...register('top_rate', {
+                      required: 'Required',
+                      pattern: {
+                        value: /^[0-9]+$/,
+                        message: 'Invalid top rate'
+                      }
+                    })}
+                  />
+                  {errors.top_rate && (
+                    <Form.Text className="text-danger">{errors.top_rate.message}</Form.Text>
+                  )}
                 </Form.Group>
               </Row>
             </Col>
@@ -323,7 +617,8 @@ function NewTsForm() {
                       background: '#00B7FF',
                       borderColor: '#00B7FF'
                     }}
-                    variant="primary">
+                    variant="primary"
+                    type="submit">
                     Save
                   </Button>
                 </Col>
@@ -332,8 +627,11 @@ function NewTsForm() {
           </Row>
         </div>
       </Form>
+      <Toaster
+        shouldOpen={shouldShowToaster}
+        message={toasterMsg}
+        backgroundColor={toasterBackground}></Toaster>
     </Container>
   );
 }
-
 export default NewTsForm;
