@@ -93,6 +93,12 @@
   margin-bottom: 0px !important;
 }
 
-.sidebar .css-19colxx-MuiDrawer-docked .MuiDrawer-paper{
-  background: #0A3546
+.sidebar .css-19colxx-MuiDrawer-docked .MuiDrawer-paper {
+  background: #0a3546;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
 }

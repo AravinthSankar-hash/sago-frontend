@@ -28,6 +28,17 @@ const SERVICES = {
       REPORT: '/report'
     }
   },
+  SALE: {
+    ROUTES: {
+      BASE_ROUTE: '/sales'
+    },
+    SALE_TYPES: {
+      'dc': 'dc',
+      'general': 'general',
+      'tippi': 'tippi',
+      'all': 'all'
+    }
+  },
   GENERIC: {
     ROUTES: {
       BASE_ROUTE: '/invoice',
