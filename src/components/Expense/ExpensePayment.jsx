@@ -10,20 +10,8 @@ import {
   tableCellClasses
 } from '@mui/material';
 
-const ExpensePayment = () => {
-  const [tableData, setTableData] = useState([]);
-  const [tableHeading, setTableHeading] = useState([]);
-  useEffect(() => {
-    fetch('http://localhost:3001/proPayment')
-      .then((rawResponse) => rawResponse.json())
-      .then((response) => {
-        setTableHeading(Object.keys(response.data[0]));
-        setTableData(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+const ExpensePayment = (props) => {
+  const { tableHeaders, tableData, footerValues } = props;
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -87,7 +75,7 @@ const ExpensePayment = () => {
           <TableHead style={tableHead}>
             <TableRow>
               <StyledTableCell style={{ padding: '10px' }}>S.No</StyledTableCell>
-              {tableHeading.map((key, index) => (
+              {tableHeaders?.map((key, index) => (
                 <StyledTableCell key={index} style={tableHeadingCell}>
                   {key}
                 </StyledTableCell>
@@ -95,14 +83,14 @@ const ExpensePayment = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData.map((row, index) => (
+            {tableData?.map((row, index) => (
               <StyledTableRow key={index} style={{ color: '#62728D' }}>
                 <StyledTableCell>{index + 1}</StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D', textAlign: 'right' }}>
-                  {row['Date']}
+                  {row['payment_date']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D', textAlign: 'right' }}>
-                  ₹ {row['Amount']}
+                  ₹ {row['amount_paid']}
                 </StyledTableCell>
                 {/* {
           tableHeading.map((heading, index) => {

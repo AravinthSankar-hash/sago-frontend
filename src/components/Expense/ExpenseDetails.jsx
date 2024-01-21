@@ -10,21 +10,31 @@ import ExpenseTab from './ExpenseTab';
 import ExpensePayment from './ExpensePayment';
 // import '../css/index.css';
 
-const ExpenseDetails = (props) => {
+const ExpenseDetails = ({ selectedExpense }) => {
   const [tableData, setTableData] = useState([]);
-  const [tableHeading, setTableHeading] = useState([]);
+  const [paymentFooterValues, setPaymentFooterValues] = useState([]);
+  const [paymentTableData, setPaymentTableData] = useState([]);
   const [showPurchase, setShowPurchase] = useState(true);
+  const [footerValues, setFooterValues] = useState([]);
+  const tableHeading = ['Expense Description', 'Amount'];
 
+  const paymentTableHeaders = ['Date', 'Amount'];
   useEffect(() => {
-    fetch('http://localhost:3001/proPurchase')
-      .then((rawResponse) => rawResponse.json())
-      .then((response) => {
-        setTableHeading(Object.keys(response.data[0]));
-        setTableData(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+    setTableData(selectedExpense.items);
+    setPaymentTableData(selectedExpense.payments);
+    setPaymentFooterValues({
+      expense_total: selectedExpense.sub_total,
+      payment_status: selectedExpense.payment_status
+    });
+    setFooterValues({
+      sub_total: selectedExpense.sub_total,
+      labour_charge: (3 / 100) * selectedExpense.sub_total,
+      vehicle_rent: 300,
+      purchase_total: selectedExpense.purchase_total,
+      commission: 76,
+      grand_total: selectedExpense.sub_total + (3 / 100) * selectedExpense.sub_total + 300 + 76,
+      approval_status: selectedExpense.payment_status
+    });
   }, []);
 
   const containerRef = useRef();
@@ -34,7 +44,7 @@ const ExpenseDetails = (props) => {
       width: '100%',
       borderRadius: '10px',
       overflowY: 'auto',
-      maxHeight: '400px',
+      maxHeight: '350px',
       backgroundColor: 'white',
       fontSize: '14px',
       fontFamily: 'Roboto',
@@ -83,19 +93,19 @@ const ExpenseDetails = (props) => {
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Expense No.
               </p>
-              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase No']}</p>
+              <p style={{ fontSize: '12px' }}>{selectedExpense['invoice_number']}</p>
             </div>
             <div className="p-2" style={{ marginRight: '30px' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Expense Date
               </p>
-              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase date']}</p>
+              <p style={{ fontSize: '12px' }}>{selectedExpense['expense_date']}</p>
             </div>
             <div className="p-2" style={{ marginRight: '30px' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Expense due date :
               </p>
-              <p style={{ fontSize: '12px' }}>26 Oct 2022</p>
+              <p style={{ fontSize: '12px' }}>{selectedExpense['payment_due_date']}</p>
             </div>
             <div className="p-2" style={{ marginRight: '30px' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
@@ -110,7 +120,7 @@ const ExpenseDetails = (props) => {
                   fontWeight: 'bold',
                   padding: '0 4px'
                 }}>
-                UNPAID
+                {selectedExpense['payment_status']}
               </p>
             </div>
           </div>
@@ -147,33 +157,39 @@ const ExpenseDetails = (props) => {
                 <Form.Label>Party Name</Form.Label>
                 <Form.Control
                   style={disabledInput}
-                  defaultValue={'Party Name'}
+                  defaultValue={selectedExpense['party_name']}
                   //   disabled
                 />
               </Form.Group>
               <Form.Group as={Col} style={{ marginRight: '20px', width: '100%' }}>
                 <Form.Label>Phone no.</Form.Label>
-                <Form.Control style={disabledInput} defaultValue="8941555367" disabled />
+                <Form.Control
+                  style={disabledInput}
+                  defaultValue={selectedExpense['phone']}
+                  disabled
+                />
               </Form.Group>
             </div>
             <div className="m-3 d-flex">
-              <div style={{ marginRight: '20px', width: '100%' }}>
+              <div style={{ marginRight: '10px', width: '100%' }}>
                 <p className="mb-1" style={{ color: '#62728D' }}>
                   Address
                 </p>
-                <p>22/13 Bajanai koil 2nd street, Choolaimedu chennai-94</p>
+                <p>Sivakasi</p>
+                {/* <p>{selectedExpense['address']}</p> */}
               </div>
-              <div style={{ marginRight: '20px', width: '30%' }}>
+              <div style={{ marginRight: '20px', width: '100%' }}>
                 <p className="mb-1" style={{ color: '#62728D' }}>
                   Phone No.
                 </p>
-                <p>1234567890</p>
+                <p>9876543567</p>
+                {/* <p>{selectedExpense['phone']}</p> */}
               </div>
-              <div style={{ marginRight: '20px', width: '30%' }}>
+              <div style={{ marginRight: '10px', width: '100%' }}>
                 <p className="mb-1" style={{ color: '#62728D' }}>
                   Expense Type
                 </p>
-                <p>Infrastructure</p>
+                <p>{selectedExpense['expense_type']}</p>
               </div>
             </div>
           </div>
@@ -189,16 +205,16 @@ const ExpenseDetails = (props) => {
               <tbody className="mb-1">
                 <tr>
                   <td style={tableRow}>Total Bill Amount :</td>
-                  <td>₹ 10,000.00</td>
+                  <td>₹ {selectedExpense['purchase_total']}</td>
                 </tr>
                 <tr>
                   <td style={tableRow}>Total Paid:</td>
-                  <td style={{ color: '#00875A' }}>₹ 2,000.00</td>
+                  <td style={{ color: '#00875A' }}>₹ {selectedExpense['paid_amount']}</td>
                 </tr>
                 <tr style={{ borderBottom: '2px solid #EBEEF0', color: '#EBEEF0' }}></tr>
                 <tr>
                   <td style={tableRow}>Outstandings :</td>
-                  <td style={{ color: '#DE350B' }}>₹ 8,000.00/-</td>
+                  <td style={{ color: '#DE350B' }}>₹ {selectedExpense['outstandings']}/-</td>
                 </tr>
               </tbody>
             </table>
@@ -209,12 +225,26 @@ const ExpenseDetails = (props) => {
 
       {tableData.length > 0 && tableHeading.length > 0 ? (
         <Container ref={containerRef} className="ag-theme-alpine mt-5" style={tableContainer}>
-          <TabComponent showTab={showTab} showPurchase={showPurchase} tabName={'Expense'} />
+          <TabComponent
+            showTab={showTab}
+            showPurchase={showPurchase}
+            tabName={'Expense'}
+            paymentCategory="expense"
+            paymentRefId={selectedExpense.item_id}
+          />
           <Container style={gridStyle}>
             {showPurchase ? (
-              <ExpenseTab tableHeading={tableHeading} tableData={tableData} />
+              <ExpenseTab
+                tableHeading={tableHeading}
+                tableData={tableData}
+                footerValues={footerValues}
+              />
             ) : (
-              <ExpensePayment />
+              <ExpensePayment
+                tableHeaders={paymentTableHeaders}
+                tableData={paymentTableData}
+                footerValues={paymentFooterValues}
+              />
             )}
           </Container>
         </Container>

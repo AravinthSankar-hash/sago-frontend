@@ -166,7 +166,9 @@ function TPPurchases(props) {
           <div style={approvalStatus}>
             <div className="m-3">
               <span style={{ marginRight: '50px', color: '#62728D' }}>Approval Status:</span>
-              <span style={{ marginRight: '0px', color: '#00B7FF' }}>pending</span>
+              <span style={{ marginRight: '0px', color: '#00B7FF' }}>
+                {footerValues.payment_status}
+              </span>
             </div>
           </div>
         </div>

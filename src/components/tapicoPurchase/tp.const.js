@@ -48,6 +48,28 @@ export const proTableColumns = [
   'approval_status'
 ];
 
+export const expenseTableHeaders = [
+  'Expense date',
+  'Expense No.',
+  'Party Name',
+  'Expense Type',
+  'Expense amount',
+  'Outstandings',
+  'Last payment date',
+  'Approval Status'
+];
+
+export const expenseTableColumns = [
+  'expense_date',
+  'invoice_number',
+  'party_name',
+  'expense_type',
+  'sub_total',
+  'outstandings',
+  'payment_due_date',
+  'approval_status'
+];
+
 export const RESPONSE_MSG = {
   INVALID_SEARCH_TEXT: 'Invalid Search Text',
   NO_DATA_FOUND: 'No Data Found',

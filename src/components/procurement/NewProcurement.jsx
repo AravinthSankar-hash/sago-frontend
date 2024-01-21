@@ -3,22 +3,14 @@ import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
-import SearchBox from '../helper/SearchBox';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import { FormGroup, IconButton } from '@mui/material';
-import Select from '@mui/material/Select';
-import FormControl from '@mui/material/FormControl';
+import { IconButton } from '@mui/material';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import '../../css/index.css';
 import ProService from '../../services/purchase.api';
 
-const NewProcurement = ({ showForm, procurementAdded, proInvoiceNo }) => {
+const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
   const {
     register,
     handleSubmit,
@@ -29,7 +21,6 @@ const NewProcurement = ({ showForm, procurementAdded, proInvoiceNo }) => {
   let amount = 0;
 
   const onSubmit = async (data) => {
-    alert('1');
     let purchase_items = [];
     purchaseItemRows.map((row, index) => {
       purchase_items.push({
@@ -62,9 +53,7 @@ const NewProcurement = ({ showForm, procurementAdded, proInvoiceNo }) => {
       initial_payment: Number(data.initial_payment)
     };
     console.log(formData, 'tpInvoiceNo22');
-    alert('2');
     await ProService.create({ type: 'PROCUREMENT', data: formData });
-    alert('4');
     procurementAdded(formData);
   };
   const containerRef = useRef();
@@ -198,9 +187,6 @@ const NewProcurement = ({ showForm, procurementAdded, proInvoiceNo }) => {
                     // Add more validation rules as needed
                   })}
                 />
-                {errors.supplier_name && (
-                  <Form.Text className="text-danger">{errors.supplier_name.message}</Form.Text>
-                )}
               </Form.Group>
 
               <Form.Group as={Col} xs={3} controlId="NewProPhone">
@@ -295,7 +281,7 @@ const NewProcurement = ({ showForm, procurementAdded, proInvoiceNo }) => {
                 </tr>
               </thead>
 
-              {purchaseItemRows.map((row, index) => (
+              {purchaseItemRows?.map((row, index) => (
                 <tbody
                   key={index}
                   style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C', padding: '20px' }}>
@@ -587,7 +573,7 @@ const NewProcurement = ({ showForm, procurementAdded, proInvoiceNo }) => {
                         width: '150px',
                         height: '40px'
                       }}
-                      defaultValue="0"
+                      defaultValue={0}
                       // disabled
                       type="number"
                       {...register(`initial_payment`, {
