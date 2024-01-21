@@ -86,7 +86,7 @@ const ProcurementTable = (props) => {
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead style={{ position: 'sticky', top: 0, zIndex: 2 }}>
             <TableRow>
-              {proTableColumns.map((key, index) => (
+              {proTableColumns?.map((key, index) => (
                 <StyledTableCell key={index}>{key}</StyledTableCell>
               ))}{' '}
             </TableRow>
@@ -95,7 +95,7 @@ const ProcurementTable = (props) => {
             {tableData.length > 0
               ? tableData.map((tableRow, index) => (
                   <StyledTableRow key={index} onClick={() => tableRowClicked(tableRow)}>
-                    {proTableColumns.map((columnKey, colIdx) => {
+                    {proTableColumns?.map((columnKey, colIdx) => {
                       let approvalStyle = {};
                       let isNumber;
                       let cellContent;
@@ -196,7 +196,7 @@ const ProcurementTable = (props) => {
           <TableBody>
             {' '}
             <StyledTablePaginationRow>
-              <TableCell colSpan={proTableHeaders.length}>
+              <TableCell colSpan={proTableHeaders?.length}>
                 <TablePagination
                   rowsPerPageOptions={TABLE_ROW_SIZE_OPTIONS}
                   component="div"

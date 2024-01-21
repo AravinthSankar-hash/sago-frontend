@@ -272,7 +272,7 @@ const GsDetails = (props) => {
         {/* </Form> */}
       </Container>
 
-      {itemTableData.length ? (
+      {itemTableData?.length ? (
         <Container ref={containerRef} className="ag-theme-alpine mt-4" style={tableContainer}>
           <TabComponent
             showTab={showTab}

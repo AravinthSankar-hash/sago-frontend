@@ -240,7 +240,7 @@ const TsDetails = (props) => {
         </div>
       </Container>
 
-      {itemTableData.length > 0 && itemTableHeaders.length > 0 ? (
+      {itemTableData?.length > 0 && itemTableHeaders?.length > 0 ? (
         <Container ref={containerRef} className="ag-theme-alpine mt-4" style={tableContainer}>
           <TabComponent
             showTab={showTab}
