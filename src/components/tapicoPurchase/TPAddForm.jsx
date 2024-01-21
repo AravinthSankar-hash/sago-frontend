@@ -15,17 +15,7 @@ import Toaster from '../helper/Snackbar.jsx';
 
 function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
   const [farmerRows, setFarmerRows] = useState([{ id: 1 }]);
-  const [rows, setRows] = useState([{ id: 1 }]);
-  // let invoiceNumber;
-  // useEffect(() => {
-  //   TpService.getInvoiceNo('TP')
-  //     .then((response) => {
-  //       invoiceNumber = response.data.invoiceNumber;
-  //     })
-  //     .catch((error) => {
-  //       console.log('Error in getting customer data', error);
-  //     });
-  // }, []);
+
   const {
     register,
     handleSubmit,
@@ -197,45 +187,6 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
   };
 
   // CHARGES DYNAMIC FORM - END
-
-  // // FARMER DYNAMIC FORM - START
-  // const staticFarmerFormGroup = (
-  //   <>
-  //     <Form.Group as={Col} xs={3}>
-  //       <Form.Control
-  //         style={inputStyle}
-  //         // eslint-disable-next-line no-undef
-  //         {...register(`farmerName${index}`, { required: 'This field is required' })}
-  //         // {...register('farmerDetails')}
-  //         // {
-  //         //   required: 'Farmer farmerDetails is required'
-  //         //   // Add more validation rules as needed
-  //         // })}
-  //       ></Form.Control>
-  //       {errors.farmerName && (
-  //         <Form.Text className="text-danger">{errors.farmerName.message}</Form.Text>
-  //       )}
-  //     </Form.Group>
-  //     <Form.Group as={Col} xs={3}>
-  //       <Form.Control
-  //         style={inputStyle}
-  //         {...register(`farmerAadhar${index}`, { required: 'This field is required' })}
-  //         // {...register('farmerAadharNo')}
-  //         // {
-  //         //   required: 'Farmer Aadhar No. is required',
-  //         //   pattern: {
-  //         //     value: /^[0-9]{12}$/, // Exactly 12 digits
-  //         //     message: 'Please enter a valid 12-digit Aadhar number'
-  //         //   }
-  //         //   // Add more validation rules as needed
-  //         // })}
-  //       ></Form.Control>
-  //       {errors.farmerAadhar && (
-  //         <Form.Text className="text-danger">{errors.farmerAadhar.message}</Form.Text>
-  //       )}
-  //     </Form.Group>
-  //   </>
-  // );
 
   const handleFarmerButtonClick = (index) => {
     if (index === farmerRows.length - 1) {
@@ -544,7 +495,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                   <option value="Wet Thippi">Wet Thippi</option>
                   <option value="Dry Thippi">Dry Thippi</option>
                 </Form.Select>
-                {errors[`product_name_${index}`] && (
+                {errors[`product_name_x`] && (
                   <Form.Text className="text-danger">
                     {errors[`product_name_${index}`].message}
                   </Form.Text>

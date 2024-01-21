@@ -28,6 +28,26 @@ export const tpTableColumns = [
   'approval_status'
 ];
 
+export const proTableHeaders = [
+  'Purchase date',
+  'Purchase No.',
+  'Supplier Name',
+  'amount',
+  'Outstandings',
+  'Last payment date',
+  'Approval Status'
+];
+
+export const proTableColumns = [
+  'purchase_date',
+  'invoice_number',
+  'supplier_name',
+  'amount',
+  'outstandings',
+  'payment_due_date',
+  'approval_status'
+];
+
 export const RESPONSE_MSG = {
   INVALID_SEARCH_TEXT: 'Invalid Search Text',
   NO_DATA_FOUND: 'No Data Found',

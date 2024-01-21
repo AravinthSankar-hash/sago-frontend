@@ -11,20 +11,6 @@ import {
 } from '@mui/material';
 function TPPayments(props) {
   const { tableHeaders, tableData, footerValues } = props;
-
-  // const [tableData, setTableData] = useState([]);
-  // const [tableHeading, setTableHeading] = useState([]);
-  // useEffect(() => {
-  //   fetch('http://localhost:3001/proPayment')
-  //     .then((rawResponse) => rawResponse.json())
-  //     .then((response) => {
-  //       setTableHeading(Object.keys(response.data[0]));
-  //       setTableData(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error fetching data:', error);
-  //     });
-  // }, []);
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.white,
