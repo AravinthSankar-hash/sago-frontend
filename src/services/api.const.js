@@ -26,11 +26,13 @@ const SERVICES = {
       TP: '/tp',
       BROKERREPORT: '/broker-purchases',
       REPORT: '/report',
-      PROCUREMENT: '/procurement'
+      PROCUREMENT: '/procurement',
+      EXPENSES: '/expense'
     },
     QUERY_PARAMS: {
       TP: '/tp-invoices',
-      PROCUREMENT: '/procurement-invoices'
+      PROCUREMENT: '/procurement-invoices',
+      EXPENSES: '/expense-invoices'
     }
   },
   SALE: {
@@ -48,9 +50,10 @@ const SERVICES = {
     ROUTES: {
       BASE_ROUTE: '/invoice',
       TP: '/tp',
-      PAYMENTS: "payments",
-      TRANSACTIONS: "transactions",
-      PROCUREMENT: '/procurements'
+      PAYMENTS: 'payments',
+      TRANSACTIONS: 'transactions',
+      PROCUREMENT: '/procurements',
+      EXPENSES: '/expenses'
     },
     PAYMENT_CATEGORY: {
       TIPPI: 'tippi'

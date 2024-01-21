@@ -11,6 +11,8 @@ import {
 } from '@mui/material';
 
 const ExpenseTab = (props) => {
+  const { footerValues } = props;
+
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.white,
@@ -75,7 +77,7 @@ const ExpenseTab = (props) => {
           <TableHead style={tableHead}>
             <TableRow>
               <StyledTableCell style={{ padding: '10px' }}>S.No</StyledTableCell>
-              {props.tableHeading.map((key, index) => (
+              {props?.tableHeading?.map((key, index) => (
                 <StyledTableCell
                   key={index}
                   style={{ padding: '16px', color: '#6B778C', textAlign: 'right' }}>
@@ -85,33 +87,15 @@ const ExpenseTab = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.tableData.map((row, index) => (
+            {props?.tableData?.map((row, index) => (
               <StyledTableRow key={index} style={{ color: '#62728D' }}>
                 <StyledTableCell>{index + 1}</StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D', textAlign: 'right' }}>
-                  {row['Product Details']}
-                </StyledTableCell>
-                <StyledTableCell key={index} style={{ color: '#62728D', textAlign: 'right' }}>
-                  {row['Product Type']}
-                </StyledTableCell>
-                <StyledTableCell key={index} style={{ color: '#62728D', textAlign: 'right' }}>
-                  {row['Rate']}
-                </StyledTableCell>
-                <StyledTableCell key={index} style={{ color: '#62728D', textAlign: 'right' }}>
-                  {row['Quantity']}
-                </StyledTableCell>
-                <StyledTableCell key={index} style={{ color: '#62728D', textAlign: 'right' }}>
-                  {row['Units']}
+                  {row['description']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#191C24', textAlign: 'right' }}>
-                  ₹ {row['Amount']}
+                  ₹ {row['amount']}
                 </StyledTableCell>
-                {/* {
-          tableHeading.map((heading, index) => {
-            {console.log(row[heading],'heding')}
-            <StyledTableCell key={index}>{row.heading}</StyledTableCell>
-          })
-        } */}
               </StyledTableRow>
             ))}{' '}
           </TableBody>
@@ -121,40 +105,38 @@ const ExpenseTab = (props) => {
         <tbody>
           <tr>
             <td style={tableBody}>Sub Total:</td>
-            <td>₹ 5,689.25</td>
+            <td>₹ {footerValues?.sub_total}</td>
           </tr>
           <tr>
             <td style={tableBody}>Labour charge (3%) :</td>
-            <td>- ₹ 500.25</td>
+            <td>- ₹ {footerValues?.labour_charge}</td>
           </tr>
           <tr>
             <td style={tableBody}>Vehicle Rent:</td>
-            <td>- ₹ 500.25</td>
-          </tr>
-          <tr>
-            <td style={tableBody}>Tax:</td>
-            <td>₹ 2,000</td>
+            <td>- ₹ {footerValues?.vehicle_rent}</td>
           </tr>
           <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}></tr>
           <tr>
             <td style={tableBody}>Purchase total:</td>
-            <td>- ₹ 500.25</td>
+            <td>- ₹ {footerValues?.purchase_total}</td>
           </tr>
           <tr>
             <td style={tableBody}>Commision (10%) :</td>
-            <td style={{ fontWeight: 'bold' }}>+ ₹ 500.25</td>
+            <td style={{ fontWeight: 'bold' }}>+ ₹ {footerValues?.commission}</td>
           </tr>
           <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}></tr>
           <tr>
             <td style={tableBody}>Grand total:</td>
-            <td style={{ fontSize: '16px', fontWeight: 'bold' }}>₹ 4,000.00</td>
+            <td style={{ fontSize: '16px', fontWeight: 'bold' }}>₹ {footerValues?.grand_total}</td>
           </tr>
         </tbody>
       </table>
       <div style={approvalStatus}>
         <div className="m-3">
           <span style={{ marginRight: '50px', color: '#62728D' }}>Approval Status:</span>
-          <span style={{ marginRight: '20px', color: '#00B7FF', fontWeight: 'bold' }}>Pending</span>
+          <span style={{ marginRight: '20px', color: '#00B7FF', fontWeight: 'bold' }}>
+            {footerValues?.approval_status}
+          </span>
         </div>
       </div>
     </>

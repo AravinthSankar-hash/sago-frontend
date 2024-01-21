@@ -41,7 +41,7 @@ function Procurements() {
   const [searchPayload, setSearchPayload] = useState({});
   const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
   const [toasterBackground, setToasterBackground] = useState(null);
-  const [toasterMsg, setToasterMsg] = useState('Tp data saved');
+  const [toasterMsg, setToasterMsg] = useState('Procurement data saved');
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [selectedPro, setSelectedPro] = useState();
   const [invoiceNumber, setInvoiceNumber] = useState('');
@@ -104,11 +104,11 @@ function Procurements() {
     // setShouldShowToaster(true);
   };
 
-  const onProcurementSave = (newAddedTp) => {
+  const onProcurementSave = (newAddedProcurement) => {
     invokeToaster();
     showForm(false);
     // updateShowTPBackBtn(false);
-    setProcurementData((tp) => [newAddedTp, ...tp]);
+    setProcurementData((procurement) => [newAddedProcurement, ...procurement]);
     invokeProcurementListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
 
@@ -178,11 +178,7 @@ function Procurements() {
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showNewForm ? (
-            <NewProcurement
-              showForm={showForm}
-              procurementAdded={onProcurementSave}
-              proInvoiceNo={invoiceNumber}
-            />
+            <NewProcurement procurementAdded={onProcurementSave} proInvoiceNo={invoiceNumber} />
           ) : (
             <>
               {' '}

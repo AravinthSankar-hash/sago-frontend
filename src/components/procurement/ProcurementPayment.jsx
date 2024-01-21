@@ -75,7 +75,7 @@ const ProcurementPayment = (props) => {
           <TableHead style={tableHead}>
             <TableRow>
               <StyledTableCell style={{ padding: '10px' }}>S.No</StyledTableCell>
-              {tableHeaders.map((key, index) => (
+              {tableHeaders?.map((key, index) => (
                 <StyledTableCell key={index} style={tableHeadingCell}>
                   {key}
                 </StyledTableCell>
@@ -83,7 +83,7 @@ const ProcurementPayment = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData.map((row, index) => (
+            {tableData?.map((row, index) => (
               <StyledTableRow key={index} style={{ color: '#62728D' }}>
                 <StyledTableCell>{index + 1}</StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D', textAlign: 'right' }}>

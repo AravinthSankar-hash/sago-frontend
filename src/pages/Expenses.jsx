@@ -15,33 +15,118 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import ExpenseForm from '../components/expense/ExpenseForm.jsx';
 import ExpenseDetails from '../components/expense/ExpenseDetails.jsx';
+import {
+  expenseTableHeaders,
+  expenseTableColumns,
+  RESPONSE_MSG
+} from '../components/tapicoPurchase/tp.const.js';
+// API
+import ExpenseService from 'services/purchase.api.js';
+import { SERVICES } from '../services/api.const.js';
+
+import { isNumeric } from '../components/helper/helper.js';
+import Toaster from '../components/helper/Snackbar.jsx';
+import GenericService from '../services/generic.api';
 
 const Expenses = () => {
   const [expenseData, setExpenseData] = useState([]);
+  const [totalExpenseDataCount, setTotalExpenseDataCount] = useState(0);
   const [showNewForm, setShowNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [rowData, setRowData] = useState({});
+  const [searchPayload, setSearchPayload] = useState({});
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
+  const [toasterBackground, setToasterBackground] = useState(null);
+  const [toasterMsg, setToasterMsg] = useState('Expense data saved');
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState();
+  const [invoiceNumber, setInvoiceNumber] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3001/procurement')
-      .then((rawResponse) => rawResponse.json())
+    invokeExpenseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, []);
+
+  const invokeExpenseListAPI = (payload, query = null) => {
+    ExpenseService.getData(SERVICES.TP.QUERY_PARAMS.EXPENSES, payload, query)
       .then((response) => {
-        setExpenseData(response.data);
-        console.log(response.data);
+        setExpenseData(response.data.data);
+        setTotalExpenseDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.log('Error in searching Purchase data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
       });
-  }, []);
+  };
+
+  const onTableRowClick = (clickedRow) => {
+    setSelectedExpense(clickedRow);
+    setShowDetails(true);
+    console.log('Expense table row clicked');
+  };
+
+  const onSearchBoxValueChange = (currentInputValue) => {
+    const isPhoneNumberSearch = isNumeric(currentInputValue);
+    const payload = {
+      ...(currentInputValue && {
+        [isPhoneNumberSearch ? 'phone' : 'search_term']: currentInputValue
+      })
+    };
+    setSearchPayload(payload);
+    invokeExpenseListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
+
+  const expensePageChanged = (currentPageNo, rowsPerPage) => {
+    setCurrentRowsPerPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokeExpenseListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  };
+
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = null) => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    if (backgroundClr) {
+      setToasterBackground(backgroundClr);
+      setShouldShowToaster(Math.random());
+    }
+    // setShouldShowToaster(true);
+  };
+
+  const onExpenseSave = (newAddedExpense) => {
+    invokeToaster();
+    showForm(false);
+    // updateShowTPBackBtn(false);
+    setExpenseData((expense) => [newAddedExpense, ...expense]);
+    invokeExpenseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
+
+  const hanldeAddExpenseFormClick = () => {
+    GenericService.getInvoiceNo('EXPENSES')
+      .then((response) => {
+        setInvoiceNumber(response.data.invoiceNumber);
+      })
+      .catch((error) => {
+        console.log('Error in getting customer data', error);
+      });
+
+    showForm(true);
+    // updateShowTPBackBtn(true);
+  };
+
   const showForm = (shouldShow) => {
     setShowNewForm(shouldShow);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  const handleChangePage = (shouldShow) => {
+    showForm(shouldShow);
+    setShowDetails(shouldShow);
   };
 
   const handleShowDetails = (shouldShow, rowData) => {
@@ -79,8 +164,7 @@ const Expenses = () => {
             <ArrowBackIcon
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                showForm(false);
-                handleShowDetails(false);
+                handleChangePage(false);
               }}
               fontSize="medium"
             />
@@ -94,18 +178,22 @@ const Expenses = () => {
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showNewForm ? (
-            <ExpenseForm />
+            <ExpenseForm expenseAdded={onExpenseSave} expenseInvoiceNo={invoiceNumber} />
           ) : (
             <>
               {' '}
               {showDetails ? (
-                <ExpenseDetails rowData={rowData} />
+                <ExpenseDetails selectedExpense={selectedExpense} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                     <Row>
                       <Col lg="3">
-                        <SearchBox className="p-0" s placeHolder={'Search here'}></SearchBox>
+                        <SearchBox
+                          className="p-0"
+                          s
+                          placeHolder={'Search here'}
+                          inputValueChanged={onSearchBoxValueChange}></SearchBox>
                       </Col>
                       <Col lg="2">
                         <DateSelector
@@ -140,7 +228,7 @@ const Expenses = () => {
                             fontWeight: 'bold'
                           }}
                           variant="outlined"
-                          onClick={() => showForm(true)}>
+                          onClick={() => hanldeAddExpenseFormClick(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
                           New Expense
                         </Button>
@@ -174,11 +262,13 @@ const Expenses = () => {
                     {expenseData.length > 0 ? (
                       <ExpenseTable
                         tableData={expenseData}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        handleShowDetails={handleShowDetails}
+                        expenseTableHeaders={expenseTableHeaders}
+                        expenseTableColumns={expenseTableColumns}
+                        totalExpenseDataCount={totalExpenseDataCount}
+                        hanldePageChange={expensePageChanged}
+                        tableRowClicked={onTableRowClick}
+                        rowsPerPage={10}
+                        page={5}
                       />
                     ) : (
                       <Box sx={{ display: 'flex' }}>
@@ -192,6 +282,10 @@ const Expenses = () => {
           )}
         </Col>
       </Row>
+      <Toaster
+        shouldOpen={shouldShowToaster}
+        message={toasterMsg}
+        backgroundColor={toasterBackground}></Toaster>
     </Container>
   );
 };
