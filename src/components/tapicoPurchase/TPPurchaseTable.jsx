@@ -23,7 +23,7 @@ const TPPurchaseTable = (props) => {
     tpTableColumns,
     hanldePageChange,
     tableRowClicked,
-    totalTPDataCount,
+    totalTpDataCount,
     hanleTableRowClick
   } = props;
 
@@ -194,7 +194,7 @@ const TPPurchaseTable = (props) => {
                 <TablePagination
                   rowsPerPageOptions={TABLE_ROW_SIZE_OPTIONS}
                   component="div"
-                  count={totalTPDataCount}
+                  count={totalTpDataCount}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={handleChangePage}

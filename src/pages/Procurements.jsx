@@ -182,18 +182,6 @@ function Procurements() {
                         <CircularProgress />
                       </Box>
                     )}
-
-                    {/* <AgGridTable
-                columnDefs={[
-                  { field: 'Purchase date' },
-                  { field: 'Purchase No' },
-                  { field: 'Supplier Name' },
-                  { field: 'Outstandings' },
-                  { field: 'Last payment date' },
-                  { field: 'Approval Status' }
-                ]}
-                rowData={procurementData}
-              /> */}
                   </div>
                 </div>
               )}
