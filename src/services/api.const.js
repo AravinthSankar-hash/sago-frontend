@@ -48,7 +48,8 @@ const SERVICES = {
     ROUTES: {
       BASE_ROUTE: '/invoice',
       TP: '/tp',
-      PAYMENTS: 'payments',
+      PAYMENTS: "payments",
+      TRANSACTIONS: "transactions",
       PROCUREMENT: '/procurements'
     },
     PAYMENT_CATEGORY: {

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import GeneralService from 'services/generic.api';
 import { Col, Row } from 'react-bootstrap';
 import SearchBox from '../helper/SearchBox.jsx';
 import DateSelector from '../helper/DateSelector.jsx';
@@ -7,39 +8,19 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../../css/index.css';
-import ExpenseTable from '../expense/ExpenseTable';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import PendingPaymentsTable from './PendingPaymentsTables';
+import { tableColumns, tableHeaders } from './payment.const.js';
 
 function PendingPayments() {
-  const [expenseData, setExpenseData] = useState([]);
-  const [selectedChips, setSelectedChips] = useState([]);
+  const [selectedChips, setSelectedChips] = useState(['All']);
+  const [pendingPayments, setPendingPayments] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [totalDataCount, setTotalDataCount] = useState(0);
   const [page, setPage] = useState(0);
-  const [showDetails, setShowDetails] = useState(false);
-  const [rowData, setRowData] = useState({});
-
-  useEffect(() => {
-    fetch('http://localhost:3001/procurement')
-      .then((rawResponse) => rawResponse.json())
-      .then((response) => {
-        setExpenseData(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
 
   const filterOptions = ['All', 'Sales', 'Procurement', 'Expense', 'Topico Purchase'];
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleShowDetails = (shouldShow, rowData) => {
-    setRowData(rowData);
-    setShowDetails(shouldShow);
-  };
 
   const chipStyle = (isSelected) => ({
     border: '2px solid #00b7ff',
@@ -53,9 +34,45 @@ function PendingPayments() {
     },
     cursor: 'pointer'
   });
+
   const handleChipSelect = (label) => {
-    setSelectedChips([]);
-    setSelectedChips([label]);
+    if (label === 'All') {
+      setSelectedChips(['All']);
+      invokeSearchAPI({ payment_category: ['All'] });
+      return;
+    }
+
+    const updatedChipSet = new Set(selectedChips);
+
+    if (updatedChipSet.has('All')) {
+      updatedChipSet.delete('All');
+    }
+
+    if (updatedChipSet.has(label)) {
+      updatedChipSet.delete(label);
+    } else {
+      updatedChipSet.add(label);
+    }
+
+    setSelectedChips([...updatedChipSet]);
+    invokeSearchAPI({ payment_category: [...updatedChipSet] });
+  };
+
+  useEffect(() => {
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI({}, `page=${0 + 1}&limit=${10}`);
+  }, []);
+  const invokeSearchAPI = (payload, query = null) => {
+    GeneralService.getPayments(payload, query)
+      .then((response) => {
+        const pendingPayments = response.data.filter((payment) => {
+          return payment?.payment_status !== 'PAID';
+        });
+        setPendingPayments(pendingPayments);
+      })
+      .catch((error) => {
+        console.log('Error in getPayments', error);
+      });
   };
 
   // Function to handle rows per page change
@@ -63,12 +80,27 @@ function PendingPayments() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to the first page when changing rows per page
   };
+
+  const pageChanged = (currentPageNo, rowsPerPage) => {
+    setPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+  };
+
+  const onSearchBoxValueChange = (currentInputValue) => {
+    const payload = {
+      search_term: currentInputValue
+    };
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${10}`);
+  };
+
   return (
     <div style={{ padding: '0 12px', margin: '0 28px' }}>
       <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
         <Row>
           <Col lg="3">
-            <SearchBox placeHolder={'Search here'}></SearchBox>
+            <SearchBox
+              placeHolder={'Search here'}
+              inputValueChanged={onSearchBoxValueChange}></SearchBox>
           </Col>
           <Col lg="2">
             <DateSelector size="smaller" customLabel="From"></DateSelector>
@@ -104,14 +136,16 @@ function PendingPayments() {
         </Row>
       </div>
       <div>
-        {expenseData.length > 0 ? (
-          <ExpenseTable
-            tableData={expenseData}
+        {pendingPayments?.length > 0 ? (
+          <PendingPaymentsTable
+            tableData={pendingPayments}
+            handleChangeRowsPerPage={handleChangeRowsPerPage}
+            tableHeaders={tableHeaders}
+            tableColumns={tableColumns}
+            totalDataCount={totalDataCount}
+            hanldePageChange={pageChanged}
             rowsPerPage={rowsPerPage}
             page={page}
-            handleChangePage={handleChangePage}
-            handleChangeRowsPerPage={handleChangeRowsPerPage}
-            handleShowDetails={handleShowDetails}
           />
         ) : (
           <Box sx={{ display: 'flex' }}>

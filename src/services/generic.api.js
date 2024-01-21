@@ -19,9 +19,18 @@ function addPayment(data) {
   });
 }
 
+function getPayments(data = {}) {
+  return request({
+    url: `${ROUTES.TRANSACTIONS}`,
+    method: 'POST',
+    data: data
+  });
+}
+
 const GeneralService = {
   getInvoiceNo,
-  addPayment
+  addPayment,
+  getPayments
 };
 
 export default GeneralService;

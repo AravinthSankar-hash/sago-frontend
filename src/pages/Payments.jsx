@@ -6,6 +6,7 @@ import PendingPayments from '../components/payments/PendingPayments';
 import Transactions from '../components/payments/Transactions';
 
 const Payments = () => {
+  // Store
   const [activeCatalogTabComponent, setActiveCatalogTabComponent] = useState(<PendingPayments />);
   const [currentTabName, setCurrentTabName] = useState('pendingPayments');
 
