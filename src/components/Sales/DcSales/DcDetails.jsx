@@ -26,6 +26,7 @@ const DcDetails = (props) => {
   ];
   const paymentTableHeaders = ['Date', 'Amount'];
   useEffect(() => {
+    console.log(selectedRowData, 'selectedRowData');
     setItemTableData(selectedRowData.items);
     setPaymentTableData(selectedRowData.payments);
     setPaymentFooterValues({ amount_paid: selectedRowData.paid_amount });

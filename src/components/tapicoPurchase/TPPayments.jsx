@@ -9,20 +9,8 @@ import {
   TableCell,
   tableCellClasses
 } from '@mui/material';
-function TPPayments() {
-  const [tableData, setTableData] = useState([]);
-  const [tableHeading, setTableHeading] = useState([]);
-  useEffect(() => {
-    fetch('http://localhost:3001/proPayment')
-      .then((rawResponse) => rawResponse.json())
-      .then((response) => {
-        setTableHeading(Object.keys(response.data[0]));
-        setTableData(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+function TPPayments(props) {
+  const { tableHeaders, tableData, footerValues } = props;
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.white,
@@ -90,7 +78,7 @@ function TPPayments() {
           <TableHead style={tableHead}>
             <TableRow>
               <StyledTableCell style={{ padding: '10px' }}>S.No</StyledTableCell>
-              {tableHeading.map((key, index) => (
+              {tableHeaders?.map((key, index) => (
                 <StyledTableCell key={index} style={tableHeadingCell}>
                   {key}
                 </StyledTableCell>
@@ -98,17 +86,17 @@ function TPPayments() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData.map((row, index) => (
+            {tableData?.map((row, index) => (
               <StyledTableRow key={index} style={{ color: '#62728D' }}>
                 <StyledTableCell>{index + 1}</StyledTableCell>
                 <StyledTableCell key={index} style={{ color: '#62728D', textAlign: 'center' }}>
-                  {row['Date']}
+                  {row['payment_date']}
                 </StyledTableCell>
                 <StyledTableCell key={index} style={AmountCol}>
-                  ₹ {row['Amount']}
+                  ₹ {row['amount_paid']}
                 </StyledTableCell>
               </StyledTableRow>
-            ))}{' '}
+            ))}
           </TableBody>
         </Table>
       </Wrapper>

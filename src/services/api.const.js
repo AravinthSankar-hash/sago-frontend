@@ -25,7 +25,12 @@ const SERVICES = {
       BASE_ROUTE: '/purchase',
       TP: '/tp',
       BROKERREPORT: '/broker-purchases',
-      REPORT: '/report'
+      REPORT: '/report',
+      PROCUREMENT: '/procurement'
+    },
+    QUERY_PARAMS: {
+      TP: '/tp-invoices',
+      PROCUREMENT: '/procurement-invoices'
     }
   },
   SALE: {
@@ -33,10 +38,10 @@ const SERVICES = {
       BASE_ROUTE: '/sales'
     },
     SALE_TYPES: {
-      'dc': 'dc',
-      'general': 'general',
-      'tippi': 'tippi',
-      'all': 'all'
+      dc: 'dc',
+      general: 'general',
+      tippi: 'tippi',
+      all: 'all'
     }
   },
   GENERIC: {
@@ -44,7 +49,8 @@ const SERVICES = {
       BASE_ROUTE: '/invoice',
       TP: '/tp',
       PAYMENTS: "payments",
-      TRANSACTIONS: "transactions"
+      TRANSACTIONS: "transactions",
+      PROCUREMENT: '/procurements'
     },
     PAYMENT_CATEGORY: {
       TIPPI: 'tippi'

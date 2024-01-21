@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
@@ -14,6 +14,7 @@ import AddSharpIcon from '@mui/icons-material/AddSharp';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import { IconButton } from '@mui/material';
 import '../../css/index.css';
 
 const ExpenseForm = () => {
@@ -54,6 +55,56 @@ const ExpenseForm = () => {
     width: '140px',
     border: 'none'
   };
+
+  // Dynamic expense item row - start
+
+  const staticExpenseItemRow = (
+    <>
+      <td style={{ padding: '10px' }}>
+        <Form.Group as={Col}>
+          {/* <Form.Label>Party Name</Form.Label> */}
+          <Form.Control
+            style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
+            defaultValue={'Lorem Ipsum'}
+            type="text"
+            //   disabled
+          />
+        </Form.Group>
+      </td>
+      <td style={{ padding: '10px' }}>
+        {' '}
+        <Form.Group as={Col}>
+          <Form.Control
+            style={{
+              background: '#F4F5F7',
+              color: '#A5ADBA',
+              border: 'none',
+              padding: '9px 12px'
+            }}
+            defaultValue="₹ 3,00,00,000"
+            disabled
+          />
+        </Form.Group>
+      </td>
+    </>
+  );
+
+  const [expenseItemRows, setExpenseItemRows] = useState([{ id: 1 }]);
+
+  const handleExpenseItemRowsButtonClick = (index) => {
+    if (index === expenseItemRows.length - 1) {
+      // If it's the last row, add a new row
+      const newRow = { id: expenseItemRows.length + 1 };
+      setExpenseItemRows((prevRows) => [...prevRows, newRow]);
+    } else {
+      // If it's not the last row, delete the current row
+      setExpenseItemRows((prevRows) => {
+        return prevRows.filter((row, indexToDelete) => indexToDelete !== index);
+      });
+    }
+  };
+
+  // Dynamic expense item row - end
 
   return (
     <>
@@ -157,93 +208,37 @@ const ExpenseForm = () => {
               </tr>
             </thead>
 
-            <tbody style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C', padding: '20px' }}>
-              <tr>
-                <td style={{ padding: '10px' }}>
-                  <Form.Group as={Col}>
-                    {/* <Form.Label>Party Name</Form.Label> */}
-                    <Form.Control
-                      style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
-                      defaultValue={'Lorem Ipsum'}
-                      type="text"
-                      //   disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  {' '}
-                  <Form.Group as={Col}>
-                    <Form.Control
+            {expenseItemRows.map((row, index) => (
+              <tbody key={index}>
+                <tr>
+                  {staticExpenseItemRow}
+
+                  <td style={{ padding: '10px', display: 'flex', justifyContent: 'flex-end' }}>
+                    <div
                       style={{
-                        background: '#F4F5F7',
-                        color: '#A5ADBA',
-                        border: 'none',
-                        padding: '9px 12px'
-                      }}
-                      defaultValue="₹ 3,00,00,000"
-                      disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px', display: 'flex', justifyContent: 'flex-end' }}>
-                  {' '}
-                  <div
-                    style={{
-                      height: '40px',
-                      width: '40px',
-                      background: '#BF2600',
-                      color: 'white',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}>
-                    <DeleteOutlineOutlinedIcon />
-                  </div>{' '}
-                </td>
-              </tr>
-              <tr>
-                <td style={{ padding: '10px' }}>
-                  <Form.Group as={Col}>
-                    {/* <Form.Label>Party Name</Form.Label> */}
-                    <Form.Control
-                      style={{ background: '#FAFBFC', color: '#7A869A', padding: '9px 12px' }}
-                      // defaultValue={'Lorem Ipsum'}
-                      type="text"
-                      //   disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px' }}>
-                  <Form.Group as={Col}>
-                    <Form.Control
-                      style={{
-                        background: '#F4F5F7',
-                        color: '#A5ADBA',
-                        border: 'none',
-                        padding: '9px 12px'
-                      }}
-                      defaultValue="₹ 0"
-                      disabled
-                    />
-                  </Form.Group>
-                </td>
-                <td style={{ padding: '10px', display: 'flex', justifyContent: 'flex-end' }}>
-                  {' '}
-                  <div
-                    style={{
-                      height: '40px',
-                      width: '40px',
-                      background: '#00B7FF',
-                      color: 'white',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center'
-                    }}>
-                    <AddSharpIcon />
-                  </div>
-                </td>
-              </tr>
-            </tbody>
+                        height: '40px',
+                        width: '40px',
+                        background:
+                          expenseItemRows.length === 1 || index === expenseItemRows.length - 1
+                            ? '#00B7FF'
+                            : '#BF2600',
+                        color: 'white',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}>
+                      <IconButton onClick={() => handleExpenseItemRowsButtonClick(index)}>
+                        {index === expenseItemRows.length - 1 ? (
+                          <AddSharpIcon style={{ color: 'white' }} />
+                        ) : (
+                          <DeleteOutlineOutlinedIcon style={{ color: 'white' }} />
+                        )}
+                      </IconButton>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            ))}
           </table>
           {/* <div  className='float-end'> */}
           <table

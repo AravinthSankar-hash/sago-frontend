@@ -10,21 +10,32 @@ import ProcurementPurchase from './ProcurementPurchase';
 import ProcurementPayment from './ProcurementPayment';
 // import '../css/index.css';
 
-const ProcurementDetails = (props) => {
+const ProcurementDetails = ({ selectedPro }) => {
+  // const { selectedPro } = props;
   const [tableData, setTableData] = useState([]);
-  const [tableHeading, setTableHeading] = useState([]);
+  const [paymentFooterValues, setPaymentFooterValues] = useState([]);
+  const [paymentTableData, setPaymentTableData] = useState([]);
   const [showPurchase, setShowPurchase] = useState(true);
+  const [footerValues, setFooterValues] = useState([]);
+  const tableHeading = ['Product Details', 'Product Type', 'Rate', 'Quantity', 'Units', 'Amount'];
+
+  const paymentTableHeaders = ['Date', 'Amount'];
 
   useEffect(() => {
-    fetch('http://localhost:3001/proPurchase')
-      .then((rawResponse) => rawResponse.json())
-      .then((response) => {
-        setTableHeading(Object.keys(response.data[0]));
-        setTableData(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
+    setTableData(selectedPro.product_details);
+    setPaymentTableData(selectedPro.payments);
+    setPaymentFooterValues({
+      purchase_total: selectedPro.purchase_total,
+      payment_status: selectedPro.payment_status
+    });
+    setFooterValues({
+      sub_total: selectedPro.sub_total,
+      discount: selectedPro.discount,
+      tax_rate: selectedPro.tax_rate,
+      tax: selectedPro.tax,
+      purchase_total: selectedPro.purchase_total,
+      approval_status: selectedPro.payment_status
+    });
   }, []);
 
   const containerRef = useRef();
@@ -56,7 +67,6 @@ const ProcurementDetails = (props) => {
   );
 
   const showTab = (shouldShow) => {
-    // alert(shouldShow);
     setShowPurchase(shouldShow);
   };
 
@@ -83,19 +93,19 @@ const ProcurementDetails = (props) => {
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Purchase No.
               </p>
-              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase No']}</p>
+              <p style={{ fontSize: '12px' }}>{selectedPro['invoice_number']}</p>
             </div>
             <div className="p-2" style={{ marginRight: '30px' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Purchase Date
               </p>
-              <p style={{ fontSize: '12px' }}>{props.rowData['Purchase date']}</p>
+              <p style={{ fontSize: '12px' }}>{selectedPro['purchase_date']}</p>
             </div>
             <div className="p-2" style={{ marginRight: '30px' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
                 Payment due date :
               </p>
-              <p style={{ fontSize: '12px' }}>26 Oct 2022</p>
+              <p style={{ fontSize: '12px' }}>{selectedPro['payment_due_date']}</p>
             </div>
             <div className="p-2" style={{ marginRight: '30px' }}>
               <p className="mb-1" style={{ color: '#62728D' }}>
@@ -110,7 +120,7 @@ const ProcurementDetails = (props) => {
                   fontWeight: 'bold',
                   padding: '0 4px'
                 }}>
-                UNPAID
+                {selectedPro['payment_status']}
               </p>
             </div>
           </div>
@@ -147,13 +157,13 @@ const ProcurementDetails = (props) => {
                 <Form.Label>Supplier Name</Form.Label>
                 <Form.Control
                   style={disabledInput}
-                  defaultValue={props.rowData['Supplier Name']}
+                  defaultValue={selectedPro['supplier_name']}
                   disabled
                 />
               </Form.Group>
               <Form.Group as={Col} xs={3} style={{ marginRight: '20px', width: '30%' }}>
                 <Form.Label>Phone no.</Form.Label>
-                <Form.Control style={disabledInput} defaultValue="8941555367" disabled />
+                <Form.Control style={disabledInput} defaultValue={selectedPro['phone']} disabled />
               </Form.Group>
             </div>
             <div className="m-3 d-flex">
@@ -161,13 +171,13 @@ const ProcurementDetails = (props) => {
                 <p className="mb-1" style={{ color: '#62728D' }}>
                   Address
                 </p>
-                <p>22/13 Bajanai koil 2nd street, Choolaimedu chennai-94</p>
+                {selectedPro['address']}
               </div>
               <div style={{ marginRight: '20px', width: '30%' }}>
                 <p className="mb-1" style={{ color: '#62728D' }}>
                   Phone No.
                 </p>
-                <p>1234567890</p>
+                {selectedPro['phone']}
               </div>
             </div>
           </div>
@@ -183,16 +193,16 @@ const ProcurementDetails = (props) => {
               <tbody className="mb-1">
                 <tr>
                   <td style={tableRow}>Total Bill Amount :</td>
-                  <td>₹ 10,000.00</td>
+                  <td>₹ {selectedPro['purchase_total']}</td>
                 </tr>
                 <tr>
                   <td style={tableRow}>Total Paid:</td>
-                  <td style={{ color: '#00875A' }}>₹ 2,000.00</td>
+                  <td style={{ color: '#00875A' }}>₹ {selectedPro['paid_amount']}</td>
                 </tr>
                 <tr style={{ borderBottom: '2px solid #EBEEF0', color: '#EBEEF0' }}></tr>
                 <tr>
                   <td style={tableRow}>Outstandings :</td>
-                  <td style={{ color: '#DE350B' }}>₹ 8,000.00/-</td>
+                  <td style={{ color: '#DE350B' }}>₹ {selectedPro['outstandings']}/-</td>
                 </tr>
               </tbody>
             </table>
@@ -203,12 +213,26 @@ const ProcurementDetails = (props) => {
 
       {tableData.length > 0 && tableHeading.length > 0 ? (
         <Container ref={containerRef} className="ag-theme-alpine mt-5" style={tableContainer}>
-          <TabComponent showTab={showTab} showPurchase={showPurchase} tabName={'Purchase'} />
+          <TabComponent
+            showTab={showTab}
+            showPurchase={showPurchase}
+            tabName={'Purchase'}
+            paymentCategory="procurement"
+            paymentRefId={selectedPro.item_id}
+          />
           <Container style={gridStyle}>
             {showPurchase ? (
-              <ProcurementPurchase tableHeading={tableHeading} tableData={tableData} />
+              <ProcurementPurchase
+                tableHeading={tableHeading}
+                tableData={tableData}
+                footerValues={footerValues}
+              />
             ) : (
-              <ProcurementPayment />
+              <ProcurementPayment
+                tableHeaders={paymentTableHeaders}
+                tableData={paymentTableData}
+                footerValues={paymentFooterValues}
+              />
             )}
           </Container>
         </Container>

@@ -15,38 +15,123 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import NewProcurement from '../components/procurement/NewProcurement.jsx';
 import ProcurementDetails from '../components/procurement/ProcurementDetails.jsx';
+import {
+  proTableHeaders,
+  proTableColumns,
+  RESPONSE_MSG
+} from '../components/tapicoPurchase/tp.const.js';
+// API
+import ProService from 'services/purchase.api.js';
+import { SERVICES } from '../services/api.const.js';
+
+import { isNumeric } from '../components/helper/helper.js';
+import Toaster from '../components/helper/Snackbar.jsx';
+import GenericService from '../services/generic.api';
 
 function Procurements() {
   const [procurementData, setProcurementData] = useState([]);
+  const [totalProDataCount, setTotalProDataCount] = useState(0);
+
   const [showNewForm, setShowNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [rowData, setRowData] = useState({});
+  const [searchPayload, setSearchPayload] = useState({});
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
+  const [toasterBackground, setToasterBackground] = useState(null);
+  const [toasterMsg, setToasterMsg] = useState('Tp data saved');
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [selectedPro, setSelectedPro] = useState();
+  const [invoiceNumber, setInvoiceNumber] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3001/procurement')
-      .then((rawResponse) => rawResponse.json())
+    invokeProcurementListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, []);
+
+  const invokeProcurementListAPI = (payload, query = null) => {
+    ProService.getData(SERVICES.TP.QUERY_PARAMS.PROCUREMENT, payload, query)
       .then((response) => {
-        setProcurementData(response.data);
-        console.log(response.data);
+        setProcurementData(response.data.data);
+        setTotalProDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.log('Error in searching Purchase data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
       });
-  }, []);
+  };
+
+  const onTableRowClick = (clickedRow) => {
+    setSelectedPro(clickedRow);
+    setShowDetails(true);
+
+    console.log(selectedPro, 'selectedPro');
+    console.log('Procurement table row clicked');
+    // updateShowTPBackBtn(true);
+    // // Show details section - Store
+    // // Show back btn - Store
+  };
+
+  const onSearchBoxValueChange = (currentInputValue) => {
+    const isPhoneNumberSearch = isNumeric(currentInputValue);
+    const payload = {
+      ...(currentInputValue && {
+        [isPhoneNumberSearch ? 'phone' : 'search_term']: currentInputValue
+      })
+    };
+    setSearchPayload(payload);
+    invokeProcurementListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
+  const proPageChanged = (currentPageNo, rowsPerPage) => {
+    setCurrentRowsPerPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokeProcurementListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  };
+
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = null) => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    if (backgroundClr) {
+      setToasterBackground(backgroundClr);
+      setShouldShowToaster(Math.random());
+    }
+    // setShouldShowToaster(true);
+  };
+
+  const onProcurementSave = (newAddedTp) => {
+    invokeToaster();
+    showForm(false);
+    // updateShowTPBackBtn(false);
+    setProcurementData((tp) => [newAddedTp, ...tp]);
+    invokeProcurementListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
+
+  const hanldeAddProcurementFormClick = () => {
+    GenericService.getInvoiceNo('PROCUREMENT')
+      .then((response) => {
+        setInvoiceNumber(response.data.invoiceNumber);
+      })
+      .catch((error) => {
+        console.log('Error in getting customer data', error);
+      });
+
+    showForm(true);
+    // updateShowTPBackBtn(true);
+  };
+
   const showForm = (shouldShow) => {
     setShowNewForm(shouldShow);
   };
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleShowDetails = (shouldShow, rowData) => {
-    setRowData(rowData);
-    setShowDetails(shouldShow);
+    showForm(false);
+    setShowDetails(false);
   };
 
   const chipStyle = (isSelected) => ({
@@ -79,8 +164,7 @@ function Procurements() {
             <ArrowBackIcon
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                showForm(false);
-                handleShowDetails(false);
+                handleChangePage(false);
               }}
               fontSize="medium"
             />
@@ -94,18 +178,24 @@ function Procurements() {
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showNewForm ? (
-            <NewProcurement />
+            <NewProcurement
+              showForm={showForm}
+              procurementAdded={onProcurementSave}
+              proInvoiceNo={invoiceNumber}
+            />
           ) : (
             <>
               {' '}
-              {showDetails ? (
-                <ProcurementDetails rowData={rowData} />
+              {showDetails && selectedPro ? (
+                <ProcurementDetails selectedPro={selectedPro} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                     <Row>
                       <Col lg="3">
-                        <SearchBox placeHolder={'Search here'}></SearchBox>
+                        <SearchBox
+                          placeHolder={'Search here'}
+                          inputValueChanged={onSearchBoxValueChange}></SearchBox>
                       </Col>
                       <Col lg="2">
                         <DateSelector size="smaller" customLabel="From"></DateSelector>
@@ -137,7 +227,7 @@ function Procurements() {
                             fontWeight: 'bold'
                           }}
                           variant="outlined"
-                          onClick={() => showForm(true)}>
+                          onClick={() => hanldeAddProcurementFormClick(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
                           New Procurement
                         </Button>
@@ -168,32 +258,22 @@ function Procurements() {
                     </Row>
                   </div>
                   <div>
-                    {procurementData.length > 0 ? (
+                    {procurementData ? (
                       <ProcurementTable
                         tableData={procurementData}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        handleChangePage={handleChangePage}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        handleShowDetails={handleShowDetails}
+                        proTableHeaders={proTableHeaders}
+                        proTableColumns={proTableColumns}
+                        totalproDataCount={totalProDataCount}
+                        hanldePageChange={proPageChanged}
+                        tableRowClicked={onTableRowClick}
+                        rowsPerPage={10}
+                        page={5}
                       />
                     ) : (
                       <Box sx={{ display: 'flex' }}>
                         <CircularProgress />
                       </Box>
                     )}
-
-                    {/* <AgGridTable
-                columnDefs={[
-                  { field: 'Purchase date' },
-                  { field: 'Purchase No' },
-                  { field: 'Supplier Name' },
-                  { field: 'Outstandings' },
-                  { field: 'Last payment date' },
-                  { field: 'Approval Status' }
-                ]}
-                rowData={procurementData}
-              /> */}
                   </div>
                 </div>
               )}
@@ -201,6 +281,10 @@ function Procurements() {
           )}
         </Col>
       </Row>
+      <Toaster
+        shouldOpen={shouldShowToaster}
+        message={toasterMsg}
+        backgroundColor={toasterBackground}></Toaster>
     </Container>
   );
 }

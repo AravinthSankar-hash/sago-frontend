@@ -25,6 +25,8 @@ import {
 import { tpTableHeaders, tpTableColumns, RESPONSE_MSG } from './tp.const.js';
 // API
 import TPService from 'services/purchase.api.js';
+import { SERVICES } from '../../services/api.const.js';
+
 import { isNumeric } from '../helper/helper.js';
 import Toaster from '../helper/Snackbar.jsx';
 import GenericService from '../../services/generic.api';
@@ -39,17 +41,26 @@ function Purchases() {
   const [toasterMsg, setToasterMsg] = useState('Tp data saved');
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [invoiceNumber, setInvoiceNumber] = useState('');
+  const [searchPayload, setSearchPayload] = useState({});
 
   useEffect(() => {
-    TPService.getData('TP')
+    invokePurchaseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, []);
+
+  const invokePurchaseListAPI = (payload, query = null) => {
+    TPService.getData(SERVICES.TP.QUERY_PARAMS.TP, payload, query)
       .then((response) => {
-        setTPData(response.data);
-        console.log(response.data.length, 'eadataaaa');
+        setTPData(response.data.data);
+        setTotalTpDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.log('Error in searching Purchase data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
       });
-  }, []);
+  };
 
   const buttonStyle = {
     borderColor: '#00B7FF',
@@ -102,9 +113,9 @@ function Purchases() {
   };
 
   const tpPageChanged = (currentPageNo, rowsPerPage) => {
-    // setCurrentRowsPerPage(rowsPerPage);
-    // console.log('page changed - ', currentPageNo, rowsPerPage);
-    // invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+    setCurrentRowsPerPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokePurchaseListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
   };
 
   const onTPSave = (newAddedTp) => {
@@ -112,25 +123,19 @@ function Purchases() {
     updateShowTPPurchaseNewForm(false);
     updateShowTPBackBtn(false);
     setTPData((tp) => [newAddedTp, ...tp]);
+    invokePurchaseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
 
-  // const onSearchBoxValueChange = (currentInputValue) => {
-  //   const isPhoneNumberSearch = isNumeric(currentInputValue);
-  //   const payload = {
-  //     ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
-  //   };
-  //   TPService.getData('TP', payload)
-  //     .then((response) => {
-  //       setTPData(response.data);
-  //       if (response.data?.length === 0) {
-  //         invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log('Error in searching Purchase data', error);
-  //       invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
-  //     });
-  // };
+  const onSearchBoxValueChange = (currentInputValue) => {
+    const isPhoneNumberSearch = isNumeric(currentInputValue);
+    const payload = {
+      ...(currentInputValue && {
+        [isPhoneNumberSearch ? 'phone' : 'search_term']: currentInputValue
+      })
+    };
+    setSearchPayload(payload);
+    invokePurchaseListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
 
   // Just a generic method to invoke toaster
   const invokeToaster = (msg, backgroundClr = null) => {
@@ -139,8 +144,9 @@ function Purchases() {
     }
     if (backgroundClr) {
       setToasterBackground(backgroundClr);
+      setShouldShowToaster(Math.random());
     }
-    setShouldShowToaster(true);
+    // setShouldShowToaster(true);
   };
 
   return (
@@ -154,7 +160,7 @@ function Purchases() {
       ) : (
         <div>
           {showPurhcaseDetails ? (
-            <TPDetails tpDetails={selectedTP} />
+            <TPDetails selectedTP={selectedTP} />
           ) : (
             <>
               {/* <TPDashboard
@@ -168,7 +174,9 @@ function Purchases() {
                       <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                         <Row>
                           <Col lg="3">
-                            <SearchBox placeHolder={'Search here'}></SearchBox>
+                            <SearchBox
+                              placeHolder={'Search here'}
+                              inputValueChanged={onSearchBoxValueChange}></SearchBox>
                           </Col>
                           <Col lg="2">
                             <DateSelector size="smaller" customLabel="From"></DateSelector>
@@ -216,7 +224,7 @@ function Purchases() {
                         </Row>
                       </div>
                       <div>
-                        {tPData.length == 3 ? (
+                        {tPData ? (
                           <TPPurchaseTable
                             tableData={tPData}
                             tpTableHeaders={tpTableHeaders}
