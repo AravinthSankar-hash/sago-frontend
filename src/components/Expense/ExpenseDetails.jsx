@@ -23,12 +23,12 @@ const ExpenseDetails = ({ selectedExpense }) => {
     setTableData(selectedExpense.items);
     setPaymentTableData(selectedExpense.payments);
     setPaymentFooterValues({
-      expense_total: selectedExpense.sub_total,
+      purchase_total: selectedExpense.purchase_total,
       payment_status: selectedExpense.payment_status
     });
     setFooterValues({
       sub_total: selectedExpense.sub_total,
-      labour_charge: (3 / 100) * selectedExpense.sub_total,
+      labour_charge: ((3 / 100) * selectedExpense.sub_total).toFixed(2),
       vehicle_rent: 300,
       purchase_total: selectedExpense.purchase_total,
       commission: 76,

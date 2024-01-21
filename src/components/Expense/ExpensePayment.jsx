@@ -114,14 +114,14 @@ const ExpensePayment = (props) => {
         <tbody>
           <tr>
             <td style={tableBody}>purchase Total :</td>
-            <td style={{ fontWeight: 'bold' }}>₹ 2,58,456.00</td>
+            <td style={{ fontWeight: 'bold' }}>₹ {footerValues.purchase_total}</td>
           </tr>
         </tbody>
       </table>
       <div style={approvalStatus}>
         <div className="m-3">
           <span style={{ marginRight: '50px', color: '#62728D' }}>Expense Status:</span>
-          <span style={{ color: '#00B7FF' }}>Pending</span>
+          <span style={{ color: '#00B7FF' }}>{footerValues.payment_status}</span>
         </div>
       </div>
     </>
