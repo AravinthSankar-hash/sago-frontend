@@ -12,7 +12,6 @@ function getData(type, data = {}, query = null) {
 }
 
 function create({ type, data }) {
-  alert(type);
   console.log(type, 'ygutfgvh');
   return request({
     url: `${ROUTES.BASE_ROUTE}${ROUTES[type]}`,

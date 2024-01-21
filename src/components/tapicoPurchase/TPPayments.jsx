@@ -111,14 +111,14 @@ function TPPayments(props) {
         <tbody>
           <tr>
             <td style={tableBody}>purchase Total :</td>
-            <td style={{ fontWeight: 'bold' }}>₹ 2,58,456.00</td>
+            <td style={{ fontWeight: 'bold' }}>₹ {footerValues.amount_paid}</td>
           </tr>
         </tbody>
       </table>
       <div style={approvalStatus}>
         <div className="m-3">
           <span style={{ marginRight: '50px', color: '#62728D' }}>Approval Status:</span>
-          <span style={{ color: '#00B7FF' }}>Pending</span>
+          <span style={{ color: '#00B7FF' }}>{footerValues.payment_status}</span>
         </div>
       </div>
     </>

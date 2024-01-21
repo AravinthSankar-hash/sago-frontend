@@ -25,7 +25,10 @@ function TPDetails(props) {
     ];
     setTableData(combinedTableData);
     setPaymentTableData(selectedTP.payments);
-    setPaymentFooterValues({ amount_paid: selectedTP.paid_amount });
+    setPaymentFooterValues({
+      amount_paid: selectedTP.paid_amount,
+      payment_status: selectedTP.payment_status
+    });
     setFooterValues({
       total_weight: combinedTableData[0].total_weight,
       vehicle_weight: combinedTableData[0].vehicle_weight,
@@ -34,7 +37,8 @@ function TPDetails(props) {
       labour_charges: selectedTP.labour_charges,
       vehicle_rent: selectedTP.vehicle_rent,
       commission: selectedTP.commission,
-      grand_total: selectedTP.grand_total
+      grand_total: selectedTP.grand_total,
+      payment_status: selectedTP.payment_status
     });
   }, []);
 
