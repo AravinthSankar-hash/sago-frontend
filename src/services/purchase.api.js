@@ -12,6 +12,7 @@ function getData(type, data = {}, query = null) {
 }
 
 function create({ type, data }) {
+  alert('3');
   console.log(type, 'ygutfgvh');
   return request({
     url: `${ROUTES.BASE_ROUTE}${ROUTES[type]}`,
@@ -21,9 +22,9 @@ function create({ type, data }) {
   });
 }
 
-const TPService = {
+const ApiService = {
   getData,
   create
 };
 
-export default TPService;
+export default ApiService;
