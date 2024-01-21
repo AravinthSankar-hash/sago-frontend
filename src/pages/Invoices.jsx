@@ -8,7 +8,6 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
-import ProcurementTable from '../components/procurement/ProcurementTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -18,38 +17,44 @@ import FormControl from '@mui/material/FormControl';
 import GsInvoiceDetails from 'components/invoice/GsInvoiceDetails.jsx';
 // import DcSalesInvoices from 'components/Invoice/DcInvoicesDetails.jsx';
 import TsInvoiceDetails from '../components/invoice/TsInvoiceDetails.jsx';
+import InvoiceTable from 'components/invoice/InvoiceTable.jsx';
+import SaleService from 'services/sale.api.js';
+import { SERVICES } from 'services/api.const.js';
+import { useUpdateShowSalesBackBtn } from '../store/store.js';
+import { invoiceTableColumns, invoiceTableHeaders } from 'components/sales/sale.const.js';
+import DcDetails from 'components/sales/DcSales/DcDetails.jsx';
+import TsDetails from 'components/sales/TS/TsDetails.jsx';
+import GsDetails from 'components/sales/GS/GsDetails.jsx';
 
 function Invoices() {
-  const [procurementData, setProcurementData] = useState([]);
+  const [salesInvoices, setsalesInvoices] = useState([]);
+  const [totalDataCount, setTotalDataCount] = useState(0);
   const [showNewForm, setShowNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const updateShowSalesBackBtn = useUpdateShowSalesBackBtn(); // Method to update bool, if back btn is clicked
+  const [selectedRowData, setSelectedRowData] = useState({});
+  const [showSaleDetails, setShowSaleDetails] = useState(false);
   const [page, setPage] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [rowData, setRowData] = useState({});
 
   useEffect(() => {
-    fetch('http://localhost:3001/procurement')
-      .then((rawResponse) => rawResponse.json())
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI({}, `page=${0 + 1}&limit=${10}`);
+  }, []);
+
+  const invokeSearchAPI = (payload, query = null) => {
+    SaleService.getSales(SERVICES.SALE.SALE_TYPES.all, payload, query)
       .then((response) => {
-        setProcurementData(response.data);
-        console.log(response.data);
+        setsalesInvoices(response.data.data);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.log('Error in searching sale invoices', error);
       });
-  }, []);
+  };
   const showForm = (shouldShow) => {
     setShowNewForm(shouldShow);
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleShowDetails = (shouldShow, rowData) => {
-    setRowData(rowData);
-    setShowDetails(shouldShow);
   };
 
   const chipStyle = (isSelected) => ({
@@ -74,16 +79,30 @@ function Invoices() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0); // Reset to the first page when changing rows per page
   };
+
+  const invoicePageChanged = (currentPageNo, rowsPerPage) => {
+    setPage(rowsPerPage);
+    console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokeSearchAPI({}, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  };
+
+  const onTableRowClick = (clickedRow) => {
+    setSelectedRowData(clickedRow);
+
+    // Show back btn - Store
+    updateShowSalesBackBtn(true);
+    setShowSaleDetails(true);
+  };
+
   return (
     <Container style={{ background: '#EBEEF0' }}>
       <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
         <Col>
-          {showDetails ? (
+          {showSaleDetails ? (
             <ArrowBackIcon
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                showForm(false);
-                handleShowDetails(false);
+                setShowSaleDetails(false);
               }}
               fontSize="medium"
             />
@@ -95,8 +114,14 @@ function Invoices() {
       </Row>
       <Row>
         <Col className="d-flex flex-column justify-content-center">
-          {showDetails ? (
-            <TsInvoiceDetails rowData={rowData} />
+          {showSaleDetails ? (
+            selectedRowData.sale_type === 'dc' ? (
+              <DcDetails selectedRowData={selectedRowData} />
+            ) : selectedRowData.sale_type === 'tippi' ? (
+              <TsDetails selectedRowData={selectedRowData} />
+            ) : (
+              <GsDetails selectedRowData={selectedRowData} />
+            )
           ) : (
             <div style={{ padding: '0 12px', margin: '0 28px' }}>
               <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
@@ -159,32 +184,23 @@ function Invoices() {
                 </Row>
               </div>
               <div>
-                {procurementData.length > 0 ? (
-                  <ProcurementTable
-                    tableData={procurementData}
+                {salesInvoices?.length > 0 ? (
+                  <InvoiceTable
+                    tableData={salesInvoices}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    tableHeaders={invoiceTableHeaders}
+                    tableColumns={invoiceTableColumns}
+                    totalDataCount={totalDataCount}
+                    hanldePageChange={invoicePageChanged}
+                    tableRowClicked={onTableRowClick}
                     rowsPerPage={rowsPerPage}
                     page={page}
-                    handleChangePage={handleChangePage}
-                    handleChangeRowsPerPage={handleChangeRowsPerPage}
-                    handleShowDetails={handleShowDetails}
                   />
                 ) : (
                   <Box sx={{ display: 'flex' }}>
                     <CircularProgress />
                   </Box>
                 )}
-
-                {/* <AgGridTable
-                columnDefs={[
-                  { field: 'Purchase date' },
-                  { field: 'Purchase No' },
-                  { field: 'Supplier Name' },
-                  { field: 'Outstandings' },
-                  { field: 'Last payment date' },
-                  { field: 'Approval Status' }
-                ]}
-                rowData={procurementData}
-              /> */}
               </div>
             </div>
           )}

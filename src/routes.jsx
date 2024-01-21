@@ -11,7 +11,6 @@ import Dashboard from './pages/Dashboard.jsx';
 import Payments from 'pages/Payments.jsx';
 import Sales from 'pages/Sales.jsx';
 import Inventory from 'pages/Inventory.jsx';
-import YourComponent from 'pages/sampleADDDELETE.jsx';
 
 function AppRoutes() {
   return (
@@ -26,7 +25,7 @@ function AppRoutes() {
       <Route path="/approvals" element={<Approvals />} />
       <Route path="/invoice" element={<Invoices />} />
       <Route path="/catalog" element={<Catalog />} />
-      <Route path="/inventory" element={<YourComponent />} />
+      <Route path="/inventory" element={<Inventory />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
