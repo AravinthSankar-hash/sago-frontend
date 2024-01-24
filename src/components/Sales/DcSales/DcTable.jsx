@@ -13,6 +13,7 @@ import {
 import '../../../css/index.css';
 import { useState } from 'react';
 import { TABLE_ROW_SIZE_OPTIONS } from '../sale.const.js';
+import dayjs from 'dayjs';
 
 const DcTable = (props) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -113,7 +114,9 @@ const DcTable = (props) => {
                   {tableColumns.map((columnKey, colIdx) => {
                     return (
                       <StyledTableCell key={colIdx} align="left">
-                        {tableRow[columnKey]}
+                        {columnKey === 'sale_date'
+                          ? dayjs(tableRow[columnKey]).format('DD MMM YY')
+                          : tableRow[columnKey]}
                       </StyledTableCell>
                     );
                   })}
