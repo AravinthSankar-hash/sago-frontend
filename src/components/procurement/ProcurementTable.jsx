@@ -148,7 +148,7 @@ const ProcurementTable = (props) => {
                               padding: '0px 4px',
                               borderRadius: '3px',
                               display: 'flex',
-                              margin: '16px',
+                              margin: '8px',
                               fontSize: 11,
                               ...approvalStyle
                             }}>

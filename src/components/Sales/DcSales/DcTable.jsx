@@ -42,29 +42,6 @@ const DcTable = (props) => {
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
       color: Outstandings < 0 ? '#DE350B' : '#62728D'
-    },
-
-    '&.approval-status': {
-      width: 'fit-content',
-      padding: '0px 4px',
-      borderRadius: '3px',
-      display: 'flex',
-      margin: '16px'
-    },
-    '&.approved': {
-      backgroundColor: '#00875A',
-      color: '#FFFFFF',
-      fontSize: 11
-    },
-    '&.rejected': {
-      backgroundColor: '#DE350B',
-      color: '#FFFFFF',
-      fontSize: 11
-    },
-    '&.pending': {
-      backgroundColor: '#00B7FF',
-      color: '#FFFFFF',
-      fontSize: 11
     }
   }));
 
@@ -112,11 +89,89 @@ const DcTable = (props) => {
               return (
                 <StyledTableRow key={RowIdx} onClick={() => tableRowClicked(tableRow)}>
                   {tableColumns.map((columnKey, colIdx) => {
+                    let paymentStyle = {};
+                    let isNumber;
+                    let cellContent;
+                    let numberStyle;
+                    if (columnKey === 'outstandings') {
+                      // Your existing logic for the "Outstanding" column
+                      const outstandingValue = tableRow[columnKey];
+                      const outstandingStyle = {
+                        color: outstandingValue < 0 ? '#DE350B' : '#62728D'
+                      };
+                      cellContent = (
+                        <span style={outstandingStyle}>
+                          {outstandingValue < 0 ? '- ₹ ' : ' ₹ '}
+                          {Math.abs(outstandingValue)}
+                        </span>
+                      );
+                    } else if (columnKey === 'payment_status') {
+                      // Logic for the "Approval Status" column
+                      const paymentStatus = tableRow[columnKey];
+                      switch (paymentStatus) {
+                        case 'PAID':
+                          paymentStyle = {
+                            backgroundColor: '#E3FCEF',
+                            color: '#006644'
+                          };
+                          break;
+                        case 'NOT_PAID':
+                          paymentStyle = {
+                            backgroundColor: '#FFEBE6',
+                            color: '#BF2600'
+                          };
+                          break;
+                        default:
+                          // paymentStyle = {
+                          //   backgroundColor: '#00B7FF',
+                          //   color: '#FFFFFF'
+                          // };
+                          break;
+                      }
+                      cellContent = (
+                        <div
+                          style={{
+                            width: 'fit-content',
+                            padding: '0px 4px',
+                            borderRadius: '3px',
+                            display: 'flex',
+                            margin: '8px',
+                            fontSize: 11,
+                            ...paymentStyle
+                          }}>
+                          {tableRow[columnKey] && tableRow[columnKey] == 'NOT_PAID'
+                            ? 'UNPAID'
+                            : tableRow[columnKey]}
+                        </div>
+                      );
+                    } else if (columnKey === 'sale_date') {
+                      cellContent = dayjs(tableRow[columnKey]).format('DD MMM YY');
+                    } else if (columnKey === 'payment_due_date') {
+                      cellContent = dayjs(tableRow[columnKey]).format('DD MMM YY');
+                    } else {
+                      // Common logic for formatting numbers
+                      isNumber = typeof tableRow[columnKey] === 'number';
+                      numberStyle = {
+                        color: isNumber
+                          ? tableRow[columnKey] < 0
+                            ? '#DE350B'
+                            : '#62728D'
+                          : 'inherit'
+                      };
+                      cellContent = (
+                        <span style={numberStyle}>
+                          {isNumber
+                            ? `${tableRow[columnKey] < 0 ? '-' : ''}${Math.abs(
+                                tableRow[columnKey]
+                              )}`
+                            : tableRow[columnKey]}
+                        </span>
+                      );
+                    }
+
                     return (
                       <StyledTableCell key={colIdx} align="left">
-                        {columnKey === 'sale_date'
-                          ? dayjs(tableRow[columnKey]).format('DD MMM YY')
-                          : tableRow[columnKey]}
+                        {cellContent}
                       </StyledTableCell>
                     );
                   })}

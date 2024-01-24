@@ -148,8 +148,8 @@ const TPPurchaseTable = (props) => {
                             width: 'fit-content',
                             padding: '0px 4px',
                             borderRadius: '3px',
+                            // margin: '8px',
                             display: 'flex',
-                            margin: '16px',
                             fontSize: 11,
                             ...approvalStyle
                           }}>
