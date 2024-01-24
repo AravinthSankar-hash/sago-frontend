@@ -57,29 +57,6 @@ const ExpenseTable = (props) => {
     [`&.${tableCellClasses.body}`]: {
       fontSize: 14,
       color: Outstandings < 0 ? '#DE350B' : '#62728D'
-    },
-
-    '&.approval-status': {
-      width: 'fit-content',
-      padding: '0px 4px',
-      borderRadius: '3px',
-      display: 'flex',
-      margin: '16px'
-    },
-    '&.approved': {
-      backgroundColor: '#00875A',
-      color: '#FFFFFF',
-      fontSize: 11
-    },
-    '&.rejected': {
-      backgroundColor: '#DE350B',
-      color: '#FFFFFF',
-      fontSize: 11
-    },
-    '&.pending': {
-      backgroundColor: '#00B7FF',
-      color: '#FFFFFF',
-      fontSize: 11
     }
   }));
 
@@ -170,7 +147,7 @@ const ExpenseTable = (props) => {
                           padding: '0px 4px',
                           borderRadius: '3px',
                           display: 'flex',
-                          margin: '16px',
+                          margin: '8px',
                           fontSize: 11,
                           ...approvalStyle
                         }}>
