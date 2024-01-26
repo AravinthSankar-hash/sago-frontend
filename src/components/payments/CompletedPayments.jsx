@@ -43,7 +43,6 @@ function CompletedPayments() {
   });
 
   const handleChipSelect = (labelObj) => {
-    let chipPayload = {};
     if (labelObj.displayLabel === 'All') {
       setSelectedChips(['All']);
       setSearchPayload((existingPayload) => {
@@ -52,7 +51,13 @@ function CompletedPayments() {
           payment_category: ['All']
         };
       });
-      invokeSearchAPI();
+      invokeSearchAPI(
+        {
+          ...searchPayload,
+          payment_category: ['All']
+        },
+        `page=${0 + 1}&limit=${rowsPerPage}`
+      );
       return;
     }
 
@@ -74,15 +79,18 @@ function CompletedPayments() {
 
     setSelectedChips([...updatedChipSet]);
     setSearchPayload((existingPayload) => {
-      console.log(existingPayload, 'exist');
-      chipPayload = {
+      return {
         ...existingPayload,
         payment_category: [...updatedChipSet]
       };
-      console.log(chipPayload, 'chipPayload');
-      return chipPayload;
     });
-    invokeSearchAPI(chipPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+    invokeSearchAPI(
+      {
+        ...searchPayload,
+        payment_category: [...updatedChipSet]
+      },
+      `page=${0 + 1}&limit=${rowsPerPage}`
+    );
   };
 
   const onSearchBoxValueChange = (currentInputValue) => {
@@ -103,7 +111,6 @@ function CompletedPayments() {
     invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   }, []);
   const invokeSearchAPI = (payload, query = null) => {
-    console.log(payload, 'payload');
     GeneralService.getPayments(payload, query)
       .then((response) => {
         setTotalDataCount(response.data.totalCount);
