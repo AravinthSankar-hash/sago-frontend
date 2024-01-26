@@ -15,7 +15,7 @@ import { useState } from 'react';
 import { TABLE_ROW_SIZE_OPTIONS } from '../sales/sale.const.js';
 
 const InvoiceTable = (props) => {
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_SIZE_OPTIONS[0]);
   const [page, setPage] = useState(0);
   const {
     tableData,
@@ -63,6 +63,12 @@ const InvoiceTable = (props) => {
     bottom: 0,
     zIndex: 2
   }));
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+    // Invoke parent
+    hanldePageChange(newPage, rowsPerPage);
+  };
 
   // This will be invoked whenver we change size of the page in the table
   const handleChangeRowsPerPage = (event) => {
@@ -176,14 +182,14 @@ const InvoiceTable = (props) => {
           <TableBody>
             {' '}
             <StyledTablePaginationRow>
-              <TableCell colSpan={tableHeaders.length}>
+              <TableCell colSpan={tableHeaders?.length}>
                 <TablePagination
                   rowsPerPageOptions={TABLE_ROW_SIZE_OPTIONS}
                   component="div"
                   count={totalDataCount}
                   rowsPerPage={rowsPerPage}
                   page={page}
-                  onPageChange={hanldePageChange}
+                  onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </TableCell>

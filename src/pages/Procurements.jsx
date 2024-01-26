@@ -34,10 +34,8 @@ function Procurements() {
 
   const [showNewForm, setShowNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState([]);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
-  const [rowData, setRowData] = useState({});
   const [searchPayload, setSearchPayload] = useState({});
   const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
   const [toasterBackground, setToasterBackground] = useState(null);
@@ -151,11 +149,6 @@ function Procurements() {
     setSelectedChips([label]);
   };
 
-  // Function to handle rows per page change
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to the first page when changing rows per page
-  };
   return (
     <Container style={{ background: '#EBEEF0' }}>
       <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
@@ -262,8 +255,8 @@ function Procurements() {
                         totalproDataCount={totalProDataCount}
                         hanldePageChange={proPageChanged}
                         tableRowClicked={onTableRowClick}
-                        rowsPerPage={10}
-                        page={5}
+                        rowsPerPage={currentRowsPerPage}
+                        page={page}
                       />
                     ) : (
                       <Box sx={{ display: 'flex' }}>

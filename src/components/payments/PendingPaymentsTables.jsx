@@ -12,9 +12,11 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import '../../css/index.css';
+import dayjs from 'dayjs';
+import { TABLE_ROW_SIZE_OPTIONS } from '../sales/sale.const.js';
 
 const PendingPaymentsTable = (props) => {
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_SIZE_OPTIONS[0]);
   const [page, setPage] = useState(0);
   const { tableData, tableHeaders, tableColumns, hanldePageChange, totalDataCount } = props;
 
@@ -54,6 +56,12 @@ const PendingPaymentsTable = (props) => {
     bottom: 0,
     zIndex: 2
   }));
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+    // Invoke parent
+    hanldePageChange(newPage, rowsPerPage);
+  };
 
   // This will be invoked whenver we change size of the page in the table
   const handleChangeRowsPerPage = (event) => {
@@ -132,6 +140,8 @@ const PendingPaymentsTable = (props) => {
                           {tableRow[columnKey] ? tableRow[columnKey] : ''}
                         </div>
                       );
+                    } else if (columnKey === 'payment_due_date' || columnKey === 'payment_date') {
+                      cellContent = dayjs(tableRow[columnKey]).format('DD MMM YY');
                     } else {
                       // Common logic for formatting numbers
                       isNumber = typeof tableRow[columnKey] === 'number';
@@ -168,12 +178,12 @@ const PendingPaymentsTable = (props) => {
             <StyledTablePaginationRow>
               <TableCell colSpan={tableHeaders?.length}>
                 <TablePagination
-                  rowsPerPageOptions={[10, 25, 100]}
+                  rowsPerPageOptions={TABLE_ROW_SIZE_OPTIONS}
                   component="div"
                   count={totalDataCount}
                   rowsPerPage={rowsPerPage}
                   page={page}
-                  onPageChange={hanldePageChange}
+                  onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </TableCell>

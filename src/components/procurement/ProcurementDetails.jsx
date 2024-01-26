@@ -219,6 +219,7 @@ const ProcurementDetails = ({ selectedPro }) => {
             tabName={'Purchase'}
             paymentCategory="procurement"
             paymentRefId={selectedPro.item_id}
+            partyName={selectedPro.supplier_name}
           />
           <Container style={gridStyle}>
             {showPurchase ? (

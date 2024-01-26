@@ -19,9 +19,9 @@ function addPayment(data) {
   });
 }
 
-function getPayments(data = {}) {
+function getPayments(data = {}, query = null) {
   return request({
-    url: `${ROUTES.TRANSACTIONS}`,
+    url: `${ROUTES.TRANSACTIONS}?${query ? '&' + query : ''}`,
     method: 'POST',
     data: data
   });

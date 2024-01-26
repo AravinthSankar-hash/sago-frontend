@@ -38,16 +38,19 @@ function Invoices() {
   const [page, setPage] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [rowData, setRowData] = useState({});
+  const [searchPayload, setSearchPayload] = useState({});
+  const [selectedValue, setSelectedValue] = useState('');
 
   useEffect(() => {
     // By default invoke the fetch API with default limit and page
-    invokeSearchAPI({}, `page=${0 + 1}&limit=${10}`);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`, 'all');
   }, []);
 
-  const invokeSearchAPI = (payload, query = null) => {
-    SaleService.getSales(SERVICES.SALE.SALE_TYPES.all, payload, query)
+  const invokeSearchAPI = (payload, query = null, type) => {
+    SaleService.getSales(SERVICES.SALE.SALE_TYPES[type], payload, query)
       .then((response) => {
         setsalesInvoices(response.data.data);
+        setTotalDataCount(response.data.totalCount);
       })
       .catch((error) => {
         console.log('Error in searching sale invoices', error);
@@ -74,16 +77,10 @@ function Invoices() {
     setSelectedChips([label]);
   };
 
-  // Function to handle rows per page change
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to the first page when changing rows per page
-  };
-
   const invoicePageChanged = (currentPageNo, rowsPerPage) => {
-    setPage(rowsPerPage);
+    setRowsPerPage(rowsPerPage);
     console.log('page changed - ', currentPageNo, rowsPerPage);
-    invokeSearchAPI({}, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`, 'all');
   };
 
   const onTableRowClick = (clickedRow) => {
@@ -92,6 +89,33 @@ function Invoices() {
     // Show back btn - Store
     updateShowSalesBackBtn(true);
     setShowSaleDetails(true);
+  };
+
+  const onSearchBoxValueChange = (currentInputValue) => {
+    let apiPayload = {};
+    setSearchPayload((existingPayload) => {
+      apiPayload = {
+        ...existingPayload,
+        search_term: currentInputValue
+      };
+
+      return apiPayload;
+    });
+    invokeSearchAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`, 'all');
+  };
+
+  const handleSelectChange = (event) => {
+    setSelectedValue(event.target.value);
+    let apiPayload = {};
+    setSearchPayload((existingPayload) => {
+      apiPayload = {
+        ...existingPayload,
+        search_term: selectedValue
+      };
+
+      return apiPayload;
+    });
+    invokeSearchAPI(selectedValue, `page=${0 + 1}&limit=${rowsPerPage}`, event.target.value);
   };
 
   return (
@@ -127,17 +151,23 @@ function Invoices() {
               <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                 <Row>
                   <Col lg="3">
-                    <SearchBox placeHolder={'Search here'}></SearchBox>
+                    <SearchBox
+                      placeHolder={'Search here'}
+                      inputValueChanged={onSearchBoxValueChange}></SearchBox>
                   </Col>
                   <Col lg="2">
                     <FormControl
                       sx={{ m: 1, minWidth: 220, marginTop: '0px', backgroundColor: 'white' }}
                       size="small">
-                      <InputLabel id="demo-select-small-label">DC</InputLabel>
-                      <Select labelId="demo-select-small-label" label="DC">
-                        <MenuItem value={10}>Wage</MenuItem>
-                        <MenuItem value={20}>Cleaning</MenuItem>
-                        <MenuItem value={30}>Manager</MenuItem>
+                      <InputLabel id="demo-select-small-label">Select</InputLabel>
+                      <Select
+                        labelId="demo-select-small-label"
+                        label="Select"
+                        value={selectedValue}
+                        onChange={handleSelectChange}>
+                        <MenuItem value={'dc'}>Delivery Challan</MenuItem>
+                        <MenuItem value={'tippi'}>Thippi Sales</MenuItem>
+                        <MenuItem value={'general'}>General Sales</MenuItem>
                       </Select>
                     </FormControl>
                   </Col>
@@ -187,7 +217,6 @@ function Invoices() {
                 {salesInvoices?.length > 0 ? (
                   <InvoiceTable
                     tableData={salesInvoices}
-                    handleChangeRowsPerPage={handleChangeRowsPerPage}
                     tableHeaders={invoiceTableHeaders}
                     tableColumns={invoiceTableColumns}
                     totalDataCount={totalDataCount}

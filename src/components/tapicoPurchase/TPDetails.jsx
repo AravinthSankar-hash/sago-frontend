@@ -256,6 +256,7 @@ function TPDetails(props) {
             tabName={'Purchase'}
             paymentCategory="tp"
             paymentRefId={selectedTP?.item_id}
+            partyName={selectedTP.broker_name}
           />
           <Container style={gridStyle}>
             {showPurchase ? (

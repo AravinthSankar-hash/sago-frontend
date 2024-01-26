@@ -231,6 +231,7 @@ const ExpenseDetails = ({ selectedExpense }) => {
             tabName={'Expense'}
             paymentCategory="expense"
             paymentRefId={selectedExpense.item_id}
+            partyName={selectedExpense.party_name}
           />
           <Container style={gridStyle}>
             {showPurchase ? (

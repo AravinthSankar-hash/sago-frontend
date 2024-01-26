@@ -19,8 +19,15 @@ function PendingPayments() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalDataCount, setTotalDataCount] = useState(0);
   const [page, setPage] = useState(0);
+  const [searchPayload, setSearchPayload] = useState({ payment_status: 'NOT_PAID' });
 
-  const filterOptions = ['All', 'Sales', 'Procurement', 'Expense', 'Topico Purchase'];
+  const filterOptions = [
+    { displayLabel: 'All', value: 'All' },
+    { displayLabel: 'Sales', value: 'sale' },
+    { displayLabel: 'Procurement', value: 'procurement' },
+    { displayLabel: 'Expense', value: 'expense' },
+    { displayLabel: 'Topico Purchase', value: 'tp' }
+  ];
 
   const chipStyle = (isSelected) => ({
     border: '2px solid #00b7ff',
@@ -35,23 +42,28 @@ function PendingPayments() {
     cursor: 'pointer'
   });
 
-  const handleChipSelect = (label) => {
-    if (label === 'All') {
+  const handleChipSelect = (labelObj) => {
+    if (labelObj.displayLabel === 'All') {
       setSelectedChips(['All']);
       invokeSearchAPI({ payment_category: ['All'] });
       return;
     }
 
     const updatedChipSet = new Set(selectedChips);
+    console.log(selectedChips, 'selectedChips');
 
     if (updatedChipSet.has('All')) {
       updatedChipSet.delete('All');
     }
 
-    if (updatedChipSet.has(label)) {
-      updatedChipSet.delete(label);
+    if (updatedChipSet.has(labelObj.value)) {
+      updatedChipSet.delete(labelObj.value);
     } else {
-      updatedChipSet.add(label);
+      updatedChipSet.add(labelObj.value);
+    }
+
+    if (!updatedChipSet.size) {
+      updatedChipSet.add('All');
     }
 
     setSelectedChips([...updatedChipSet]);
@@ -60,37 +72,36 @@ function PendingPayments() {
 
   useEffect(() => {
     // By default invoke the fetch API with default limit and page
-    invokeSearchAPI({}, `page=${0 + 1}&limit=${10}`);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   }, []);
   const invokeSearchAPI = (payload, query = null) => {
     GeneralService.getPayments(payload, query)
       .then((response) => {
-        const pendingPayments = response.data.filter((payment) => {
-          return payment?.payment_status !== 'PAID';
-        });
-        setPendingPayments(pendingPayments);
+        setTotalDataCount(response.data.totalCount);
+        setPendingPayments(response.data.data);
       })
       .catch((error) => {
         console.log('Error in getPayments', error);
       });
   };
 
-  // Function to handle rows per page change
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to the first page when changing rows per page
-  };
-
   const pageChanged = (currentPageNo, rowsPerPage) => {
-    setPage(rowsPerPage);
+    setRowsPerPage(rowsPerPage);
     console.log('page changed - ', currentPageNo, rowsPerPage);
+    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
   };
 
   const onSearchBoxValueChange = (currentInputValue) => {
-    const payload = {
-      search_term: currentInputValue
-    };
-    invokeSearchAPI(payload, `page=${0 + 1}&limit=${10}`);
+    let apiPayload = {};
+    setSearchPayload((existingPayload) => {
+      apiPayload = {
+        ...existingPayload,
+        search_term: currentInputValue
+      };
+
+      return apiPayload;
+    });
+    invokeSearchAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
 
   return (
@@ -123,13 +134,13 @@ function PendingPayments() {
         <Row className="mt-3">
           <Stack direction="row" spacing={1}>
             <p style={{ color: '#6B778C' }}>Filter by : </p>
-            {filterOptions.map((filterOption, index) => (
+            {filterOptions.map((filterOptionObj, index) => (
               <Chip
                 key={index}
-                label={filterOption}
-                color={selectedChips.includes(filterOption) ? 'primary' : 'default'}
-                onClick={() => handleChipSelect(filterOption)}
-                sx={chipStyle(selectedChips.includes(filterOption))}
+                label={filterOptionObj.displayLabel}
+                // color={selectedChips.includes(filterOptionObj.value) ? 'primary' : 'default'}
+                onClick={() => handleChipSelect(filterOptionObj)}
+                sx={chipStyle(selectedChips.includes(filterOptionObj.value))}
               />
             ))}
           </Stack>
@@ -139,7 +150,6 @@ function PendingPayments() {
         {pendingPayments?.length > 0 ? (
           <PendingPaymentsTable
             tableData={pendingPayments}
-            handleChangeRowsPerPage={handleChangeRowsPerPage}
             tableHeaders={tableHeaders}
             tableColumns={tableColumns}
             totalDataCount={totalDataCount}

@@ -32,12 +32,12 @@ const Dc = () => {
   const [totalInvoicesDataCount, setTotalInvoicesDataCount] = useState(0);
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [toasterBackground, setToasterBackground] = useState(null);
-  const [toasterMsg, setToasterMsg] = useState('Customer data saved');
+  const [toasterMsg, setToasterMsg] = useState('DC Sales data saved');
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
   const [selectedRowData, setSelectedRowData] = useState({});
-  const [totalDataCount, setTotalDataCount] = useState(0);
+  const [searchPayload, setSearchPayload] = useState({});
 
   // Store
   const updateShowSalesBackBtn = useUpdateShowSalesBackBtn(); // Method to update bool, if back btn is clicked
@@ -48,7 +48,7 @@ const Dc = () => {
 
   useEffect(() => {
     // By default invoke the fetch API with default limit and page
-    invokeSearchAPI({}, `page=${0 + 1}&limit=${10}`);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   }, []);
 
   const invokeSearchAPI = (payload, query = null) => {
@@ -76,16 +76,24 @@ const Dc = () => {
 
   const showForm = (shouldShow) => {
     // Show back btn - Store
-    updateShowSalesBackBtn(true);
+    updateShowSalesBackBtn(shouldShow);
 
     // Show Add Sales form - Store
-    updateShowDCSalesNewForm(true);
+    updateShowDCSalesNewForm(shouldShow);
+  };
+
+  const onDCSave = (newAddedDC) => {
+    invokeToaster();
+    showForm(false);
+    // updateShowTPBackBtn(false);
+    setsalesInvoices((DC) => [newAddedDC, ...DC]);
+    // invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
 
   const dcPageChanged = (currentPageNo, rowsPerPage) => {
-    setPage(rowsPerPage);
+    setRowsPerPage(rowsPerPage);
     console.log('page changed - ', currentPageNo, rowsPerPage);
-    invokeSearchAPI({}, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
   };
 
   const onTableRowClick = (clickedRow) => {
@@ -114,24 +122,24 @@ const Dc = () => {
     setSelectedChips([label]);
   };
 
-  // Function to handle rows per page change
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to the first page when changing rows per page
-  };
-
   const onSearchBoxValueChange = (currentInputValue) => {
-    const payload = {
-      search_term: currentInputValue
-    };
-    invokeSearchAPI(payload, `page=${0 + 1}&limit=${10}`);
+    let apiPayload = {};
+    setSearchPayload((existingPayload) => {
+      apiPayload = {
+        ...existingPayload,
+        search_term: currentInputValue
+      };
+
+      return apiPayload;
+    });
+    invokeSearchAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
   return (
     <Container style={{ background: '#EBEEF0' }}>
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showDCSalesNewForm ? (
-            <NewDcSalesForm />
+            <NewDcSalesForm dcAdded={onDCSave} />
           ) : (
             <>
               {' '}
@@ -210,10 +218,9 @@ const Dc = () => {
                     {salesInvoices.length > 0 ? (
                       <DcTable
                         tableData={salesInvoices}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
                         tableHeaders={dcTableHeaders}
                         tableColumns={dcTableColumns}
-                        totalDataCount={totalDataCount}
+                        totalDataCount={totalInvoicesDataCount}
                         hanldePageChange={dcPageChanged}
                         tableRowClicked={onTableRowClick}
                         rowsPerPage={rowsPerPage}

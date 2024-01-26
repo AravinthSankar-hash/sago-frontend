@@ -280,6 +280,7 @@ const GsDetails = (props) => {
             paymentRefId={selectedRowData.itemId}
             showPurchase={showPurchase}
             tabName={'Sales'}
+            partyName={selectedRowData.customer_name}
           />
           <Container style={gridStyle}>
             {showPurchase ? (
