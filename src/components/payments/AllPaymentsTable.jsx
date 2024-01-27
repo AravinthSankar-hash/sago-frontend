@@ -12,11 +12,20 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import '../../css/index.css';
+import dayjs from 'dayjs';
+import { TABLE_ROW_SIZE_OPTIONS } from '../sales/sale.const.js';
 
 const AllPaymentsTable = (props) => {
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [page, setPage] = useState(0);
-  const { tableData, tableHeaders, tableColumns, hanldePageChange, totalDataCount } = props;
+  const {
+    tableData,
+    tableHeaders,
+    tableColumns,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    totalDataCount,
+    rowsPerPage,
+    page
+  } = props;
 
   const Wrapper = styled('div')({
     display: 'flex',
@@ -56,14 +65,6 @@ const AllPaymentsTable = (props) => {
     zIndex: 2
   }));
 
-  // This will be invoked whenver we change size of the page in the table
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value));
-    setPage(0);
-    // Invoke parent
-    hanldePageChange(0, parseInt(event.target.value));
-  };
-
   return (
     <Wrapper>
       <TableContainer component={Paper}>
@@ -96,6 +97,10 @@ const AllPaymentsTable = (props) => {
                           {Math.abs(outstandingValue)}
                         </span>
                       );
+                    } else if (columnKey === 'payment_due_date') {
+                      cellContent = dayjs(tableRow[columnKey]).format('DD MMM YY');
+                    } else if (columnKey === 'payment_date') {
+                      cellContent = dayjs(tableRow[columnKey]).format('DD MMM YY');
                     } else if (columnKey === 'type') {
                       // Logic for the "Approval Status" column
                       const paymentStatus = tableRow[columnKey];
@@ -113,10 +118,6 @@ const AllPaymentsTable = (props) => {
                           };
                           break;
                         default:
-                          // paymentStyle = {
-                          //   backgroundColor: '#00B7FF',
-                          //   color: '#FFFFFF'
-                          // };
                           break;
                       }
                       cellContent = (
@@ -168,12 +169,12 @@ const AllPaymentsTable = (props) => {
             <StyledTablePaginationRow>
               <TableCell colSpan={tableHeaders?.length}>
                 <TablePagination
-                  rowsPerPageOptions={[10, 25, 100]}
+                  rowsPerPageOptions={TABLE_ROW_SIZE_OPTIONS}
                   component="div"
                   count={totalDataCount}
                   rowsPerPage={rowsPerPage}
                   page={page}
-                  onPageChange={hanldePageChange}
+                  onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </TableCell>
