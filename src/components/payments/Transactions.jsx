@@ -93,14 +93,51 @@ function AllPayments() {
     );
   };
 
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
+  const onDateChange = (selectedDate, dateType) => {
+    if (!selectedDate) {
+      // If the date is not selected, reset the corresponding state
+      if (dateType === 'from') {
+        setFromDate(null);
+      } else if (dateType === 'to') {
+        setToDate(null);
+      }
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        from_date: undefined,
+        to_date: undefined
+      }));
+    } else {
+      // If the date is selected, update the corresponding state
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: selectedDate
+      }));
+      if (dateType === 'from') {
+        setFromDate(selectedDate);
+      } else if (dateType === 'to') {
+        setToDate(selectedDate);
+      }
+    }
+  };
   useEffect(() => {
-    // By default invoke the fetch API with default limit and page
-    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
-  }, []);
+    let apiPayload = searchPayload;
+    // Check if any fromDate and toDate are missing
+    if (!fromDate || !toDate) {
+      apiPayload = {
+        ...searchPayload,
+        from_date: undefined,
+        to_date: undefined
+      };
+    }
+    invokeSearchAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  }, [fromDate, toDate]);
+
   const invokeSearchAPI = (payload, query = null) => {
     GeneralService.getPayments(payload, query)
       .then((response) => {
-        // setPage(page);
         setRowsPerPage(rowsPerPage);
         setTotalDataCount(response.data.totalCount);
         setAllPayments(response.data.data);
@@ -132,10 +169,13 @@ function AllPayments() {
               inputValueChanged={onSearchBoxValueChange}></SearchBox>
           </Col>
           <Col lg="2">
-            <DateSelector size="smaller" customLabel="From"></DateSelector>
+            <DateSelector
+              dateChangeHanlder={onDateChange}
+              size="smaller"
+              customLabel="From"></DateSelector>
           </Col>
           <Col lg="2">
-            <DateSelector customLabel="To"></DateSelector>
+            <DateSelector dateChangeHanlder={onDateChange} customLabel="To"></DateSelector>
           </Col>
           <Col lg="4" className="d-flex justify-content-end">
             <IconButton size="small">
