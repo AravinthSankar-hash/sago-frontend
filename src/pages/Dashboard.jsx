@@ -1,9 +1,10 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import DateSelector from '../components/helper/DateSelector.jsx';
 import DashboardTab from '../components/dashboard/DashboardTab.jsx';
 import ProductGraph from 'components/dashboard/ProductGraph.jsx';
 import CommonGraph from 'components/dashboard/CommonGraph.jsx';
+import GeneralService from '../services/generic.api.js';
 
 function Dashboard() {
   const containerRef = useRef();
@@ -35,6 +36,22 @@ function Dashboard() {
   const switchTabHandler = (showHideBool) => {
     setShowProductGraph(showHideBool);
   };
+
+  useEffect(() => {
+    invokeDashboardStatsAPI();
+  }, []);
+
+  const [filterPayload, setFilterPayload] = useState({});
+  const [graphData, setGraphData] = useState();
+  function invokeDashboardStatsAPI() {
+    GeneralService.getDashboardStats(filterPayload)
+      .then((response) => {
+        setGraphData(response.data);
+      })
+      .catch((error) => {
+        console.log('Error in invokeDashboardStatsAPI', error);
+      });
+  }
   return (
     <>
       <div>
@@ -64,7 +81,12 @@ function Dashboard() {
         <div ref={containerRef} className="m-3 mt-5" style={tableContainer}>
           <DashboardTab showProductGraph={showProductGraph} switchTab={switchTabHandler} />
           <Container style={gridStyle}>
-            {showProductGraph ? <ProductGraph /> : <CommonGraph />}
+            {graphData && (
+              <>
+                {/* {showProductGraph ? <ProductGraph statisticsData={graphData} /> : <CommonGraph />} */}
+                <ProductGraph statisticsData={graphData} />
+              </>
+            )}
           </Container>
         </div>
       </Container>

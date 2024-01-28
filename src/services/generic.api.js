@@ -34,11 +34,20 @@ function deleteInvoice(query = null) {
   });
 }
 
+function getDashboardStats(data = {}) {
+  return request({
+    url: `inventory/stats`,
+    method: 'POST',
+    data,
+  })
+}
+
 const GeneralService = {
   getInvoiceNo,
   addPayment,
   getPayments,
-  deleteInvoice
+  deleteInvoice,
+  getDashboardStats
 };
 
 export default GeneralService;

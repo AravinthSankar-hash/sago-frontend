@@ -30,24 +30,24 @@ export const areaGraphOptions = {
     xaxis: {
         categories: [1, 2, 3, 4, 5, 6, 7, 8, 9],
         title: {
-            text: 'X axis Name'
+            text: 'Days'
         }
     },
     // Graph Header
     title: {
-        text: 'Any title'
+        text: 'No of bags'
     },
     // Y axis value start, end, and divident
-    yaxis: [
-        {
+    yaxis:
+        [{
             title: {
                 text: 'Y axis name'
             },
             min: 0,
-            max: 900,
-            tickAmount: 9
-        }
-    ],
+            max: 100,
+            tickAmount: 10
+        }],
+    // ],
     // Grid lines
     grid: {
         xaxis: {
@@ -64,8 +64,8 @@ export const areaGraphOptions = {
 };
 export const areaGraphDataPoints = [
     {
-        name: 'No. of bags',
-        data: [145, 522, 318, 545, 219, 223, 852]
+        name: 'Dates',
+        data: [0, 22, 18, 45, 19, 23]
     }
 ];
 
@@ -83,7 +83,7 @@ export const lineGraphOptions = {
         }
     },
     // To fill the graph in color
-    colors: ['#90BE6D', '#00B7FF'],
+    colors: ['#90BE6D', '#F8961E'],
     // Data points display
     dataLabels: {
         enabled: false
@@ -93,12 +93,12 @@ export const lineGraphOptions = {
     xaxis: {
         categories: [1, 2, 3, 4, 5, 6, 7, 8, 9],
         title: {
-            text: 'X axis Name'
+            text: 'Months'
         }
     },
     // Graph Header
     title: {
-        text: 'Any title'
+        text: 'Rupees in (₹)'
     },
     // Y axis value start, end, and divident
     yaxis: [
@@ -168,12 +168,12 @@ export const barGraphOptions = {
 
 export const barGraphDataPoints = [
     {
-        name: 'Sale Rate', //will be displayed on the y-axis
-        data: [30]
+        name: 'Top Rate', //will be displayed on the y-axis
+        data: [3000]
     },
     {
         name: 'Sale Rate', //will be displayed on the y-axis
-        data: [50]
+        data: [500]
     }
 ];
 
@@ -191,3 +191,51 @@ export const donutGraphOptions = {
     }
 };
 export const donutGraphDataPoints = [44, 55, 41, 17];
+
+export const totalOrdersLineOptions = {
+    chart: {
+        height: 70,
+        type: "bar",
+        stacked: true,
+        sparkline: { enabled: true }
+    },
+    plotOptions: {
+        bar: {
+            horizontal: true,
+            barHeight: "20%",
+            colors: { backgroundBarColors: ["#F8961E"] }
+        }
+    },
+    stroke: {
+        width: 0
+    },
+    title: {
+        floating: true,
+        offsetX: -10,
+        offsetY: 5,
+        text: "Total Orders"
+    },
+    subtitle: {
+        floating: true,
+        align: "right",
+        offsetY: 0,
+        text: "44%",
+        style: {
+            fontSize: "20px"
+        }
+    },
+    tooltip: {
+        enabled: false
+    },
+    xaxis: {
+        categories: ["Total Orders"]
+    },
+    yaxis: {
+        max: 100
+    },
+    fill: {
+        opacity: 1
+    }
+};
+
+export const totalOrdersLinePoints = [{ name: "Process 1", data: [41] }];
