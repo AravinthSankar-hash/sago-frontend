@@ -75,6 +75,11 @@ function Procurements() {
     // // Show back btn - Store
   };
 
+  const onDeleteList = (shouldShow) => {
+    setShowDetails(shouldShow);
+    invokeProcurementListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
+
   const onSearchBoxValueChange = (currentInputValue) => {
     setPage(0);
     const isPhoneNumberSearch = isNumeric(currentInputValue);
@@ -140,9 +145,9 @@ function Procurements() {
     setShowNewForm(shouldShow);
   };
 
-  const handleChangePage = (event, newPage) => {
-    showForm(false);
-    setShowDetails(false);
+  const handleChangePage = (shouldShow) => {
+    showForm(shouldShow);
+    setShowDetails(shouldShow);
   };
 
   const chipStyle = (isSelected) => ({
@@ -189,7 +194,7 @@ function Procurements() {
             <>
               {' '}
               {showDetails && selectedPro ? (
-                <ProcurementDetails selectedPro={selectedPro} />
+                <ProcurementDetails selectedPro={selectedPro} onDeleteListApi={onDeleteList} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>

@@ -105,6 +105,12 @@ const Dc = () => {
     updateShowDCDetails(true);
   };
 
+  const onDeleteList = (shouldShow) => {
+    updateShowSalesBackBtn(shouldShow);
+    updateShowDCDetails(shouldShow);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  };
+
   const chipStyle = (isSelected) => ({
     border: '2px solid #00b7ff',
     borderRadius: '8px',
@@ -144,7 +150,7 @@ const Dc = () => {
             <>
               {' '}
               {showDCDetails ? (
-                <DcDetails selectedRowData={selectedRowData} />
+                <DcDetails selectedRowData={selectedRowData} onDeleteListApi={onDeleteList} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>

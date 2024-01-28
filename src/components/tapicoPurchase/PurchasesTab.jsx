@@ -124,6 +124,12 @@ function Purchases() {
     invokePurchaseListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${currentRowsPerPage}`);
   };
 
+  const onDeleteList = (shouldShow) => {
+    updateShowTPBackBtn(shouldShow);
+    updateShowPurhcaseDetails(shouldShow);
+    invokePurchaseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
+
   const onTPSave = (newAddedTp) => {
     invokeToaster();
     updateShowTPPurchaseNewForm(false);
@@ -167,7 +173,7 @@ function Purchases() {
       ) : (
         <div>
           {showPurhcaseDetails ? (
-            <TPDetails selectedTP={selectedTP} />
+            <TPDetails selectedTP={selectedTP} onDeleteListApi={onDeleteList} />
           ) : (
             <>
               {/* <TPDashboard
