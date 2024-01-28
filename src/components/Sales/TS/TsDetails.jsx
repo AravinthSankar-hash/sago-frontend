@@ -7,9 +7,10 @@ import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import TabComponent from '../../helper/TabComponent';
 import TsSales from './TsSales';
 import TsPayment from './TsPayment';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import GenericService from '../../../services/generic.api';
 
-const TsDetails = (props) => {
-  const { selectedRowData } = props;
+const TsDetails = ({ selectedRowData, onDeleteListApi }) => {
   const [itemTableData, setItemTableData] = useState([]);
   const [footerValues, setFooterValues] = useState([]);
   const [paymentFooterValues, setPaymentFooterValues] = useState([]);
@@ -85,6 +86,21 @@ const TsDetails = (props) => {
     color: '#5C9EB8'
   };
 
+  const deleteInvoice = (itemId) => {
+    invokeDeleteApi(`type=sale&ref_id=${itemId}`);
+  };
+
+  const invokeDeleteApi = (query = null) => {
+    GenericService.deleteInvoice(query)
+      .then((response) => {
+        onDeleteListApi(false);
+      })
+      .catch((error) => {
+        console.log('Error in searching Purchase data', error);
+        // invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
   return (
     <>
       <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
@@ -137,7 +153,11 @@ const TsDetails = (props) => {
               <LocalPrintshopOutlinedIcon fontSize={'small'} /> Print{' '}
             </div>
             <div className="m-2 d-flex" style={{ color: '#B2B3B7', marginLeft: '10px' }}>
-              <MoreVertOutlinedIcon />
+              {/* <MoreVertOutlinedIcon /> */}
+              <DeleteOutlineOutlinedIcon
+                style={{ color: '#BF2600  ' }}
+                onClick={() => deleteInvoice(selectedRowData?.item_id)}
+              />
             </div>
           </div>
         </div>
@@ -245,7 +265,7 @@ const TsDetails = (props) => {
           <TabComponent
             showTab={showTab}
             paymentCategory="tippi"
-            paymentRefId={selectedRowData.itemId}
+            paymentRefId={selectedRowData.item_id}
             showPurchase={showPurchase}
             tabName={'Sales'}
             partyName={selectedRowData.customer_name}

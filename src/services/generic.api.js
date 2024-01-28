@@ -27,10 +27,18 @@ function getPayments(data = {}, query = null) {
   });
 }
 
+function deleteInvoice(query = null) {
+  return request({
+    url: `${ROUTES.BASE_ROUTE}?${query ? '&' + query : ''}`,
+    method: 'DELETE'
+  });
+}
+
 const GeneralService = {
   getInvoiceNo,
   addPayment,
-  getPayments
+  getPayments,
+  deleteInvoice
 };
 
 export default GeneralService;

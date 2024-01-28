@@ -8,9 +8,12 @@ import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import TabComponent from '../helper/TabComponent';
 import ExpenseTab from './ExpenseTab';
 import ExpensePayment from './ExpensePayment';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import GenericService from '../../services/generic.api';
+
 // import '../css/index.css';
 
-const ExpenseDetails = ({ selectedExpense }) => {
+const ExpenseDetails = ({ selectedExpense, onDeleteListApi }) => {
   const [tableData, setTableData] = useState([]);
   const [paymentFooterValues, setPaymentFooterValues] = useState([]);
   const [paymentTableData, setPaymentTableData] = useState([]);
@@ -82,6 +85,21 @@ const ExpenseDetails = ({ selectedExpense }) => {
     color: '#5C9EB8'
   };
 
+  const deleteInvoice = (itemId) => {
+    invokeDeleteApi(`type=expense&ref_id=${itemId}`);
+  };
+
+  const invokeDeleteApi = (query = null) => {
+    GenericService.deleteInvoice(query)
+      .then((response) => {
+        onDeleteListApi(false);
+      })
+      .catch((error) => {
+        console.log('Error in searching Purchase data', error);
+        // invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
   return (
     <>
       <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
@@ -146,7 +164,11 @@ const ExpenseDetails = ({ selectedExpense }) => {
             <div
               className="m-2 d-flex align-items-center"
               style={{ color: '#B2B3B7', marginLeft: '10px' }}>
-              <MoreVertOutlinedIcon />
+              {/* <MoreVertOutlinedIcon /> */}
+              <DeleteOutlineOutlinedIcon
+                style={{ color: '#BF2600  ' }}
+                onClick={() => deleteInvoice(selectedExpense?.item_id)}
+              />
             </div>{' '}
           </div>
         </div>

@@ -42,6 +42,7 @@ function Purchases() {
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [invoiceNumber, setInvoiceNumber] = useState('');
   const [searchPayload, setSearchPayload] = useState({});
+  const [page, setPage] = useState(0);
 
   useEffect(() => {
     invokePurchaseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
@@ -112,10 +113,21 @@ function Purchases() {
     // Show back btn - Store
   };
 
-  const tpPageChanged = (currentPageNo, rowsPerPage) => {
-    setCurrentRowsPerPage(rowsPerPage);
-    console.log('page changed - ', currentPageNo, rowsPerPage);
-    invokePurchaseListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  const handleChangeRowsPerPage = (event) => {
+    setCurrentRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+    invokePurchaseListAPI(searchPayload, `page=${0 + 1}&limit=${parseInt(event.target.value, 10)}`);
+  };
+
+  const tpPageChanged = (event, currentPageNo) => {
+    setPage(currentPageNo);
+    invokePurchaseListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${currentRowsPerPage}`);
+  };
+
+  const onDeleteList = (shouldShow) => {
+    updateShowTPBackBtn(shouldShow);
+    updateShowPurhcaseDetails(shouldShow);
+    invokePurchaseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
 
   const onTPSave = (newAddedTp) => {
@@ -127,6 +139,7 @@ function Purchases() {
   };
 
   const onSearchBoxValueChange = (currentInputValue) => {
+    setPage(0);
     const isPhoneNumberSearch = isNumeric(currentInputValue);
     const payload = {
       ...(currentInputValue && {
@@ -160,7 +173,7 @@ function Purchases() {
       ) : (
         <div>
           {showPurhcaseDetails ? (
-            <TPDetails selectedTP={selectedTP} />
+            <TPDetails selectedTP={selectedTP} onDeleteListApi={onDeleteList} />
           ) : (
             <>
               {/* <TPDashboard
@@ -231,9 +244,10 @@ function Purchases() {
                             tpTableColumns={tpTableColumns}
                             totalTpDataCount={totalTpDataCount}
                             hanldePageChange={tpPageChanged}
+                            handleChangeRowsPerPage={handleChangeRowsPerPage}
+                            rowsPerPage={currentRowsPerPage}
                             tableRowClicked={onTableRowClick}
-                            rowsPerPage={10}
-                            page={5}
+                            page={page}
                           />
                         ) : (
                           <Box sx={{ display: 'flex' }}>

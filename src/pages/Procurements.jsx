@@ -51,6 +51,7 @@ function Procurements() {
   const invokeProcurementListAPI = (payload, query = null) => {
     ProService.getData(SERVICES.TP.QUERY_PARAMS.PROCUREMENT, payload, query)
       .then((response) => {
+        // setCurrentRowsPerPage(currentRowsPerPage);
         setProcurementData(response.data.data);
         setTotalProDataCount(response.data.totalCount);
         if (response.data?.data.length === 0) {
@@ -74,7 +75,13 @@ function Procurements() {
     // // Show back btn - Store
   };
 
+  const onDeleteList = (shouldShow) => {
+    setShowDetails(shouldShow);
+    invokeProcurementListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
+
   const onSearchBoxValueChange = (currentInputValue) => {
+    setPage(0);
     const isPhoneNumberSearch = isNumeric(currentInputValue);
     const payload = {
       ...(currentInputValue && {
@@ -84,10 +91,21 @@ function Procurements() {
     setSearchPayload(payload);
     invokeProcurementListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
-  const proPageChanged = (currentPageNo, rowsPerPage) => {
-    setCurrentRowsPerPage(rowsPerPage);
-    console.log('page changed - ', currentPageNo, rowsPerPage);
-    invokeProcurementListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  const proPageChanged = (event, currentPageNo) => {
+    setPage(currentPageNo);
+    invokeProcurementListAPI(
+      searchPayload,
+      `page=${currentPageNo + 1}&limit=${currentRowsPerPage}`
+    );
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setCurrentRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+    invokeProcurementListAPI(
+      searchPayload,
+      `page=${0 + 1}&limit=${parseInt(event.target.value, 10)}`
+    );
   };
 
   // Just a generic method to invoke toaster
@@ -127,9 +145,9 @@ function Procurements() {
     setShowNewForm(shouldShow);
   };
 
-  const handleChangePage = (event, newPage) => {
-    showForm(false);
-    setShowDetails(false);
+  const handleChangePage = (shouldShow) => {
+    showForm(shouldShow);
+    setShowDetails(shouldShow);
   };
 
   const chipStyle = (isSelected) => ({
@@ -176,7 +194,7 @@ function Procurements() {
             <>
               {' '}
               {showDetails && selectedPro ? (
-                <ProcurementDetails selectedPro={selectedPro} />
+                <ProcurementDetails selectedPro={selectedPro} onDeleteListApi={onDeleteList} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
@@ -255,6 +273,7 @@ function Procurements() {
                         totalproDataCount={totalProDataCount}
                         hanldePageChange={proPageChanged}
                         tableRowClicked={onTableRowClick}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
                         rowsPerPage={currentRowsPerPage}
                         page={page}
                       />

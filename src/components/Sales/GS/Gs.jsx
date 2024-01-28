@@ -124,6 +124,12 @@ const Gs = () => {
     updateShowGSDetails(true);
   };
 
+  const onDeleteList = (shouldShow) => {
+    updateShowSalesBackBtn(shouldShow);
+    updateShowGSDetails(shouldShow);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  };
+
   const onSearchBoxValueChange = (currentInputValue) => {
     let apiPayload = {};
     setSearchPayload((existingPayload) => {
@@ -145,7 +151,7 @@ const Gs = () => {
             <>
               {' '}
               {showGSDetails ? (
-                <GsDetails selectedRowData={selectedRowData} />
+                <GsDetails selectedRowData={selectedRowData} onDeleteListApi={onDeleteList} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>

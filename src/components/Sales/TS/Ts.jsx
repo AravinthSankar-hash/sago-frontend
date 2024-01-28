@@ -33,7 +33,6 @@ const TpSales = () => {
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [salesInvoices, setsalesInvoices] = useState([]);
-  const [totalInvoicesDataCount, setTotalInvoicesDataCount] = useState(0);
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [toasterBackground, setToasterBackground] = useState(null);
   const [toasterMsg, setToasterMsg] = useState('Customer data saved');
@@ -100,6 +99,12 @@ const TpSales = () => {
     updateShowTSDetails(true);
   };
 
+  const onDeleteList = (shouldShow) => {
+    updateShowSalesBackBtn(shouldShow);
+    updateShowTSDetails(shouldShow);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  };
+
   const showForm = (shouldShow) => {
     // Show back btn - Store
     updateShowSalesBackBtn(shouldShow);
@@ -158,7 +163,7 @@ const TpSales = () => {
             <>
               {' '}
               {showTSDetails ? (
-                <TsDetails selectedRowData={selectedRowData} />
+                <TsDetails selectedRowData={selectedRowData} onDeleteListApi={onDeleteList} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
@@ -252,6 +257,10 @@ const TpSales = () => {
           )}
         </Col>
       </Row>
+      <Toaster
+        shouldOpen={shouldShowToaster}
+        message={toasterMsg}
+        backgroundColor={toasterBackground}></Toaster>
     </Container>
   );
 };
