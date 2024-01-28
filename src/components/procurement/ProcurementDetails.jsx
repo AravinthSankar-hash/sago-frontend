@@ -8,9 +8,12 @@ import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import TabComponent from '../helper/TabComponent';
 import ProcurementPurchase from './ProcurementPurchase';
 import ProcurementPayment from './ProcurementPayment';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import GenericService from '../../services/generic.api';
+
 // import '../css/index.css';
 
-const ProcurementDetails = ({ selectedPro }) => {
+const ProcurementDetails = ({ selectedPro, onDeleteListApi }) => {
   // const { selectedPro } = props;
   const [tableData, setTableData] = useState([]);
   const [paymentFooterValues, setPaymentFooterValues] = useState([]);
@@ -82,6 +85,20 @@ const ProcurementDetails = ({ selectedPro }) => {
     color: '#5C9EB8'
   };
 
+  const deleteInvoice = (itemId) => {
+    invokeDeleteApi(`type=procurement&ref_id=${itemId}`);
+  };
+  const invokeDeleteApi = (query = null) => {
+    GenericService.deleteInvoice(query)
+      .then((response) => {
+        onDeleteListApi(false);
+      })
+      .catch((error) => {
+        console.log('Error in searching Purchase data', error);
+        // invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
+
   return (
     <>
       <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
@@ -146,7 +163,11 @@ const ProcurementDetails = ({ selectedPro }) => {
             <div
               className="m-2 d-flex align-items-center"
               style={{ color: '#B2B3B7', marginLeft: '10px' }}>
-              <MoreVertOutlinedIcon />
+              {/* <MoreVertOutlinedIcon /> */}
+              <DeleteOutlineOutlinedIcon
+                style={{ color: '#BF2600  ' }}
+                onClick={() => deleteInvoice(selectedPro?.item_id)}
+              />
             </div>{' '}
           </div>
         </div>
@@ -219,6 +240,7 @@ const ProcurementDetails = ({ selectedPro }) => {
             tabName={'Purchase'}
             paymentCategory="procurement"
             paymentRefId={selectedPro.item_id}
+            partyName={selectedPro.supplier_name}
           />
           <Container style={gridStyle}>
             {showPurchase ? (

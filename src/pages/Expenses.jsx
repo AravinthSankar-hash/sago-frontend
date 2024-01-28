@@ -129,6 +129,11 @@ const Expenses = () => {
     setShowDetails(shouldShow);
   };
 
+  const onDeleteList = (shouldShow) => {
+    setShowDetails(shouldShow);
+    invokeExpenseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
+
   const handleShowDetails = (shouldShow, rowData) => {
     setRowData(rowData);
     setShowDetails(shouldShow);
@@ -183,7 +188,7 @@ const Expenses = () => {
             <>
               {' '}
               {showDetails ? (
-                <ExpenseDetails selectedExpense={selectedExpense} />
+                <ExpenseDetails selectedExpense={selectedExpense} onDeleteListApi={onDeleteList} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>

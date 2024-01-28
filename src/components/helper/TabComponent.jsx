@@ -8,7 +8,7 @@ import PaymentModel from './paymentModal.jsx';
 import { RESPONSE_MSG } from '../sales/sale.const.js';
 
 const TabComponent = (props) => {
-  const { paymentCategory, paymentRefId } = props;
+  const { paymentCategory, paymentRefId, partyName } = props;
   const [dialogVisible, setDialogVisible] = useState(false);
   const [toasterBackground, setToasterBackground] = useState(null);
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
@@ -70,6 +70,7 @@ const TabComponent = (props) => {
           <PaymentModel
             paymentCategory={paymentCategory}
             paymentRefId={paymentRefId}
+            partyName={partyName}
             visible={dialogVisible}
             onClose={handleDialogClose}
           />

@@ -23,7 +23,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const PaymentModal = (props) => {
-  const { paymentCategory, paymentRefId, onClose } = props;
+  const { paymentCategory, paymentRefId, partyName, onClose } = props;
   const {
     register,
     control,
@@ -50,6 +50,7 @@ const PaymentModal = (props) => {
       paymentPayload.push({
         category_type: paymentCategory,
         payment_ref_id: paymentRefId,
+        partner_name: partyName,
         payment_date: formData[`selectedDate_${index}`],
         mode: formData[`mode_${index}`],
         amount_paid: +formData[`amount_${index}`]

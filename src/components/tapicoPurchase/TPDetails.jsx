@@ -7,9 +7,11 @@ import TPPurchases from './TPPurchases.jsx';
 import TPPayments from './TPPayments.jsx';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import TabComponent from 'components/helper/TabComponent.jsx';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import GenericService from '../../services/generic.api';
 
-function TPDetails(props) {
-  const { selectedTP } = props;
+function TPDetails({ selectedTP, onDeleteListApi }) {
+  // const { selectedTP } = props;
   console.log(selectedTP, 'tppp');
   const [tableData, setTableData] = useState([]);
   const [paymentFooterValues, setPaymentFooterValues] = useState([]);
@@ -87,6 +89,20 @@ function TPDetails(props) {
     textAlign: 'right',
     color: '#5C9EB8'
   };
+
+  const deleteInvoice = (itemId) => {
+    invokeDeleteApi(`type=tp&ref_id=${itemId}`);
+  };
+  const invokeDeleteApi = (query = null) => {
+    GenericService.deleteInvoice(query)
+      .then((response) => {
+        onDeleteListApi(false);
+      })
+      .catch((error) => {
+        console.log('Error in searching Purchase data', error);
+        // invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
+      });
+  };
   // const detailsSection = {
   //   backgroundColor: 'white',
   //   borderRadius: '10px',
@@ -162,7 +178,11 @@ function TPDetails(props) {
             <div
               className="m-2 d-flex align-items-center"
               style={{ color: '#B2B3B7', marginLeft: '10px' }}>
-              <MoreVertOutlinedIcon />
+              {/* <MoreVertOutlinedIcon /> */}
+              <DeleteOutlineOutlinedIcon
+                style={{ color: '#BF2600' }}
+                onClick={() => deleteInvoice(selectedTP?.item_id)}
+              />
             </div>
           </div>
         </div>
@@ -256,6 +276,7 @@ function TPDetails(props) {
             tabName={'Purchase'}
             paymentCategory="tp"
             paymentRefId={selectedTP?.item_id}
+            partyName={selectedTP.broker_name}
           />
           <Container style={gridStyle}>
             {showPurchase ? (

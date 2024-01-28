@@ -33,13 +33,13 @@ const TpSales = () => {
   const [selectedChips, setSelectedChips] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [salesInvoices, setsalesInvoices] = useState([]);
-  const [totalInvoicesDataCount, setTotalInvoicesDataCount] = useState(0);
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [toasterBackground, setToasterBackground] = useState(null);
   const [toasterMsg, setToasterMsg] = useState('Customer data saved');
   const [page, setPage] = useState(0);
   const [selectedRowData, setSelectedRowData] = useState({});
   const [totalDataCount, setTotalDataCount] = useState(0);
+  const [searchPayload, setSearchPayload] = useState({});
 
   // Store
   const updateShowSalesBackBtn = useUpdateShowSalesBackBtn(); // Method to update bool, if back btn is clicked
@@ -50,14 +50,14 @@ const TpSales = () => {
 
   useEffect(() => {
     // By default invoke the fetch API with default limit and page
-    invokeSearchAPI({}, `page=${0 + 1}&limit=${10}`);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   }, []);
 
   const invokeSearchAPI = (payload, query = null) => {
     SaleService.getSales(SERVICES.SALE.SALE_TYPES.tippi, payload, query)
       .then((response) => {
         setsalesInvoices(response.data.data);
-        setTotalInvoicesDataCount(response.data.totalCount);
+        setTotalDataCount(response.data.totalCount);
         if (response.data?.data.length === 0) {
           invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
         }
@@ -79,7 +79,15 @@ const TpSales = () => {
   const tsPageChanged = (currentPageNo, rowsPerPage) => {
     setPage(rowsPerPage);
     console.log('page changed - ', currentPageNo, rowsPerPage);
-    invokeSearchAPI({}, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  };
+
+  const onTSSave = (newAddedTS) => {
+    invokeToaster();
+    setRowsPerPage(false);
+    // updateShowTPBackBtn(false);
+    setsalesInvoices((TS) => [newAddedTS, ...TS]);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
 
   const onTableRowClick = (clickedRow) => {
@@ -91,12 +99,18 @@ const TpSales = () => {
     updateShowTSDetails(true);
   };
 
+  const onDeleteList = (shouldShow) => {
+    updateShowSalesBackBtn(shouldShow);
+    updateShowTSDetails(shouldShow);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  };
+
   const showForm = (shouldShow) => {
     // Show back btn - Store
-    updateShowSalesBackBtn(true);
+    updateShowSalesBackBtn(shouldShow);
 
     // Show Add TS Sales form - Store
-    updateShowTSSalesNewForm(true);
+    updateShowTSSalesNewForm(shouldShow);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -126,22 +140,30 @@ const TpSales = () => {
     setPage(0); // Reset to the first page when changing rows per page
   };
   const onSearchBoxValueChange = (currentInputValue) => {
-    const payload = {
+    let apiPayload = {};
+    const searchNamePayload = {
       search_term: currentInputValue
     };
-    invokeSearchAPI(payload, `page=${0 + 1}&limit=${10}`);
+    setSearchPayload((existingPayload) => {
+      apiPayload = {
+        ...existingPayload,
+        search_term: currentInputValue
+      };
+      return apiPayload;
+    });
+    invokeSearchAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
   return (
     <Container style={{ background: '#EBEEF0' }}>
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showTSSalesNewForm ? (
-            <NewTsForm />
+            <NewTsForm tsAdded={onTSSave} />
           ) : (
             <>
               {' '}
               {showTSDetails ? (
-                <TsDetails selectedRowData={selectedRowData} />
+                <TsDetails selectedRowData={selectedRowData} onDeleteListApi={onDeleteList} />
               ) : (
                 <div style={{ padding: '0 12px', margin: '0 28px' }}>
                   <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
@@ -215,7 +237,6 @@ const TpSales = () => {
                     {salesInvoices.length > 0 ? (
                       <TsTable
                         tableData={salesInvoices}
-                        handleChangeRowsPerPage={handleChangeRowsPerPage}
                         tableHeaders={tsTableHeaders}
                         tableColumns={tsTableColumns}
                         totalDataCount={totalDataCount}
@@ -236,6 +257,10 @@ const TpSales = () => {
           )}
         </Col>
       </Row>
+      <Toaster
+        shouldOpen={shouldShowToaster}
+        message={toasterMsg}
+        backgroundColor={toasterBackground}></Toaster>
     </Container>
   );
 };

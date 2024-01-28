@@ -12,7 +12,7 @@ import SaleService from '../../../services/sale.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 import { RESPONSE_MSG } from '../sale.const.js';
 
-function NewTsForm() {
+function NewTsForm(tsAdded) {
   const {
     register,
     handleSubmit,
@@ -132,11 +132,10 @@ function NewTsForm() {
   const invokeCreateAPI = (type, data) => {
     SaleService.createSale({ type, data })
       .then((response) => {
-        invokeToaster(RESPONSE_MSG.SALE_CREATED_SUCCESSFULLY);
+        tsAdded(data);
       })
       .catch((error) => {
         console.log('Error in creating sale', error);
-        invokeToaster(RESPONSE_MSG.FAILED, 'red');
       });
   };
 
