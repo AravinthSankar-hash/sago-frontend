@@ -34,6 +34,50 @@ function PendingApprovals() {
       });
   }, []);
 
+  const [selectedChips, setSelectedChips] = useState(['procurement']);
+  const filterOptions = [
+    { displayLabel: 'Procurement', value: 'procurement' },
+    { displayLabel: 'Expense', value: 'expense' },
+    { displayLabel: 'Topico Purchase', value: 'tp' }
+  ];
+
+  const chipStyle = (isSelected) => ({
+    border: '2px solid #00b7ff',
+    borderRadius: '8px',
+    backgroundColor: isSelected ? '#00b7ff' : 'white',
+    color: isSelected ? 'white' : '#00b7ff',
+    ':hover': {
+      background: '#00b7ff',
+      color: 'white',
+      boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)'
+    },
+    cursor: 'pointer'
+  });
+
+  const handleChipSelect = (labelObj) => {
+    if (labelObj.displayLabel === 'All') {
+      setSelectedChips(['All']);
+      return;
+    }
+
+    const updatedChipSet = new Set(selectedChips);
+
+    if (updatedChipSet.has('All')) {
+      updatedChipSet.delete('All');
+    }
+
+    if (updatedChipSet.has(labelObj.value)) {
+      updatedChipSet.delete(labelObj.value);
+    } else {
+      updatedChipSet.add(labelObj.value);
+    }
+
+    if (!updatedChipSet.size) {
+      updatedChipSet.add('All');
+    }
+    setSelectedChips([...updatedChipSet]);
+  };
+
   const onTableRowClick = (rowData) => {
     setClickedRowData(rowData);
     updateShowPendingApprovalDetails(true);
@@ -75,10 +119,15 @@ function PendingApprovals() {
                   <Row className="mt-3">
                     <Stack direction="row" spacing={1}>
                       <p style={{ color: '#6B778C' }}>Filter by : </p>
-                      <Chip label="All" color={'primary'} />
-                      <Chip label="Procurement" color={'default'} />
-                      <Chip label="Tapico Purchase" color={'default'} />
-                      <Chip label="Expenses" color={'default'} />
+                      {filterOptions.map((filterOptionObj, index) => (
+                        <Chip
+                          key={index}
+                          label={filterOptionObj.displayLabel}
+                          // color={selectedChips.includes(filterOption) ? 'primary' : 'default'}
+                          onClick={() => handleChipSelect(filterOptionObj)}
+                          sx={chipStyle(selectedChips.includes(filterOptionObj.value))}
+                        />
+                      ))}
                     </Stack>
                   </Row>
                 </div>
