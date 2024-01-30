@@ -16,15 +16,16 @@ import '../../../css/index.css';
 import { TABLE_ROW_SIZE_OPTIONS } from '../sale.const.js';
 
 const TsTable = (props) => {
-  const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_SIZE_OPTIONS[0]);
-  const [page, setPage] = useState(0);
   const {
     tableData,
     tableHeaders,
     tableColumns,
-    hanldePageChange,
     tableRowClicked,
-    totalDataCount
+    handleChangePage,
+    handleChangeRowsPerPage,
+    totalDataCount,
+    rowsPerPage,
+    page
   } = props;
 
   const Wrapper = styled('div')({
@@ -33,20 +34,6 @@ const TsTable = (props) => {
     height: '650px',
     margin: '10px'
   });
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    // Invoke parent
-    hanldePageChange(newPage, rowsPerPage);
-  };
-
-  // This will be invoked whenver we change size of the page in the table
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value));
-    setPage(0);
-    // Invoke parent
-    hanldePageChange(0, parseInt(event.target.value));
-  };
 
   const StyledTableCell = styled(TableCell)(({ theme, Outstandings }) => ({
     [`&.${tableCellClasses.head}`]: {

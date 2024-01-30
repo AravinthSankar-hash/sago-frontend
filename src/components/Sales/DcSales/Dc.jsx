@@ -46,14 +46,10 @@ const Dc = () => {
   const showDCDetails = useShowDCDetails(); // Show DC Details Dashboard
   const updateShowDCDetails = useUpdateShowDCDetails(); // Show DC Details Dashboard
 
-  useEffect(() => {
-    // By default invoke the fetch API with default limit and page
-    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
-  }, []);
-
   const invokeSearchAPI = (payload, query = null) => {
     SaleService.getSales(SERVICES.SALE.SALE_TYPES.dc, payload, query)
       .then((response) => {
+        setRowsPerPage(rowsPerPage);
         setsalesInvoices(response.data.data);
         setTotalInvoicesDataCount(response.data.totalCount);
         if (response.data?.data.length === 0) {
@@ -90,10 +86,15 @@ const Dc = () => {
     // invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
 
-  const dcPageChanged = (currentPageNo, rowsPerPage) => {
-    setRowsPerPage(rowsPerPage);
-    console.log('page changed - ', currentPageNo, rowsPerPage);
+  const dcPageChanged = (event, currentPageNo) => {
+    setPage(currentPageNo);
     invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${parseInt(event.target.value, 10)}`);
   };
 
   const onTableRowClick = (clickedRow) => {
@@ -111,6 +112,11 @@ const Dc = () => {
     invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
 
+  const filterOptions = [
+    { displayLabel: 'All', value: 'All' },
+    { displayLabel: 'Paid', value: 'PAID' },
+    { displayLabel: 'Unpaid', value: 'NOT_PAID' }
+  ];
   const chipStyle = (isSelected) => ({
     border: '2px solid #00b7ff',
     borderRadius: '8px',
@@ -123,9 +129,45 @@ const Dc = () => {
     },
     cursor: 'pointer'
   });
-  const handleChipSelect = (label) => {
-    setSelectedChips([]);
-    setSelectedChips([label]);
+  const handleChipSelect = (labelObj) => {
+    let payload = searchPayload;
+    if (labelObj.displayLabel === 'All') {
+      setSelectedChips(['All']);
+      setSearchPayload((searchPayload) => ({
+        ...searchPayload,
+        payment_status: ['All']
+      }));
+      payload = { ...payload, payment_status: ['All'] };
+      invokeSearchAPI(payload, `page=${0 + 1}&limit=${rowsPerPage}`);
+      return;
+    }
+
+    const updatedChipSet = new Set(selectedChips);
+    console.log(selectedChips, 'selectedChips');
+
+    if (updatedChipSet.has('All')) {
+      updatedChipSet.delete('All');
+    }
+
+    if (updatedChipSet.has(labelObj.value)) {
+      updatedChipSet.delete(labelObj.value);
+    } else {
+      updatedChipSet.add(labelObj.value);
+    }
+
+    if (!updatedChipSet.size) {
+      updatedChipSet.add('All');
+    }
+
+    setSelectedChips([...updatedChipSet]);
+    setPage(0);
+    setSearchPayload((searchPayload) => ({
+      ...searchPayload,
+      payment_status: [...updatedChipSet]
+    }));
+    payload = { ...payload, payment_status: [...updatedChipSet] };
+
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
 
   const onSearchBoxValueChange = (currentInputValue) => {
@@ -140,6 +182,49 @@ const Dc = () => {
     });
     invokeSearchAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
+
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
+  const onDateChange = (selectedDate, dateType) => {
+    if (!selectedDate) {
+      // If the date is not selected, reset the corresponding state
+      if (dateType === 'from') {
+        setFromDate(null);
+      } else if (dateType === 'to') {
+        setToDate(null);
+      }
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: undefined
+      }));
+    } else {
+      // If the date is selected, update the corresponding state
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: selectedDate
+      }));
+      if (dateType === 'from') {
+        setFromDate(selectedDate);
+      } else if (dateType === 'to') {
+        setToDate(selectedDate);
+      }
+    }
+  };
+
+  useEffect(() => {
+    let apiPayload = searchPayload;
+    // Check if any fromDate and toDate are missing
+    if (!fromDate || !toDate) {
+      apiPayload = {
+        ...searchPayload,
+        from_date: undefined,
+        to_date: undefined
+      };
+    }
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  }, [fromDate, toDate]);
   return (
     <Container style={{ background: '#EBEEF0' }}>
       <Row>
@@ -161,10 +246,15 @@ const Dc = () => {
                           inputValueChanged={onSearchBoxValueChange}></SearchBox>
                       </Col>
                       <Col lg="2">
-                        <DateSelector size="smaller" customLabel="From"></DateSelector>
+                        <DateSelector
+                          size="smaller"
+                          dateChangeHanlder={onDateChange}
+                          customLabel="From"></DateSelector>
                       </Col>
                       <Col lg="2">
-                        <DateSelector customLabel="To"></DateSelector>
+                        <DateSelector
+                          dateChangeHanlder={onDateChange}
+                          customLabel="To"></DateSelector>
                       </Col>
                       <Col lg="3" className="d-flex justify-content-end">
                         <IconButton size="small">
@@ -199,24 +289,17 @@ const Dc = () => {
                     <Row className="mt-3">
                       <Stack direction="row" spacing={1}>
                         <p style={{ color: '#6B778C' }}>Filter by : </p>
-                        <Chip
-                          label="All"
-                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                          onClick={() => handleChipSelect('All')}
-                          sx={chipStyle(selectedChips.includes('All'))}
-                        />
-                        <Chip
-                          label="Paid"
-                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                          onClick={() => handleChipSelect('Paid')}
-                          sx={chipStyle(selectedChips.includes('Paid'))}
-                        />
-                        <Chip
-                          label="Unpaid"
-                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                          onClick={() => handleChipSelect('UnPaid')}
-                          sx={chipStyle(selectedChips.includes('UnPaid'))}
-                        />
+                        {filterOptions.map((filterOptionObj, index) => (
+                          <Chip
+                            key={index}
+                            label={filterOptionObj.displayLabel}
+                            color={
+                              selectedChips.includes(filterOptionObj.value) ? 'primary' : 'default'
+                            }
+                            onClick={() => handleChipSelect(filterOptionObj)}
+                            sx={chipStyle(selectedChips.includes(filterOptionObj.value))}
+                          />
+                        ))}
                       </Stack>
                     </Row>
                   </div>
@@ -227,8 +310,9 @@ const Dc = () => {
                         tableHeaders={dcTableHeaders}
                         tableColumns={dcTableColumns}
                         totalDataCount={totalInvoicesDataCount}
-                        hanldePageChange={dcPageChanged}
+                        handleChangePage={dcPageChanged}
                         tableRowClicked={onTableRowClick}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
                         rowsPerPage={rowsPerPage}
                         page={page}
                       />
