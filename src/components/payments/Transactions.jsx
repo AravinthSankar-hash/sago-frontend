@@ -17,8 +17,8 @@ function AllPayments() {
   const [selectedChips, setSelectedChips] = useState(['All']);
   const [searchPayload, setSearchPayload] = useState({});
   const [allPayments, setAllPayments] = useState([]);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [totalDataCount, setTotalDataCount] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
 
   const filterOptions = [
@@ -106,8 +106,7 @@ function AllPayments() {
       }
       setSearchPayload((existingPayload) => ({
         ...existingPayload,
-        from_date: undefined,
-        to_date: undefined
+        [`${dateType}_date`]: undefined
       }));
     } else {
       // If the date is selected, update the corresponding state
