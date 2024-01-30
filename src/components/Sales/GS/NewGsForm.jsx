@@ -101,10 +101,10 @@ function NewGsForm({ gsAdded }) {
     });
     const formData = {
       invoice_number: data.invoice_number,
-      sale_date: data.sale_date,
+      sale_date: new Date(data.sale_date),
       customer_name: data.customer_name,
       gst_in: data.gst_in,
-      payment_due_date: data.payment_due_date,
+      payment_due_date: new Date(data.payment_due_date),
       address: data.address,
       phone: data.phone,
       broker_name: data.broker_name,

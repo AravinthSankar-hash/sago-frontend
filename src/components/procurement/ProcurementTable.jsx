@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import '../../css/index.css';
 import { TABLE_ROW_SIZE_OPTIONS } from '../tapicoPurchase/tp.const';
+import dayjs from 'dayjs';
 
 const ProcurementTable = (props) => {
   const { selectedTP } = props;
@@ -79,8 +80,8 @@ const ProcurementTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData.length > 0
-              ? tableData.map((tableRow, index) => (
+            {tableData?.length > 0
+              ? tableData?.map((tableRow, index) => (
                   <StyledTableRow key={index} onClick={() => tableRowClicked(tableRow)}>
                     {proTableColumns?.map((columnKey, colIdx) => {
                       let approvalStyle = {};
@@ -149,6 +150,16 @@ const ProcurementTable = (props) => {
                             {/* {Math.abs(outstandingValue)} */}
                           </span>
                         );
+                      } else if (
+                        columnKey === 'purchase_date' ||
+                        columnKey === 'payment_due_date'
+                      ) {
+                        cellContent =
+                          // <span>
+                          dayjs(tableRow[columnKey]).format('DD MMM YY');
+
+                        //   {/* {Math.abs(outstandingValue)} */}
+                        // // </span>
                       } else {
                         // Common logic for formatting numbers
                         isNumber = typeof tableRow[columnKey] === 'number';
