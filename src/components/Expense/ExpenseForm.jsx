@@ -3,14 +3,8 @@ import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import FormControl from '@mui/material/FormControl';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
+import Toaster from '../../components/helper/Snackbar.jsx';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
@@ -52,12 +46,31 @@ const ExpenseForm = ({ expenseAdded, expenseInvoiceNo }) => {
       tax_rate: Number(data.tax_rate),
       tax: Number(data.tax),
       purchase_total: purchase_total,
-      initial_payment: Number(data.initial_payment)
+      initial_payment: Number(data.initial_payment),
+      grand_total: +data.tax_rate - +data.discount + purchase_total
     };
     console.log(formData, 'tpInvoiceNo22');
-    await ExpenseService.create({ type: 'EXPENSES', data: formData });
+    try {
+      await ExpenseService.create({ type: 'EXPENSES', data: formData });
+    } catch (error) {
+      console.log('Error in saving expense', error);
+      if (error.status === 400) {
+        invokeToaster('Failed, Bad Request');
+      }
+    }
     expenseAdded(formData);
     console.log(data);
+  };
+  const [toasterBackground, setToasterBackground] = useState(null);
+  const [toasterMsg, setToasterMsg] = useState('Expense data saved');
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = '#4BB543') => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    setToasterBackground(backgroundClr);
+    setShouldShowToaster(true);
   };
   const containerRef = useRef();
 
@@ -485,6 +498,10 @@ const ExpenseForm = ({ expenseAdded, expenseInvoiceNo }) => {
             {/* </div> */}
           </Container>
         </Form>
+        <Toaster
+          shouldOpen={shouldShowToaster}
+          message={toasterMsg}
+          backgroundColor={toasterBackground}></Toaster>
       </Container>
     </>
   );

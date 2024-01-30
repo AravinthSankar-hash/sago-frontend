@@ -32,27 +32,22 @@ const Expenses = () => {
   const [expenseData, setExpenseData] = useState([]);
   const [totalExpenseDataCount, setTotalExpenseDataCount] = useState(0);
   const [showNewForm, setShowNewForm] = useState(false);
-  const [selectedChips, setSelectedChips] = useState([]);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [page, setPage] = useState(0);
+  const [selectedChips, setSelectedChips] = useState(['All']);
   const [showDetails, setShowDetails] = useState(false);
-  const [rowData, setRowData] = useState({});
   const [searchPayload, setSearchPayload] = useState({});
-  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
   const [toasterBackground, setToasterBackground] = useState(null);
   const [toasterMsg, setToasterMsg] = useState('Expense data saved');
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [selectedExpense, setSelectedExpense] = useState();
   const [invoiceNumber, setInvoiceNumber] = useState('');
-
-  useEffect(() => {
-    invokeExpenseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
-  }, []);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
 
   const invokeExpenseListAPI = (payload, query = null) => {
     ExpenseService.getData(SERVICES.TP.QUERY_PARAMS.EXPENSES, payload, query)
       .then((response) => {
         setExpenseData(response.data.data);
+        setRowsPerPage(rowsPerPage);
         setTotalExpenseDataCount(response.data.totalCount);
         if (response.data?.data.length === 0) {
           invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
@@ -70,21 +65,28 @@ const Expenses = () => {
     console.log('Expense table row clicked');
   };
 
-  const onSearchBoxValueChange = (currentInputValue) => {
-    const isPhoneNumberSearch = isNumeric(currentInputValue);
-    const payload = {
-      ...(currentInputValue && {
-        [isPhoneNumberSearch ? 'phone' : 'search_term']: currentInputValue
-      })
-    };
-    setSearchPayload(payload);
-    invokeExpenseListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  const expensePageChanged = (event, currentPageNo) => {
+    setPage(currentPageNo);
+    invokeExpenseListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
   };
 
-  const expensePageChanged = (currentPageNo, rowsPerPage) => {
-    setCurrentRowsPerPage(rowsPerPage);
-    console.log('page changed - ', currentPageNo, rowsPerPage);
-    invokeExpenseListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+    invokeExpenseListAPI(searchPayload, `page=${0 + 1}&limit=${parseInt(event.target.value, 10)}`);
+  };
+
+  const onSearchBoxValueChange = (currentInputValue) => {
+    setPage(0);
+    const isPhoneNumberSearch = isNumeric(currentInputValue);
+    const payload = {
+      ...searchPayload,
+      ...{
+        [isPhoneNumberSearch ? 'phone' : 'search_term']: currentInputValue
+      }
+    };
+    setSearchPayload(payload);
+    invokeExpenseListAPI(payload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
 
   // Just a generic method to invoke toaster
@@ -104,7 +106,7 @@ const Expenses = () => {
     showForm(false);
     // updateShowTPBackBtn(false);
     setExpenseData((expense) => [newAddedExpense, ...expense]);
-    invokeExpenseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+    invokeExpenseListAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
 
   const hanldeAddExpenseFormClick = () => {
@@ -131,13 +133,14 @@ const Expenses = () => {
 
   const onDeleteList = (shouldShow) => {
     setShowDetails(shouldShow);
-    invokeExpenseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+    invokeExpenseListAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
 
-  const handleShowDetails = (shouldShow, rowData) => {
-    setRowData(rowData);
-    setShowDetails(shouldShow);
-  };
+  const filterOptions = [
+    { displayLabel: 'All', value: 'All' },
+    { displayLabel: 'Paid', value: 'PAID' },
+    { displayLabel: 'Unpaid', value: 'NOT_PAID' }
+  ];
 
   const chipStyle = (isSelected) => ({
     border: '2px solid #00b7ff',
@@ -151,16 +154,88 @@ const Expenses = () => {
     },
     cursor: 'pointer'
   });
-  const handleChipSelect = (label) => {
-    setSelectedChips([]);
-    setSelectedChips([label]);
+  const handleChipSelect = (labelObj) => {
+    let payload = searchPayload;
+    if (labelObj.displayLabel === 'All') {
+      setSelectedChips(['All']);
+      setSearchPayload((searchPayload) => ({
+        ...searchPayload,
+        payment_status: ['All']
+      }));
+      payload = { ...payload, payment_status: ['All'] };
+      invokeExpenseListAPI(payload, `page=${0 + 1}&limit=${rowsPerPage}`);
+      return;
+    }
+
+    const updatedChipSet = new Set(selectedChips);
+    console.log(selectedChips, 'selectedChips');
+
+    if (updatedChipSet.has('All')) {
+      updatedChipSet.delete('All');
+    }
+
+    if (updatedChipSet.has(labelObj.value)) {
+      updatedChipSet.delete(labelObj.value);
+    } else {
+      updatedChipSet.add(labelObj.value);
+    }
+
+    if (!updatedChipSet.size) {
+      updatedChipSet.add('All');
+    }
+
+    setSelectedChips([...updatedChipSet]);
+    setPage(0);
+    setSearchPayload((searchPayload) => ({
+      ...searchPayload,
+      payment_status: [...updatedChipSet]
+    }));
+    payload = { ...payload, payment_status: [...updatedChipSet] };
+
+    invokeExpenseListAPI(payload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  };
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
+  const onDateChange = (selectedDate, dateType) => {
+    if (!selectedDate) {
+      // If the date is not selected, reset the corresponding state
+      if (dateType === 'from') {
+        setFromDate(null);
+      } else if (dateType === 'to') {
+        setToDate(null);
+      }
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: undefined
+      }));
+    } else {
+      // If the date is selected, update the corresponding state
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: selectedDate
+      }));
+      if (dateType === 'from') {
+        setFromDate(selectedDate);
+      } else if (dateType === 'to') {
+        setToDate(selectedDate);
+      }
+    }
   };
 
-  // Function to handle rows per page change
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to the first page when changing rows per page
-  };
+  useEffect(() => {
+    let apiPayload = searchPayload;
+    // Check if any fromDate and toDate are missing
+    if (!fromDate || !toDate) {
+      apiPayload = {
+        ...searchPayload,
+        from_date: undefined,
+        to_date: undefined
+      };
+    }
+    invokeExpenseListAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  }, [fromDate, toDate]);
+
   return (
     <Container style={{ background: '#EBEEF0' }}>
       <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
@@ -202,12 +277,16 @@ const Expenses = () => {
                       </Col>
                       <Col lg="2">
                         <DateSelector
+                          dateChangeHanlder={onDateChange}
                           className="p-0"
                           size="smaller"
                           customLabel="From"></DateSelector>
                       </Col>
                       <Col lg="2">
-                        <DateSelector className="p-0" customLabel="To"></DateSelector>
+                        <DateSelector
+                          dateChangeHanlder={onDateChange}
+                          className="p-0"
+                          customLabel="To"></DateSelector>
                       </Col>
                       <Col lg="3" className="d-flex justify-content-end">
                         <IconButton size="small">
@@ -242,24 +321,17 @@ const Expenses = () => {
                     <Row className="mt-3">
                       <Stack direction="row" spacing={1}>
                         <p style={{ color: '#6B778C' }}>Filter by : </p>
-                        <Chip
-                          label="All"
-                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                          onClick={() => handleChipSelect('All')}
-                          sx={chipStyle(selectedChips.includes('All'))}
-                        />
-                        <Chip
-                          label="Paid"
-                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                          onClick={() => handleChipSelect('Paid')}
-                          sx={chipStyle(selectedChips.includes('Paid'))}
-                        />
-                        <Chip
-                          label="Unpaid"
-                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                          onClick={() => handleChipSelect('UnPaid')}
-                          sx={chipStyle(selectedChips.includes('UnPaid'))}
-                        />
+                        {filterOptions.map((filterOptionObj, index) => (
+                          <Chip
+                            key={index}
+                            label={filterOptionObj.displayLabel}
+                            color={
+                              selectedChips.includes(filterOptionObj.value) ? 'primary' : 'default'
+                            }
+                            onClick={() => handleChipSelect(filterOptionObj)}
+                            sx={chipStyle(selectedChips.includes(filterOptionObj.value))}
+                          />
+                        ))}
                       </Stack>
                     </Row>
                   </div>
@@ -269,11 +341,12 @@ const Expenses = () => {
                         tableData={expenseData}
                         expenseTableHeaders={expenseTableHeaders}
                         expenseTableColumns={expenseTableColumns}
-                        totalExpenseDataCount={totalExpenseDataCount}
-                        hanldePageChange={expensePageChanged}
                         tableRowClicked={onTableRowClick}
-                        rowsPerPage={10}
-                        page={5}
+                        totalDataCount={totalExpenseDataCount}
+                        handleChangePage={expensePageChanged}
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
                       />
                     ) : (
                       <Box sx={{ display: 'flex' }}>

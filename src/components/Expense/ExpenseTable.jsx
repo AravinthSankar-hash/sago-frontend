@@ -15,32 +15,17 @@ import {
 import { TABLE_ROW_SIZE_OPTIONS } from '../tapicoPurchase/tp.const';
 
 const ExpenseTable = (props) => {
-  const { selectedTP } = props;
-  const [rowsPerPage, setRowsPerPage] = useState(TABLE_ROW_SIZE_OPTIONS[0]);
-  const [page, setPage] = useState(0);
-
   const {
     tableData,
     expenseTableHeaders,
     expenseTableColumns,
-    totalExpenseDataCount,
     tableRowClicked,
-    hanldePageChange
+    handleChangePage,
+    handleChangeRowsPerPage,
+    totalDataCount,
+    rowsPerPage,
+    page
   } = props;
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    // Invoke parent
-    hanldePageChange(newPage, rowsPerPage);
-  };
-
-  // This will be invoked whenver we change size of the page in the table
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value));
-    setPage(0);
-    // Invoke parent
-    hanldePageChange(0, parseInt(event.target.value));
-  };
 
   const Wrapper = styled('div')({
     display: 'flex',
@@ -189,7 +174,7 @@ const ExpenseTable = (props) => {
                 <TablePagination
                   rowsPerPageOptions={TABLE_ROW_SIZE_OPTIONS}
                   component="div"
-                  count={totalExpenseDataCount}
+                  count={totalDataCount}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   onPageChange={handleChangePage}

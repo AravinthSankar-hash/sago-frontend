@@ -84,13 +84,15 @@ function Procurements() {
     setPage(0);
     const isPhoneNumberSearch = isNumeric(currentInputValue);
     const payload = {
-      ...(currentInputValue && {
+      ...searchPayload,
+      ...{
         [isPhoneNumberSearch ? 'phone' : 'search_term']: currentInputValue
-      })
+      }
     };
     setSearchPayload(payload);
     invokeProcurementListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
+
   const proPageChanged = (event, currentPageNo) => {
     setPage(currentPageNo);
     invokeProcurementListAPI(
@@ -150,6 +152,11 @@ function Procurements() {
     setShowDetails(shouldShow);
   };
 
+  const filterOptions = [
+    { displayLabel: 'All', value: 'All' },
+    { displayLabel: 'Paid', value: 'PAID' },
+    { displayLabel: 'Unpaid', value: 'NOT_PAID' }
+  ];
   const chipStyle = (isSelected) => ({
     border: '2px solid #00b7ff',
     borderRadius: '8px',
@@ -162,10 +169,88 @@ function Procurements() {
     },
     cursor: 'pointer'
   });
-  const handleChipSelect = (label) => {
-    setSelectedChips([]);
-    setSelectedChips([label]);
+  const handleChipSelect = (labelObj) => {
+    let payload = searchPayload;
+    if (labelObj.displayLabel === 'All') {
+      setSelectedChips(['All']);
+      setSearchPayload((searchPayload) => ({
+        ...searchPayload,
+        payment_status: ['All']
+      }));
+      payload = { ...payload, payment_status: ['All'] };
+      invokeProcurementListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+      return;
+    }
+
+    const updatedChipSet = new Set(selectedChips);
+    console.log(selectedChips, 'selectedChips');
+
+    if (updatedChipSet.has('All')) {
+      updatedChipSet.delete('All');
+    }
+
+    if (updatedChipSet.has(labelObj.value)) {
+      updatedChipSet.delete(labelObj.value);
+    } else {
+      updatedChipSet.add(labelObj.value);
+    }
+
+    if (!updatedChipSet.size) {
+      updatedChipSet.add('All');
+    }
+
+    setSelectedChips([...updatedChipSet]);
+    setPage(0);
+    setSearchPayload((searchPayload) => ({
+      ...searchPayload,
+      payment_status: [...updatedChipSet]
+    }));
+    payload = { ...payload, payment_status: [...updatedChipSet] };
+
+    invokeProcurementListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
+
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
+  const onDateChange = (selectedDate, dateType) => {
+    if (!selectedDate) {
+      // If the date is not selected, reset the corresponding state
+      if (dateType === 'from') {
+        setFromDate(null);
+      } else if (dateType === 'to') {
+        setToDate(null);
+      }
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: undefined
+      }));
+    } else {
+      // If the date is selected, update the corresponding state
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: selectedDate
+      }));
+      if (dateType === 'from') {
+        setFromDate(selectedDate);
+      } else if (dateType === 'to') {
+        setToDate(selectedDate);
+      }
+    }
+  };
+
+  useEffect(() => {
+    let apiPayload = searchPayload;
+    // Check if any fromDate and toDate are missing
+    if (!fromDate || !toDate) {
+      apiPayload = {
+        ...searchPayload,
+        from_date: undefined,
+        to_date: undefined
+      };
+    }
+    invokeProcurementListAPI(apiPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, [fromDate, toDate]);
 
   return (
     <Container style={{ background: '#EBEEF0' }}>
@@ -205,10 +290,15 @@ function Procurements() {
                           inputValueChanged={onSearchBoxValueChange}></SearchBox>
                       </Col>
                       <Col lg="2">
-                        <DateSelector size="smaller" customLabel="From"></DateSelector>
+                        <DateSelector
+                          size="smaller"
+                          dateChangeHanlder={onDateChange}
+                          customLabel="From"></DateSelector>
                       </Col>
                       <Col lg="2">
-                        <DateSelector customLabel="To"></DateSelector>
+                        <DateSelector
+                          dateChangeHanlder={onDateChange}
+                          customLabel="To"></DateSelector>
                       </Col>
                       <Col lg="3" className="d-flex justify-content-end">
                         <IconButton size="small">
@@ -243,24 +333,17 @@ function Procurements() {
                     <Row className="mt-3">
                       <Stack direction="row" spacing={1}>
                         <p style={{ color: '#6B778C' }}>Filter by : </p>
-                        <Chip
-                          label="All"
-                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                          onClick={() => handleChipSelect('All')}
-                          sx={chipStyle(selectedChips.includes('All'))}
-                        />
-                        <Chip
-                          label="Paid"
-                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                          onClick={() => handleChipSelect('Paid')}
-                          sx={chipStyle(selectedChips.includes('Paid'))}
-                        />
-                        <Chip
-                          label="Unpaid"
-                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                          onClick={() => handleChipSelect('UnPaid')}
-                          sx={chipStyle(selectedChips.includes('UnPaid'))}
-                        />
+                        {filterOptions.map((filterOptionObj, index) => (
+                          <Chip
+                            key={index}
+                            label={filterOptionObj.displayLabel}
+                            color={
+                              selectedChips.includes(filterOptionObj.value) ? 'primary' : 'default'
+                            }
+                            onClick={() => handleChipSelect(filterOptionObj)}
+                            sx={chipStyle(selectedChips.includes(filterOptionObj.value))}
+                          />
+                        ))}
                       </Stack>
                     </Row>
                   </div>
