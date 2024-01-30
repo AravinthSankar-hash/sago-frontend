@@ -4,6 +4,7 @@ import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
+import Toaster from '../../components/helper/Snackbar.jsx';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
@@ -46,13 +47,30 @@ const ExpenseForm = ({ expenseAdded, expenseInvoiceNo }) => {
       tax: Number(data.tax),
       purchase_total: purchase_total,
       initial_payment: Number(data.initial_payment),
-      grand_total: purchase_total,
-      approval_status: 'PENDING'
+      grand_total: +data.tax_rate - +data.discount + purchase_total
     };
     console.log(formData, 'tpInvoiceNo22');
-    await ExpenseService.create({ type: 'EXPENSES', data: formData });
+    try {
+      await ExpenseService.create({ type: 'EXPENSES', data: formData });
+    } catch (error) {
+      console.log('Error in saving expense', error);
+      if (error.status === 400) {
+        invokeToaster('Failed, Bad Request');
+      }
+    }
     expenseAdded(formData);
     console.log(data);
+  };
+  const [toasterBackground, setToasterBackground] = useState(null);
+  const [toasterMsg, setToasterMsg] = useState('Expense data saved');
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = '#4BB543') => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    setToasterBackground(backgroundClr);
+    setShouldShowToaster(true);
   };
   const containerRef = useRef();
 
@@ -480,6 +498,10 @@ const ExpenseForm = ({ expenseAdded, expenseInvoiceNo }) => {
             {/* </div> */}
           </Container>
         </Form>
+        <Toaster
+          shouldOpen={shouldShowToaster}
+          message={toasterMsg}
+          backgroundColor={toasterBackground}></Toaster>
       </Container>
     </>
   );
