@@ -1,15 +1,17 @@
-export const tableHeaders = [
-    'Date',
-    'Reference No.',
-    'Type',
-    'Party Name',
-    'Total Amount'
-]
+export const pendingTableHeaders = [
+  'Date',
+  'Reference No.',
+  'Type',
+  'Party Name',
+  'Total Amount',
+  'Status'
+];
 
-export const tableColumns = [
-    'Purchase date',
-    'Purchase No',
-    'type',
-    'Supplier Name',
-    'amount'
-]
+export const pendingTableColumns = [
+  'purchase_date'
+  'invoice_number',
+  'type',
+  'supplier_name',
+  'sub_total',
+  'approval_status'
+];

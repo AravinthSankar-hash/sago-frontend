@@ -43,8 +43,8 @@ const ExpenseForm = ({ expenseAdded, expenseInvoiceNo }) => {
     const formData = {
       invoice_number: expenseInvoiceNo,
       party_name: data.party_name,
-      expense_type: data.expense_type,
-      expense_date: data.expense_date,
+      expense_type: new Date(data.expense_type),
+      expense_date: new Date(data.expense_date),
       payment_due_date: data.payment_due_date,
       items: expense_items,
       sub_total: sub_total,
@@ -52,7 +52,9 @@ const ExpenseForm = ({ expenseAdded, expenseInvoiceNo }) => {
       tax_rate: Number(data.tax_rate),
       tax: Number(data.tax),
       purchase_total: purchase_total,
-      initial_payment: Number(data.initial_payment)
+      initial_payment: Number(data.initial_payment),
+      grand_total: purchase_total,
+      approval_status: 'PENDING'
     };
     console.log(formData, 'tpInvoiceNo22');
     await ExpenseService.create({ type: 'EXPENSES', data: formData });

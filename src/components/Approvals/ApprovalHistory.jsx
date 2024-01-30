@@ -6,7 +6,7 @@ import SearchBox from '../helper/SearchBox';
 import { Container, Row, Col } from 'react-bootstrap';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ApprovalHistoryTable from './ApprovalHistoryTable';
-import { tableColumns, tableHeaders } from './approvals.const.js';
+import { pendingTableColumns, pendingTableHeaders } from './approvals.const.js';
 // Store
 import {
   useUpdateShowApprovalsBackBtn,
@@ -86,8 +86,8 @@ function ApprovalHistory() {
                   {approvalHistoryData.length > 0 ? (
                     <ApprovalHistoryTable
                       tableData={approvalHistoryData}
-                      tableHeaders={tableHeaders}
-                      tableColumns={tableColumns}
+                      tableHeaders={pendingTableHeaders}
+                      tableColumns={pendingTableColumns}
                       hanleTableRowClick={onTableRowClick}
                     />
                   ) : (

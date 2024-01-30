@@ -67,10 +67,10 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
       address: data.address,
       phone: data.phone,
       tapico_type: data.tapico_type,
-      purchase_date: data.purchase_date,
+      purchase_date: new Date(data.purchase_date),
       broker_name: data.broker_name,
       commission: data.commission,
-      payment_due_date: data.payment_due_date,
+      payment_due_date: new Date(data.payment_due_date),
       vehicle_no: data.vehicle_no,
       weight_bill_no: data.weight_bill_no,
       farmer_details: farmerRows.map((row, index) => ({
