@@ -2,9 +2,13 @@ import { useState } from 'react';
 import ProcurementDetails from '../procurement/ProcurementDetails';
 import { Button, Row, Col, Container } from 'react-bootstrap';
 import ActionPopup from './Popup.jsx';
+import ExpenseDetails from 'components/expense/ExpenseDetails';
+import TPDetails from 'components/tapicoPurchase/TPDetails';
+import GenericApi from 'services/generic.api';
 
-function ApprovalDetails({ detailsData, isActionRequired }) {
+function ApprovalDetails({ detailsData, selectedChips, isActionRequired, showDetailsTab }) {
   const [modalShow, setModalShow] = useState(false);
+  const [approvalStatus, setApprovalStatus] = useState(detailsData.approval_status);
   const [modalDetails, setModelDetails] = useState({
     title: 'Are you Sure?',
     body: 'Do you want to approve this purchase',
@@ -21,10 +25,55 @@ function ApprovalDetails({ detailsData, isActionRequired }) {
       });
     }
   };
+  const approvalAction = (shouldApprove) => {
+    let payload = {
+      item_id: detailsData.item_id,
+      type: selectedChips[0]
+    };
+    if (modalDetails.btn2Txt == 'Approve') {
+      if (shouldApprove) {
+        setModalShow(false);
+        setApprovalStatus('APPROVED');
+        payload.approval_status = 'APPROVED';
+      } else {
+        setModalShow(false);
+        // payload.approval_status = 'REJECTED';
+      }
+    } else if (modalDetails.btn2Txt == 'Reject') {
+      if (shouldApprove) {
+        setModalShow(false);
+        setApprovalStatus('REJECTED');
+        payload.approval_status = 'REJECTED';
+      } else {
+        setModalShow(false);
+        // payload.approval_status = 'REJECTED';
+      }
+    }
+    if (payload.approval_status) {
+      GenericApi.invoiceApprove(payload);
+      showDetailsTab(false);
+    }
+    console.log(payload, 'payyyyload');
+  };
   return (
     <Container>
       <Row style={{ padding: '0px 12px', margin: '0px 28px' }}>
-        <ProcurementDetails rowData={detailsData} />
+        {selectedChips[0] == 'procurement' && detailsData ? (
+          <>
+            {' '}
+            <ProcurementDetails selectedPro={detailsData} />
+          </>
+        ) : selectedChips[0] == 'tp' && detailsData ? (
+          <>
+            {' '}
+            <TPDetails selectedTP={detailsData} />
+          </>
+        ) : (
+          <>
+            {' '}
+            <ExpenseDetails selectedExpense={detailsData} />
+          </>
+        )}
       </Row>
       <Row
         style={{
@@ -49,11 +98,21 @@ function ApprovalDetails({ detailsData, isActionRequired }) {
         ) : (
           <Col lg="2">
             <Button
-              style={{ width: '200px' }}
-              variant="primary"
-              disabled
-              onClick={() => setModalShow(true)}>
-              Approved
+              style={{
+                width: '200px',
+                color: '#FFFFFF',
+                border: 'none',
+                backgroundColor:
+                  approvalStatus === 'PENDING'
+                    ? '#00B7FF'
+                    : approvalStatus === 'APPROVED'
+                      ? '#00875A'
+                      : approvalStatus === 'REJECTED'
+                        ? '#DE350B'
+                        : 'inherit'
+              }}
+              disabled>
+              {approvalStatus}
             </Button>
           </Col>
         )}
@@ -63,8 +122,8 @@ function ApprovalDetails({ detailsData, isActionRequired }) {
         body={modalDetails.body}
         btn1Txt={modalDetails.btn1Txt}
         btn2Txt={modalDetails.btn2Txt}
-        onCancel={() => setModalShow(false)}
-        onAgree={() => setModalShow(true)}
+        onCancel={() => approvalAction(false)}
+        onAgree={() => approvalAction(true)}
         show={modalShow}
       />
     </Container>

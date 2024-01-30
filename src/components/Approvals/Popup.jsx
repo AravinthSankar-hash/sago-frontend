@@ -5,7 +5,10 @@ function ActionPopup(props) {
   const { title, body, btn1Txt, btn2Txt, onCancel, onAgree } = props;
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter" centered>
-      <Modal.Header closeButton style={{ borderTop: '0px none', borderBottom: '0px none' }}>
+      <Modal.Header
+        closeButton
+        style={{ borderTop: '0px none', borderBottom: '0px none' }}
+        onClick={onCancel}>
         <Modal.Title id="contained-modal-title-vcenter">{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>

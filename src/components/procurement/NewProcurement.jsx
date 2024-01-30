@@ -50,7 +50,8 @@ const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
       tax_rate: Number(data.tax_rate),
       tax: Number(data.tax),
       purchase_total: purchase_total,
-      initial_payment: Number(data.initial_payment)
+      initial_payment: Number(data.initial_payment),
+      grand_total: purchase_total
     };
     console.log(formData, 'tpInvoiceNo22');
     await ProService.create({ type: 'PROCUREMENT', data: formData });

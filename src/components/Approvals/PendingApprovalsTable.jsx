@@ -76,16 +76,16 @@ const PendingApprovalsTable = (props) => {
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead style={{ position: 'sticky', top: 0, zIndex: 2 }}>
             <TableRow>
-              {pendingTableHeaders.map((key, index) => (
+              {pendingTableHeaders?.map((key, index) => (
                 <StyledTableCell key={index}>{key}</StyledTableCell>
               ))}{' '}
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData.map((tableRow, RowIdx) => {
+            {tableData?.map((tableRow, RowIdx) => {
               return (
                 <StyledTableRow key={RowIdx} onClick={() => onTableRowClick(tableRow)}>
-                  {pendingTableColumns.map((columnKey, colIdx) => {
+                  {pendingTableColumns?.map((columnKey, colIdx) => {
                     let approvalStyle = {};
                     let isNumber;
                     let cellContent;

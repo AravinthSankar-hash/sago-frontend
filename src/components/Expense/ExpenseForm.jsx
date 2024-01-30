@@ -3,13 +3,6 @@ import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
 import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import FormControl from '@mui/material/FormControl';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -43,9 +36,9 @@ const ExpenseForm = ({ expenseAdded, expenseInvoiceNo }) => {
     const formData = {
       invoice_number: expenseInvoiceNo,
       party_name: data.party_name,
-      expense_type: new Date(data.expense_type),
+      expense_type: data.expense_type,
       expense_date: new Date(data.expense_date),
-      payment_due_date: data.payment_due_date,
+      payment_due_date: new Date(data.payment_due_date),
       items: expense_items,
       sub_total: sub_total,
       discount: Number(data.discount),

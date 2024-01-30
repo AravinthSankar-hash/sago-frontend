@@ -53,10 +53,14 @@ const SERVICES = {
       PAYMENTS: 'payments',
       TRANSACTIONS: 'transactions',
       PROCUREMENT: '/procurements',
-      EXPENSES: '/expenses'
+      EXPENSES: '/expenses',
+      PURCHASE: '/purchase'
     },
     PAYMENT_CATEGORY: {
       TIPPI: 'tippi'
+    },
+    INVOICE_APPROVAL: {
+      APPROVE: '/invoice-action'
     }
   }
 };

@@ -40,9 +40,9 @@ function PendingApprovals() {
   // const [url, setUrl] = useState('/procurement-invoices');
 
   useEffect(() => {
-    invokeProcurementListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+    invokePurchaseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   }, [selectedChips]);
-  const invokeProcurementListAPI = (payload, query = null) => {
+  const invokePurchaseListAPI = (payload, query = null) => {
     let url;
     if (selectedChips[0] == 'procurement') {
       url = `/procurement-invoices`;
@@ -87,24 +87,18 @@ function PendingApprovals() {
       })
     };
     setSearchPayload(payload);
-    invokeProcurementListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+    invokePurchaseListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
 
   const approvalPageChange = (event, currentPageNo) => {
     setPage(currentPageNo);
-    invokeProcurementListAPI(
-      searchPayload,
-      `page=${currentPageNo + 1}&limit=${currentRowsPerPage}`
-    );
+    invokePurchaseListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${currentRowsPerPage}`);
   };
 
   const handleChangeRowsPerPage = (event) => {
     setCurrentRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-    invokeProcurementListAPI(
-      searchPayload,
-      `page=${0 + 1}&limit=${parseInt(event.target.value, 10)}`
-    );
+    invokePurchaseListAPI(searchPayload, `page=${0 + 1}&limit=${parseInt(event.target.value, 10)}`);
   };
 
   const filterOptions = [
@@ -127,16 +121,7 @@ function PendingApprovals() {
   });
 
   const handleChipSelect = (labelObj) => {
-    // if (labelObj.value == 'expense') {
-    //   // setUrl('/expense-invoices');
-    //   setUrl((prevUrl) => '/expense-invoices');
-    // } else if (labelObj.value == 'tp') {
-    //   // setUrl((pre) => pre);
-    //   setUrl((prevUrl) => '/tp-invoices');
-    // } else {
-    //   setUrl((prevUrl) => '/procurement-invoices');
-    // }
-    setSelectedChips([labelObj?.value]);
+    setSelectedChips((preValue) => [labelObj?.value]);
   };
 
   const onTableRowClick = (rowData) => {
@@ -145,10 +130,20 @@ function PendingApprovals() {
     updateShowApprovalsBackBtn(true);
   };
 
+  const showDetailsTab = (shouldShow) => {
+    updateShowPendingApprovalDetails(shouldShow);
+    updateShowApprovalsBackBtn(shouldShow);
+  };
+
   return (
     <>
       {showPendingApprovalDetails ? (
-        <ApprovalDetails detailsData={clickedRowData} isActionRequired={true} />
+        <ApprovalDetails
+          detailsData={clickedRowData}
+          selectedChips={selectedChips}
+          isActionRequired={true}
+          showDetailsTab={showDetailsTab}
+        />
       ) : (
         <Container style={{ background: '#EBEEF0', padding: '10px', paddingBottom: '0px' }}>
           <Row>
@@ -186,7 +181,6 @@ function PendingApprovals() {
                         <Chip
                           key={index}
                           label={filterOptionObj.displayLabel}
-                          // color={selectedChips.includes(filterOption) ? 'primary' : 'default'}
                           onClick={() => handleChipSelect(filterOptionObj)}
                           sx={chipStyle(selectedChips.includes(filterOptionObj.value))}
                         />

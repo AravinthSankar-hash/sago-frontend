@@ -8,7 +8,7 @@ export const pendingTableHeaders = [
 ];
 
 export const pendingTableColumns = [
-  'purchase_date'
+  'purchase_date',
   'invoice_number',
   'type',
   'supplier_name',

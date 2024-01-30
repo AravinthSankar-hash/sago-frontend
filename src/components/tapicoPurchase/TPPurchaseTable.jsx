@@ -12,6 +12,7 @@ import {
   tableCellClasses
 } from '@mui/material';
 import '../../css/index.css';
+import dayjs from 'dayjs';
 import { TABLE_ROW_SIZE_OPTIONS } from './tp.const';
 
 const TPPurchaseTable = (props) => {
@@ -141,6 +142,8 @@ const TPPurchaseTable = (props) => {
                           {tableRow[columnKey] ? tableRow[columnKey] : 'PENDING'}
                         </div>
                       );
+                    } else if (columnKey === 'purchase_date') {
+                      cellContent = dayjs(tableRow[columnKey]).format('DD MMM YY');
                     } else {
                       // Common logic for formatting numbers
                       isNumber = typeof tableRow[columnKey] === 'number';

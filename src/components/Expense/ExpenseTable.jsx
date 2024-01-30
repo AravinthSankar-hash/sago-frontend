@@ -11,6 +11,8 @@ import {
   TablePagination,
   tableCellClasses
 } from '@mui/material';
+import dayjs from 'dayjs';
+
 // import '../css/index.css';
 import { TABLE_ROW_SIZE_OPTIONS } from '../tapicoPurchase/tp.const';
 
@@ -154,6 +156,8 @@ const ExpenseTable = (props) => {
                         {tableRow[columnKey] ? tableRow[columnKey] : 'PENDING'}
                       </div>
                     );
+                  } else if (columnKey === 'expense_date' || columnKey === 'payment_due_date') {
+                    cellContent = dayjs(tableRow[columnKey]).format('DD MMM YY');
                   } else {
                     // Common logic for formatting numbers
                     isNumber = typeof tableRow[columnKey] === 'number';
