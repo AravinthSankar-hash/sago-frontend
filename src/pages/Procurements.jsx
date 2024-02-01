@@ -33,7 +33,7 @@ function Procurements() {
   const [totalProDataCount, setTotalProDataCount] = useState(0);
 
   const [showNewForm, setShowNewForm] = useState(false);
-  const [selectedChips, setSelectedChips] = useState([]);
+  const [selectedChips, setSelectedChips] = useState(['All']);
   const [page, setPage] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [searchPayload, setSearchPayload] = useState({});
