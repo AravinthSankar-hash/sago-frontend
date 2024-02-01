@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import '../../css/index.css';
 import { useState } from 'react';
+import dayjs from 'dayjs';
 import { TABLE_ROW_SIZE_OPTIONS } from '../sales/sale.const.js';
 
 const InvoiceTable = (props) => {
@@ -149,6 +150,8 @@ const InvoiceTable = (props) => {
                             : tableRow[columnKey]}
                         </div>
                       );
+                    } else if (columnKey === 'sale_date') {
+                      cellContent = dayjs(tableRow['sale_date']).format('DD MMM YY');
                     } else {
                       // Common logic for formatting numbers
                       isNumber = typeof tableRow[columnKey] === 'number';

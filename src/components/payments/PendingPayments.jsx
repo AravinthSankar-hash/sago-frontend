@@ -45,7 +45,14 @@ function PendingPayments() {
   const handleChipSelect = (labelObj) => {
     if (labelObj.displayLabel === 'All') {
       setSelectedChips(['All']);
-      invokeSearchAPI({ payment_category: ['All'] });
+      setSearchPayload((searchPayload) => ({
+        ...searchPayload,
+        payment_category: ['All']
+      }));
+      invokeSearchAPI(
+        { payment_category: ['All'], payment_status: 'NOT_PAID' },
+        `page=${0 + 1}&limit=${rowsPerPage}`
+      );
       return;
     }
 
@@ -67,16 +74,21 @@ function PendingPayments() {
     }
 
     setSelectedChips([...updatedChipSet]);
-    invokeSearchAPI({ payment_category: [...updatedChipSet] });
+    setPage(0);
+    setSearchPayload((searchPayload) => ({
+      ...searchPayload,
+      payment_category: [...updatedChipSet]
+    }));
+    invokeSearchAPI(
+      { payment_category: [...updatedChipSet], payment_status: 'NOT_PAID' },
+      `page=${0 + 1}&limit=${rowsPerPage}`
+    );
   };
 
-  useEffect(() => {
-    // By default invoke the fetch API with default limit and page
-    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
-  }, []);
   const invokeSearchAPI = (payload, query = null) => {
     GeneralService.getPayments(payload, query)
       .then((response) => {
+        setRowsPerPage(rowsPerPage);
         setTotalDataCount(response.data.totalCount);
         setPendingPayments(response.data.data);
       })
@@ -104,6 +116,47 @@ function PendingPayments() {
     invokeSearchAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
 
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
+  const onDateChange = (selectedDate, dateType) => {
+    if (!selectedDate) {
+      // If the date is not selected, reset the corresponding state
+      if (dateType === 'from') {
+        setFromDate(null);
+      } else if (dateType === 'to') {
+        setToDate(null);
+      }
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: undefined
+      }));
+    } else {
+      // If the date is selected, update the corresponding state
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: selectedDate
+      }));
+      if (dateType === 'from') {
+        setFromDate(selectedDate);
+      } else if (dateType === 'to') {
+        setToDate(selectedDate);
+      }
+    }
+  };
+  useEffect(() => {
+    let apiPayload = searchPayload;
+    // Check if any fromDate and toDate are missing
+    if (!fromDate || !toDate) {
+      apiPayload = {
+        ...searchPayload,
+        from_date: undefined,
+        to_date: undefined
+      };
+    }
+    invokeSearchAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  }, [fromDate, toDate]);
+
   return (
     <div style={{ padding: '0 12px', margin: '0 28px' }}>
       <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
@@ -114,10 +167,13 @@ function PendingPayments() {
               inputValueChanged={onSearchBoxValueChange}></SearchBox>
           </Col>
           <Col lg="2">
-            <DateSelector size="smaller" customLabel="From"></DateSelector>
+            <DateSelector
+              size="smaller"
+              dateChangeHanlder={onDateChange}
+              customLabel="From"></DateSelector>
           </Col>
           <Col lg="2">
-            <DateSelector customLabel="To"></DateSelector>
+            <DateSelector dateChangeHanlder={onDateChange} customLabel="To"></DateSelector>
           </Col>
           <Col lg="4" className="d-flex justify-content-end">
             <IconButton size="small">

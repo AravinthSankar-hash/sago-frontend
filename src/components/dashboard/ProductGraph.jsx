@@ -10,7 +10,6 @@ import {
   barGraphOptions,
   barGraphDataPoints,
   donutGraphOptions,
-  donutGraphDataPoints,
   totalOrdersLineOptions,
   totalOrdersLinePoints
 } from './graph-spec.js';
@@ -116,8 +115,8 @@ function ProductGraph(props) {
           xaxis: { ...lineGraphOptions?.xaxis, categories: graph2Stats?.lastSixMonths },
           yaxis: {
             ...lineGraphOptions?.yaxis,
-            min: graph2Stats.minYaxis - 2 * graph2Stats.minYaxis,
-            max: graph2Stats.maxYaxis + 2 * graph2Stats.maxYaxis
+            min: graph2Stats?.minYaxis - 2 * graph2Stats?.minYaxis,
+            max: graph2Stats?.maxYaxis + 2 * graph2Stats?.maxYaxis
           }
         }
       : {};
@@ -161,11 +160,11 @@ function ProductGraph(props) {
           ...totalOrdersLineOptions,
           yaxis: {
             ...totalOrdersLineOptions?.yaxis,
-            max: graph5Stats?.[0].count + graph5Stats?.[1].count + 5
+            max: graph5Stats?.[0]?.count + graph5Stats?.[1]?.count + 5
           },
           subtitle: {
             ...totalOrdersLineOptions?.subtitle,
-            text: graph5Stats?.[0].count + graph5Stats?.[1].count
+            text: graph5Stats?.[0]?.count + graph5Stats?.[1]?.count
           }
         }
       : {};
@@ -173,7 +172,7 @@ function ProductGraph(props) {
 
   function getTotalOrdersLinePoints() {
     return graph5Stats
-      ? [{ ...totalOrdersLinePoints[0], data: [graph5Stats?.[0].count + graph5Stats?.[1].count] }]
+      ? [{ ...totalOrdersLinePoints[0], data: [graph5Stats?.[0]?.count + graph5Stats?.[1]?.count] }]
       : [];
   }
 
@@ -183,7 +182,7 @@ function ProductGraph(props) {
           ...totalOrdersLineOptions,
           yaxis: {
             ...totalOrdersLineOptions?.yaxis,
-            max: graph5Stats?.[0].count + graph5Stats?.[1].count + 5
+            max: graph5Stats?.[0]?.count + graph5Stats?.[1]?.count + 5
           },
           title: {
             ...totalOrdersLineOptions?.title,
@@ -191,14 +190,14 @@ function ProductGraph(props) {
           },
           subtitle: {
             ...totalOrdersLineOptions?.subtitle,
-            text: graph5Stats?.[0].count
+            text: graph5Stats?.[0]?.count
           }
         }
       : {};
   }
 
   function getCompletedOrdersLinePoints() {
-    return graph5Stats ? [{ ...totalOrdersLinePoints[0], data: [graph5Stats?.[0].count] }] : [];
+    return graph5Stats ? [{ ...totalOrdersLinePoints[0], data: [graph5Stats?.[0]?.count] }] : [];
   }
 
   function getIncompletedOrdersLineOptions() {
@@ -207,7 +206,7 @@ function ProductGraph(props) {
           ...totalOrdersLineOptions,
           yaxis: {
             ...totalOrdersLineOptions?.yaxis,
-            max: graph5Stats?.[0].count + graph5Stats?.[1].count + 5
+            max: graph5Stats?.[0]?.count + graph5Stats?.[1]?.count + 5
           },
           title: {
             ...totalOrdersLineOptions?.title,
@@ -215,14 +214,14 @@ function ProductGraph(props) {
           },
           subtitle: {
             ...totalOrdersLineOptions?.subtitle,
-            text: graph5Stats?.[1].count
+            text: graph5Stats?.[1]?.count
           }
         }
       : {};
   }
 
   function getIncompleteTotalOrdersLinePoints() {
-    return graph5Stats ? [{ ...totalOrdersLinePoints[0], data: [graph5Stats?.[1].count] }] : [];
+    return graph5Stats ? [{ ...totalOrdersLinePoints[0], data: [graph5Stats?.[1]?.count] }] : [];
   }
   return (
     <Container>

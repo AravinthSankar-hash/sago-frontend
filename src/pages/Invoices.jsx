@@ -30,7 +30,7 @@ function Invoices() {
   const [salesInvoices, setsalesInvoices] = useState([]);
   const [totalDataCount, setTotalDataCount] = useState(0);
   const [showNewForm, setShowNewForm] = useState(false);
-  const [selectedChips, setSelectedChips] = useState([]);
+  const [selectedChips, setSelectedChips] = useState(['All']);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const updateShowSalesBackBtn = useUpdateShowSalesBackBtn(); // Method to update bool, if back btn is clicked
   const [selectedRowData, setSelectedRowData] = useState({});
@@ -38,13 +38,8 @@ function Invoices() {
   const [page, setPage] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
   const [rowData, setRowData] = useState({});
-  const [searchPayload, setSearchPayload] = useState({});
-  const [selectedValue, setSelectedValue] = useState('');
-
-  useEffect(() => {
-    // By default invoke the fetch API with default limit and page
-    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`, 'all');
-  }, []);
+  const [searchPayload, setSearchPayload] = useState({ payment_status: ['All'] });
+  const [selectedValue, setSelectedValue] = useState('all');
 
   const invokeSearchAPI = (payload, query = null, type) => {
     SaleService.getSales(SERVICES.SALE.SALE_TYPES[type], payload, query)
@@ -56,31 +51,11 @@ function Invoices() {
         console.log('Error in searching sale invoices', error);
       });
   };
-  const showForm = (shouldShow) => {
-    setShowNewForm(shouldShow);
-  };
-
-  const chipStyle = (isSelected) => ({
-    border: '2px solid #00b7ff',
-    borderRadius: '8px',
-    backgroundColor: isSelected ? '#00b7ff' : 'white',
-    color: isSelected ? 'white' : '#00b7ff',
-    ':hover': {
-      background: '#00b7ff',
-      color: 'white',
-      boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)'
-    },
-    cursor: 'pointer'
-  });
-  const handleChipSelect = (label) => {
-    setSelectedChips([]);
-    setSelectedChips([label]);
-  };
 
   const invoicePageChanged = (currentPageNo, rowsPerPage) => {
     setRowsPerPage(rowsPerPage);
     console.log('page changed - ', currentPageNo, rowsPerPage);
-    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`, 'all');
+    invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`, selectedValue);
   };
 
   const onTableRowClick = (clickedRow) => {
@@ -101,22 +76,115 @@ function Invoices() {
 
       return apiPayload;
     });
-    invokeSearchAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`, 'all');
+    invokeSearchAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`, selectedValue);
   };
 
   const handleSelectChange = (event) => {
     setSelectedValue(event.target.value);
-    let apiPayload = {};
-    setSearchPayload((existingPayload) => {
-      apiPayload = {
-        ...existingPayload,
-        search_term: selectedValue
-      };
-
-      return apiPayload;
-    });
-    invokeSearchAPI(selectedValue, `page=${0 + 1}&limit=${rowsPerPage}`, event.target.value);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`, event.target.value);
   };
+
+  const filterOptions = [
+    { displayLabel: 'All', value: 'All' },
+    { displayLabel: 'Paid', value: 'PAID' },
+    { displayLabel: 'Unpaid', value: 'NOT_PAID' }
+  ];
+
+  const chipStyle = (isSelected) => ({
+    border: '2px solid #00b7ff',
+    borderRadius: '8px',
+    backgroundColor: isSelected ? '#00b7ff' : 'white',
+    color: isSelected ? 'white' : '#00b7ff',
+    ':hover': {
+      background: '#00b7ff',
+      color: 'white',
+      boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)'
+    },
+    cursor: 'pointer'
+  });
+
+  const handleChipSelect = (labelObj) => {
+    let payload = searchPayload;
+    if (labelObj.displayLabel === 'All') {
+      setSelectedChips(['All']);
+      setSearchPayload((searchPayload) => ({
+        ...searchPayload,
+        payment_status: ['All']
+      }));
+      payload = { ...payload, payment_status: ['All'] };
+      invokeSearchAPI(payload, `page=${0 + 1}&limit=${rowsPerPage}`, selectedValue);
+      return;
+    }
+
+    const updatedChipSet = new Set(selectedChips);
+    console.log(selectedChips, 'selectedChips');
+
+    if (updatedChipSet.has('All')) {
+      updatedChipSet.delete('All');
+    }
+
+    if (updatedChipSet.has(labelObj.value)) {
+      updatedChipSet.delete(labelObj.value);
+    } else {
+      updatedChipSet.add(labelObj.value);
+    }
+
+    if (!updatedChipSet.size) {
+      updatedChipSet.add('All');
+    }
+
+    setSelectedChips([...updatedChipSet]);
+    setPage(0);
+    setSearchPayload((searchPayload) => ({
+      ...searchPayload,
+      payment_status: [...updatedChipSet]
+    }));
+    payload = { ...payload, payment_status: [...updatedChipSet] };
+
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${rowsPerPage}`, selectedValue);
+  };
+
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
+  const onDateChange = (selectedDate, dateType) => {
+    if (!selectedDate) {
+      // If the date is not selected, reset the corresponding state
+      if (dateType === 'from') {
+        setFromDate(null);
+      } else if (dateType === 'to') {
+        setToDate(null);
+      }
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: undefined
+      }));
+    } else {
+      // If the date is selected, update the corresponding state
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: selectedDate
+      }));
+      if (dateType === 'from') {
+        setFromDate(selectedDate);
+      } else if (dateType === 'to') {
+        setToDate(selectedDate);
+      }
+    }
+  };
+
+  useEffect(() => {
+    let apiPayload = searchPayload;
+    // Check if any fromDate and toDate are missing
+    if (!fromDate || !toDate) {
+      apiPayload = {
+        ...searchPayload,
+        from_date: undefined,
+        to_date: undefined
+      };
+    }
+    invokeSearchAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`, selectedValue);
+  }, [fromDate, toDate]);
 
   return (
     <Container style={{ background: '#EBEEF0' }}>
@@ -165,6 +233,7 @@ function Invoices() {
                         label="Select"
                         value={selectedValue}
                         onChange={handleSelectChange}>
+                        <MenuItem value={'all'}>All</MenuItem>
                         <MenuItem value={'dc'}>Delivery Challan</MenuItem>
                         <MenuItem value={'tippi'}>Thippi Sales</MenuItem>
                         <MenuItem value={'general'}>General Sales</MenuItem>
@@ -172,10 +241,13 @@ function Invoices() {
                     </FormControl>
                   </Col>
                   <Col lg="2">
-                    <DateSelector size="smaller" customLabel="From"></DateSelector>
+                    <DateSelector
+                      size="smaller"
+                      dateChangeHanlder={onDateChange}
+                      customLabel="From"></DateSelector>
                   </Col>
                   <Col lg="2">
-                    <DateSelector customLabel="To"></DateSelector>
+                    <DateSelector customLabel="To" dateChangeHanlder={onDateChange}></DateSelector>
                   </Col>
                   <Col lg="3" style={{ display: 'flex', justifyContent: 'space-around' }}>
                     <IconButton size="small">
@@ -192,24 +264,17 @@ function Invoices() {
                 <Row className="mt-3">
                   <Stack direction="row" spacing={1}>
                     <p style={{ color: '#6B778C' }}>Filter by : </p>
-                    <Chip
-                      label="All"
-                      color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                      onClick={() => handleChipSelect('All')}
-                      sx={chipStyle(selectedChips.includes('All'))}
-                    />
-                    <Chip
-                      label="Paid"
-                      color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                      onClick={() => handleChipSelect('Paid')}
-                      sx={chipStyle(selectedChips.includes('Paid'))}
-                    />
-                    <Chip
-                      label="Unpaid"
-                      color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                      onClick={() => handleChipSelect('UnPaid')}
-                      sx={chipStyle(selectedChips.includes('UnPaid'))}
-                    />
+                    {filterOptions.map((filterOptionObj, index) => (
+                      <Chip
+                        key={index}
+                        label={filterOptionObj.displayLabel}
+                        color={
+                          selectedChips.includes(filterOptionObj.value) ? 'primary' : 'default'
+                        }
+                        onClick={() => handleChipSelect(filterOptionObj)}
+                        sx={chipStyle(selectedChips.includes(filterOptionObj.value))}
+                      />
+                    ))}
                   </Stack>
                 </Row>
               </div>

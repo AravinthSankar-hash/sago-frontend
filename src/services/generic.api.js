@@ -34,9 +34,9 @@ function deleteInvoice(query = null) {
   });
 }
 
-function getDashboardStats(data = {}) {
+function getDashboardStats(data = {}, query = null) {
   return request({
-    url: `inventory/stats`,
+    url: `inventory/stats?${query ? query : ''}`,
     method: 'POST',
     data
   });
