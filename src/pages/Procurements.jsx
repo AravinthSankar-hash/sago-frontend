@@ -70,9 +70,6 @@ function Procurements() {
 
     console.log(selectedPro, 'selectedPro');
     console.log('Procurement table row clicked');
-    // updateShowTPBackBtn(true);
-    // // Show details section - Store
-    // // Show back btn - Store
   };
 
   const onDeleteList = (shouldShow) => {
@@ -348,7 +345,7 @@ function Procurements() {
                     </Row>
                   </div>
                   <div>
-                    {procurementData ? (
+                    {procurementData.length ? (
                       <ProcurementTable
                         tableData={procurementData}
                         proTableHeaders={proTableHeaders}

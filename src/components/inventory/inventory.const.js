@@ -1,43 +1,9 @@
-export const tableHeaders = [
-    'Date',
-    'Bags Produced'
-];
-export const tableColumns = ['date', 'bags_produced'];
-export const tableData = [
-    {
-        'date': '12 Feb 22',
-        'bags_produced': 600
-    },
-    {
-        'date': '13 Mar 22',
-        'bags_produced': 800
-    },
-    {
-        'date': '21 Nov 23',
-        'bags_produced': 800
-    },
-    {
-        'date': '12 Feb 22',
-        'bags_produced': 600
-    },
-    {
-        'date': '12 Feb 22',
-        'bags_produced': 600
-    },
-    {
-        'date': '13 Mar 22',
-        'bags_produced': 800
-    },
-    {
-        'date': '21 Nov 23',
-        'bags_produced': 800
-    },
-    {
-        'date': '12 Feb 22',
-        'bags_produced': 600
-    },
-    {
-        'date': '08 Dec 23',
-        'bags_produced': 500
-    }
-];
+export const inventoryTableHeaders = ['Entry Date', 'Product Name', 'Entry Type', 'Total Bags'];
+
+export const inventoryTableColumns = ['entry_date', 'product_name', 'entry_type', 'total_bags'];
+
+export const TABLE_ROW_SIZE_OPTIONS = [10, 25, 50, 100];
+
+export const inventoryStatsTableHeaders = ['Date', 'Bags Produced'];
+
+export const inventoryStatsTableColumns = ['entry_date', 'total_bags'];

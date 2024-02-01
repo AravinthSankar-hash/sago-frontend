@@ -11,10 +11,20 @@ import {
   tableCellClasses
 } from '@mui/material';
 import '../../css/index.css';
+import { TABLE_ROW_SIZE_OPTIONS } from '../tapicoPurchase/tp.const';
+import dayjs from 'dayjs';
 
 function InventoryStatsGraphTable(props) {
-  const { tableData, tableHeaders, tableColumns, handleChangePage } = props;
-
+  const {
+    statsData,
+    tableHeaders,
+    tableColumns,
+    totalDataCount,
+    hanldePageChange,
+    handleChangeRowsPerPage,
+    rowsPerPage,
+    page
+  } = props;
   const Wrapper = styled('div')({
     display: 'flex',
     flexDirection: 'column',
@@ -88,15 +98,43 @@ function InventoryStatsGraphTable(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {tableData?.map((tableRow, RowIdx) => {
+            {statsData?.map((tableRow, RowIdx) => {
               return (
                 <StyledTableRow key={RowIdx}>
                   {tableColumns?.map((columnKey, colIdx) => {
-                    console.log('tableColumns');
-                    console.log(tableColumns);
+                    let isNumber;
+                    let cellContent;
+                    let numberStyle;
+                    if (columnKey === 'entry_date') {
+                      cellContent =
+                        // <span>
+                        dayjs(tableRow[columnKey]).format('DD MMM YY');
+
+                      //   {/* {Math.abs(outstandingValue)} */}
+                      // // </span>
+                    } else {
+                      // Common logic for formatting numbers
+                      isNumber = typeof tableRow[columnKey] === 'number';
+                      numberStyle = {
+                        color: isNumber
+                          ? tableRow[columnKey] < 0
+                            ? '#DE350B'
+                            : '#62728D'
+                          : 'inherit'
+                      };
+                      cellContent = (
+                        <span style={numberStyle}>
+                          {isNumber
+                            ? `${tableRow[columnKey] < 0 ? '-' : ''}${Math.abs(
+                                tableRow[columnKey]
+                              )}`
+                            : tableRow[columnKey]}
+                        </span>
+                      );
+                    }
                     return (
                       <StyledTableCell key={colIdx} align="left">
-                        {tableRow[columnKey]}
+                        {cellContent}
                       </StyledTableCell>
                     );
                   })}
@@ -107,14 +145,15 @@ function InventoryStatsGraphTable(props) {
           <TableBody>
             {' '}
             <StyledTablePaginationRow>
-              <TableCell colSpan={10}>
+              <TableCell colSpan={tableHeaders?.length}>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 25]}
+                  rowsPerPageOptions={TABLE_ROW_SIZE_OPTIONS}
                   component="div"
-                  count={100}
-                  rowsPerPage={5}
-                  page={0}
-                  onPageChange={handleChangePage}
+                  count={totalDataCount}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={hanldePageChange}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </TableCell>
             </StyledTablePaginationRow>
