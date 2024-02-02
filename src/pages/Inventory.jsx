@@ -9,7 +9,10 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import InventoryTable from 'components/inventory/InventoryTable.jsx';
-import { tpTableHeaders, tpTableColumns } from '../components/tapicoPurchase/tp.const.js';
+import {
+  inventoryTableHeaders,
+  inventoryTableColumns
+} from '../components/inventory/inventory.const.js';
 import sago_icon from '../assets/images/sago_inventory.svg';
 import broken_icon from '../assets/images/broken_inventory.svg';
 import starch_inventory from '../assets/images/starch_inventory.svg';
@@ -19,6 +22,11 @@ import chart_icon from '../assets/images/chart_icon_inventory.svg';
 import InventoryNewForm from 'components/inventory/InventoryNewForm.jsx';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import InventoryStatsGraph from 'components/inventory/InventoryStatsGraph.jsx';
+import { RESPONSE_MSG } from '../components/tapicoPurchase/tp.const.js';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
 // Store
 import {
   useShowInventoryDetails,
@@ -30,10 +38,25 @@ import {
   useShowInventoryBackBtn,
   useUpdateShowInventoryBackBtn
 } from '../store/store.js';
+// API
+import InventoryService from 'services/inventory.api.js';
+import { SERVICES } from '../services/api.const.js';
+
+import { isNumeric } from '../components/helper/helper.js';
+import Toaster from '../components/helper/Snackbar.jsx';
+import GenericService from '../services/generic.api';
 
 function Inventory() {
-  const [inventoryData, setInventoryData] = useState([]);
-
+  const [inventoryDataList, setInventoryDataList] = useState([]);
+  const [inventoryAvailableStocks, setInventoryAvailableStocks] = useState([]);
+  const [totalInventoryDataCount, setTotalInventoryDataCount] = useState(0);
+  const [searchPayload, setSearchPayload] = useState({});
+  const [toasterBackground, setToasterBackground] = useState(null);
+  const [toasterMsg, setToasterMsg] = useState('Inventory data saved');
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [selectedinventoryList, setSelectedinventoryList] = useState();
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
   // Store
   const showInventoryBackBtn = useShowInventoryBackBtn();
   const showInventoryDetails = useShowInventoryDetails();
@@ -44,22 +67,54 @@ function Inventory() {
   const updateShowInventoryNewForm = useUpdateShowInventoryNewForm();
   const updateShowInventoryCharts = useUpdateShowInventoryCharts();
 
-  useEffect(() => {
-    // On component Init clear the store to defaults
-    onBackBtnClick();
-
-    fetch('http://localhost:3001/broker-reports')
-      .then((rawResponse) => rawResponse.json())
+  const invokeInventoryListAPI = (payload, query = null) => {
+    InventoryService.getData(SERVICES.INVENTORY.QUERY_PARAMS.INVENTORYLIST, payload, query)
       .then((response) => {
-        setInventoryData(response.data);
+        // setCurrentRowsPerPage(currentRowsPerPage);
+        setInventoryDataList(response.data.data.inventoryList);
+        setInventoryAvailableStocks(response.data.data.productAvailableStocks);
+        setTotalInventoryDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.log('Error in searching Purchase data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
       });
-  }, []);
+  };
+
+  const inventoryPageChanged = (event, currentPageNo) => {
+    setPage(currentPageNo);
+    invokeInventoryListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+    invokeInventoryListAPI(
+      searchPayload,
+      `page=${0 + 1}&limit=${parseInt(event.target.value, 10)}`
+    );
+  };
+
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = null) => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    if (backgroundClr) {
+      setToasterBackground(backgroundClr);
+      setShouldShowToaster(Math.random());
+    }
+    // setShouldShowToaster(true);
+  };
 
   const onInventoryDataSave = (newAddedInventory) => {
-    setInventoryData((brokers) => [newAddedInventory, ...brokers]);
+    invokeToaster();
+    updateShowInventoryNewForm(false);
+    setInventoryDataList((inventory) => [newAddedInventory, ...inventory]);
+    invokeInventoryListAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
   const handleTableClick = () => {
     updateShowInvetoryDetails(true);
@@ -69,7 +124,8 @@ function Inventory() {
     updateShowInventoryNewForm(true);
     updateShowInventoryBackBtn(true);
   };
-  const viewChat = () => {
+  const viewChat = (itemName) => {
+    setSelectedinventoryList(itemName);
     updateShowInventoryCharts(true);
     updateShowInventoryBackBtn(true);
   };
@@ -79,6 +135,52 @@ function Inventory() {
     updateShowInvetoryDetails(true);
     updateShowInventoryBackBtn(false);
   };
+
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
+  const onDateChange = (selectedDate, dateType) => {
+    if (!selectedDate) {
+      // If the date is not selected, reset the corresponding state
+      if (dateType === 'from') {
+        setFromDate(null);
+      } else if (dateType === 'to') {
+        setToDate(null);
+      }
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: undefined
+      }));
+    } else {
+      // If the date is selected, update the corresponding state
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: selectedDate
+      }));
+      if (dateType === 'from') {
+        setFromDate(selectedDate);
+      } else if (dateType === 'to') {
+        setToDate(selectedDate);
+      }
+    }
+  };
+
+  useEffect(
+    () => {
+      let apiPayload = searchPayload;
+      // Check if any fromDate and toDate are missing
+      if (!fromDate || !toDate) {
+        apiPayload = {
+          ...searchPayload,
+          from_date: undefined,
+          to_date: undefined
+        };
+      }
+      invokeInventoryListAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+    },
+    [fromDate, toDate],
+    [inventoryDataList]
+  );
 
   const boldNumbers = { fontSize: '18px' };
 
@@ -101,175 +203,50 @@ function Inventory() {
         )}
       </Row>
       {showInventoryCharts ? (
-        <InventoryStatsGraph />
+        <InventoryStatsGraph selectedinventory={selectedinventoryList} />
       ) : (
         <>
           {showInventoryNewForm ? (
-            <InventoryNewForm />
+            <InventoryNewForm inventoryAdded={onInventoryDataSave} />
           ) : (
             <Row>
               {showInventoryDetails && (
                 <Col lg={2} style={{ padding: '15px', marginLeft: '30px' }}>
-                  <Row
-                    style={{
-                      backgroundColor: 'white',
-                      borderRadius: '15px',
-                      border: '2px solid #E0E3E8',
-                      marginTop: '20px',
-                      paddingLeft: '10px',
-                      padding: '15px'
-                    }}>
-                    <Col>
-                      <Image style={{ height: '60px', width: '60px' }} src={sago_icon} />
-                    </Col>
-                    <Col>
-                      <Row>
-                        <label style={fontHeader}>Sago</label>
-                      </Row>
-                      <Row>
-                        <span style={fontValue}>
-                          <text style={boldNumbers}>1000</text> Bags
-                        </span>
-                      </Row>
-                    </Col>
-                    <hr style={{ color: '#62728D' }}></hr>
-                    <Row>
-                      <Col style={{ cursor: 'pointer' }}>
-                        <Image style={{ height: '17px', width: '17px' }} src={chart_icon} />
-                        <span style={{ ...fontValue, color: '#00B7FF', marginLeft: '15px' }}>
-                          <u onClick={viewChat}>View Charts</u>
-                        </span>
-                      </Col>
-                    </Row>
-                  </Row>
-                  <Row
-                    style={{
-                      backgroundColor: 'white',
-                      borderRadius: '15px',
-                      border: '2px solid #E0E3E8',
-                      marginTop: '20px',
-                      paddingLeft: '10px',
-                      padding: '15px'
-                    }}>
-                    <Col>
-                      <Image style={{ height: '60px', width: '60px' }} src={broken_icon} />
-                    </Col>
-                    <Col>
-                      <Row>
-                        <label style={fontHeader}>Broken</label>
-                      </Row>
-                      <Row>
-                        <span style={fontValue}>
-                          <text style={boldNumbers}>2000</text> Bags
-                        </span>
-                      </Row>
-                    </Col>
-                    <hr style={{ color: '#62728D' }}></hr>
-                    <Row>
-                      <Col style={{ cursor: 'pointer' }}>
-                        <Image style={{ height: '17px', width: '17px' }} src={chart_icon} />
-                        <span style={{ ...fontValue, color: '#00B7FF', marginLeft: '15px' }}>
-                          <u>View Charts</u>
-                        </span>
-                      </Col>
-                    </Row>
-                  </Row>
-                  <Row
-                    style={{
-                      backgroundColor: 'white',
-                      borderRadius: '15px',
-                      border: '2px solid #E0E3E8',
-                      marginTop: '20px',
-                      paddingLeft: '10px',
-                      padding: '15px'
-                    }}>
-                    <Col>
-                      <Image style={{ height: '60px', width: '60px' }} src={dry_thippi_inventory} />
-                    </Col>
-                    <Col>
-                      <Row>
-                        <label style={fontHeader}>Dry Thippi</label>
-                      </Row>
-                      <Row>
-                        <span style={fontValue}>
-                          <text style={boldNumbers}>2000</text> Bags
-                        </span>
-                      </Row>
-                    </Col>
-                    <hr style={{ color: '#62728D' }}></hr>
-                    <Row>
+                  {inventoryAvailableStocks?.map((item, index) => (
+                    <Row
+                      key={index}
+                      style={{
+                        backgroundColor: 'white',
+                        borderRadius: '15px',
+                        border: '2px solid #E0E3E8',
+                        marginTop: '20px',
+                        paddingLeft: '10px',
+                        padding: '15px'
+                      }}>
                       <Col>
-                        <Image style={{ height: '17px', width: '17px' }} src={chart_icon} />
-                        <span style={{ ...fontValue, color: '#00B7FF', marginLeft: '15px' }}>
-                          <u>View Charts</u>
-                        </span>
+                        <Image style={{ height: '60px', width: '60px' }} src={sago_icon} />
                       </Col>
-                    </Row>
-                  </Row>
-                  <Row
-                    style={{
-                      backgroundColor: 'white',
-                      borderRadius: '15px',
-                      border: '2px solid #E0E3E8',
-                      marginTop: '20px',
-                      paddingLeft: '10px',
-                      padding: '15px'
-                    }}>
-                    <Col>
-                      <Image style={{ height: '60px', width: '60px' }} src={wet_thippi_inventory} />
-                    </Col>
-                    <Col>
-                      <Row>
-                        <label style={fontHeader}>Wet Thippi</label>
-                      </Row>
-                      <Row>
-                        <span style={fontValue}>
-                          <text style={boldNumbers}>2000</text> Bags
-                        </span>
-                      </Row>
-                    </Col>
-                    <hr style={{ color: '#62728D' }}></hr>
-                    <Row>
                       <Col>
-                        <Image style={{ height: '17px', width: '17px' }} src={chart_icon} />
-                        <span style={{ ...fontValue, color: '#00B7FF', marginLeft: '15px' }}>
-                          <u>View Charts</u>
-                        </span>
+                        <Row>
+                          <label style={fontHeader}>{item.product_name}</label>
+                        </Row>
+                        <Row>
+                          <span style={fontValue}>
+                            <text style={boldNumbers}>{item.current_available_bags}</text> Bags
+                          </span>
+                        </Row>
                       </Col>
-                    </Row>
-                  </Row>
-                  <Row
-                    style={{
-                      backgroundColor: 'white',
-                      borderRadius: '15px',
-                      border: '2px solid #E0E3E8',
-                      marginTop: '20px',
-                      paddingLeft: '10px',
-                      padding: '15px'
-                    }}>
-                    <Col>
-                      <Image style={{ height: '60px', width: '60px' }} src={starch_inventory} />
-                    </Col>
-                    <Col>
+                      <hr style={{ color: '#62728D' }}></hr>
                       <Row>
-                        <label style={fontHeader}>Starch</label>
+                        <Col style={{ cursor: 'pointer' }}>
+                          <Image style={{ height: '17px', width: '17px' }} src={chart_icon} />
+                          <span style={{ ...fontValue, color: '#00B7FF', marginLeft: '15px' }}>
+                            <u onClick={() => viewChat(item.product_name)}>View Charts</u>
+                          </span>
+                        </Col>
                       </Row>
-                      <Row>
-                        <span style={fontValue}>
-                          <text style={boldNumbers}>5000</text> Bags
-                        </span>
-                      </Row>
-                    </Col>
-                    <hr style={{ color: '#62728D' }}></hr>
-                    <Row>
-                      <Col>
-                        <Image style={{ height: '17px', width: '17px' }} src={chart_icon} />
-                        <span style={{ ...fontValue, color: '#00B7FF', marginLeft: '15px' }}>
-                          <u>View Charts</u>
-                        </span>
-                      </Col>
                     </Row>
-                  </Row>
+                  ))}
                 </Col>
               )}
               <Col
@@ -279,7 +256,15 @@ function Inventory() {
                 <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
                   <Row>
                     <Col lg="3">
-                      <SearchBox placeHolder={'Search here'}></SearchBox>
+                      <FormControl
+                        sx={{ m: 1, minWidth: 200, marginTop: '0px', backgroundColor: 'white' }}
+                        size="small">
+                        <InputLabel id="demo-select-small-label">Entry Type</InputLabel>
+                        <Select labelId="demo-select-small-label" label="Entry Type">
+                          <MenuItem value="sale">Sale</MenuItem>
+                          <MenuItem value="produce">Produce</MenuItem>
+                        </Select>
+                      </FormControl>
                     </Col>
                     <Col lg="2">
                       <DateSelector size="smaller" customLabel="From"></DateSelector>
@@ -320,11 +305,16 @@ function Inventory() {
                 </div>
                 {/* Table */}
                 <div>
-                  {inventoryData.length > 0 ? (
+                  {inventoryDataList.length > 0 ? (
                     <InventoryTable
-                      tableData={inventoryData}
-                      tableHeaders={tpTableHeaders}
-                      tableColumns={tpTableColumns}
+                      tableData={inventoryDataList}
+                      tableHeaders={inventoryTableHeaders}
+                      tableColumns={inventoryTableColumns}
+                      totalDataCount={totalInventoryDataCount}
+                      hanldePageChange={inventoryPageChanged}
+                      handleChangeRowsPerPage={handleChangeRowsPerPage}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
                     />
                   ) : (
                     <Box sx={{ display: 'flex' }}>
@@ -337,6 +327,10 @@ function Inventory() {
           )}
         </>
       )}
+      <Toaster
+        shouldOpen={shouldShowToaster}
+        message={toasterMsg}
+        backgroundColor={toasterBackground}></Toaster>
     </Container>
   );
 }

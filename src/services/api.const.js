@@ -46,6 +46,16 @@ const SERVICES = {
       all: 'all'
     }
   },
+  INVENTORY: {
+    ROUTES: {
+      BASE_ROUTE: '/inventory',
+      INVENTORY: '/add-stock'
+    },
+    QUERY_PARAMS: {
+      INVENTORYLIST: '/list-stocks',
+      INVENTORYSTATS: '/stats'
+    }
+  },
   GENERIC: {
     ROUTES: {
       BASE_ROUTE: '/invoice',
