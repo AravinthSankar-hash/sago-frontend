@@ -9,7 +9,16 @@ import '../../css/index.css';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import IosShareIcon from '@mui/icons-material/IosShare';
-import { tpTableHeaders, tpTableColumns } from './tp.const';
+import ProService from 'services/purchase.api.js';
+import { SERVICES } from '../../services/api.const';
+import { isNumeric } from '../../components/helper/helper.js';
+import BrokerReportsInvoiceTables from './BrokerReportsInvoiceTables.jsx';
+import {
+  brokerReportsHeaders,
+  brokerReportsColumns,
+  brokerInvoicesColumns,
+  brokerInvoicesHeaders
+} from './tp.const';
 // Store
 import {
   useUpdateShowTPBackBtn,
@@ -19,22 +28,31 @@ import {
 
 function BrokerReports() {
   const [brokerReportsData, setBrokerReportsData] = useState([]);
+  const [totalBrokerReportsCount, setTotalBrokerReportsCount] = useState(0);
   const [selectedBroker, setSelectedBroker] = useState();
+  const [searchPayload, setSearchPayload] = useState({});
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
   // Store
   const updateShowTPBackBtn = useUpdateShowTPBackBtn(); // Bool to show/hide the back TP btn
   const showTPBrokerReportDetails = useShowTPBrokerReportDetails();
   const updateShowTPBrokerReportDetails = useUpdateShowTPBrokerReportDetails();
 
   useEffect(() => {
-    fetch('http://localhost:3001/broker-reports')
-      .then((rawResponse) => rawResponse.json())
+    invokeBrokerReportsAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, []);
+
+  const invokeBrokerReportsAPI = (payload, query = null) => {
+    ProService.getData(SERVICES.TP.ROUTES.BROKER_REPORT, payload, query)
       .then((response) => {
-        setBrokerReportsData(response.data);
+        // setCurrentRowsPerPage(currentRowsPerPage);
+        setBrokerReportsData(response.data.data);
+        setTotalBrokerReportsCount(response.data.totalCount);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.log('Error in searching Purchase data', error);
       });
-  }, []);
+  };
+
   const [selectedChips, setSelectedChips] = useState([]);
   const chipStyle = (isSelected) => ({
     border: '2px solid #00b7ff',
@@ -76,21 +94,21 @@ function BrokerReports() {
               <Col style={{ padding: '20px' }}>
                 <Row>
                   <label style={fontHeader}>Broker Name</label>
-                  <p style={fontValue}>{selectedBroker.brokerName}</p>
+                  <p style={fontValue}>{selectedBroker.broker_name}</p>
                 </Row>
                 <Row>
                   <label style={fontHeader}>Last Purchase Date</label>
-                  <p style={fontValue}>{selectedBroker.lastPurchase}</p>
+                  <p style={fontValue}>{selectedBroker.last_purchase_date}</p>
                 </Row>
                 <Row>
                   <label style={fontHeader}>Avg Rate</label>
-                  <p style={fontValue}>{selectedBroker.avgBagRate}</p>
+                  <p style={fontValue}>{selectedBroker.avg_bag_rate}</p>
                 </Row>
               </Col>
               <Col style={{ padding: '20px' }}>
                 <Row>
                   <label style={fontHeader}>AP</label>
-                  <p style={fontValue}>{selectedBroker.ap}</p>
+                  <p style={fontValue}>{selectedBroker.total_ap_in_all_invoices}</p>
                 </Row>{' '}
                 <Row>
                   <label style={fontHeader}>TP</label>
@@ -98,7 +116,7 @@ function BrokerReports() {
                 </Row>{' '}
                 <Row>
                   <label style={fontHeader}>Total Bags</label>
-                  <p style={fontValue}>{selectedBroker.totalBags}</p>
+                  <p style={fontValue}>{selectedBroker.total_bags_purchased}</p>
                 </Row>
               </Col>
             </Row>
@@ -112,7 +130,7 @@ function BrokerReports() {
                 padding: '15px'
               }}>
               <label style={fontHeader}>Total Payment</label>
-              <p style={fontValue}>{selectedBroker.outstandings}</p>
+              <p style={fontValue}>{selectedBroker.total_purchased_amount}</p>
             </Row>
             <Row
               style={{
@@ -128,67 +146,77 @@ function BrokerReports() {
             </Row>
           </Col>
         )}
-        <Col
-          lg={showTPBrokerReportDetails ? 9 : 12}
-          className="d-flex flex-column justify-content-center">
-          {/* Filters */}
-          <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
-            <Row style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Col lg="3">
-                <SearchBox placeHolder={'Search here'}></SearchBox>
-              </Col>
-              <Col lg="2">
-                <IconButton size="small">
-                  <IosShareIcon
-                    fontSize="small"
-                    style={{
-                      wordSpacing: 1
-                    }}
+        {showTPBrokerReportDetails ? (
+          <Col lg={9} className="mt-3">
+            {' '}
+            <BrokerReportsInvoiceTables
+              tableData={selectedBroker.invoices}
+              tableHeaders={brokerInvoicesHeaders}
+              tableColumns={brokerInvoicesColumns}
+              tableRowClicked={onTableRowClick}
+            />
+          </Col>
+        ) : (
+          <Col className="d-flex flex-column justify-content-center">
+            {/* Filters */}
+            <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
+              <Row style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Col lg="3">
+                  <SearchBox placeHolder={'Search here'}></SearchBox>
+                </Col>
+                <Col lg="2">
+                  <IconButton size="small">
+                    <IosShareIcon
+                      fontSize="small"
+                      style={{
+                        wordSpacing: 1
+                      }}
+                    />
+                    Export Data
+                  </IconButton>
+                </Col>
+              </Row>
+              <Row className="mt-3">
+                <Stack direction="row" spacing={1}>
+                  <p style={{ color: '#6B778C' }}>Filter by : </p>
+                  <Chip
+                    label="All"
+                    color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
+                    onClick={() => handleChipSelect('All')}
+                    sx={chipStyle(selectedChips.includes('All'))}
                   />
-                  Export Data
-                </IconButton>
-              </Col>
-            </Row>
-            <Row className="mt-3">
-              <Stack direction="row" spacing={1}>
-                <p style={{ color: '#6B778C' }}>Filter by : </p>
-                <Chip
-                  label="All"
-                  color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                  onClick={() => handleChipSelect('All')}
-                  sx={chipStyle(selectedChips.includes('All'))}
+                  <Chip
+                    label="Paid"
+                    color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
+                    onClick={() => handleChipSelect('Paid')}
+                    sx={chipStyle(selectedChips.includes('Paid'))}
+                  />
+                  <Chip
+                    label="Unpaid"
+                    color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
+                    onClick={() => handleChipSelect('UnPaid')}
+                    sx={chipStyle(selectedChips.includes('UnPaid'))}
+                  />
+                </Stack>
+              </Row>
+            </div>
+            {/* Table */}
+            <div>
+              {brokerReportsData.length > 0 ? (
+                <BrokerReportsTable
+                  tableData={brokerReportsData}
+                  tableHeaders={brokerReportsHeaders}
+                  tableColumns={brokerReportsColumns}
+                  tableRowClicked={onTableRowClick}
                 />
-                <Chip
-                  label="Paid"
-                  color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                  onClick={() => handleChipSelect('Paid')}
-                  sx={chipStyle(selectedChips.includes('Paid'))}
-                />
-                <Chip
-                  label="Unpaid"
-                  color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                  onClick={() => handleChipSelect('UnPaid')}
-                  sx={chipStyle(selectedChips.includes('UnPaid'))}
-                />
-              </Stack>
-            </Row>
-          </div>
-          {/* Table */}
-          <div>
-            {brokerReportsData.length > 0 ? (
-              <BrokerReportsTable
-                tableData={brokerReportsData}
-                tableHeaders={tpTableHeaders}
-                tableColumns={tpTableColumns}
-                tableRowClicked={onTableRowClick}
-              />
-            ) : (
-              <Box sx={{ display: 'flex' }}>
-                <CircularProgress />
-              </Box>
-            )}
-          </div>
-        </Col>
+              ) : (
+                <Box sx={{ display: 'flex' }}>
+                  <CircularProgress />
+                </Box>
+              )}
+            </div>
+          </Col>
+        )}
       </Row>
     </Container>
   );

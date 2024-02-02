@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import '../../css/index.css';
 
-const BrokerReportsTable = (props) => {
+const BrokerReportsInvoiceTables = (props) => {
   const {
     tableData,
     tableHeaders,
@@ -131,4 +131,4 @@ const BrokerReportsTable = (props) => {
   );
 };
 
-export default BrokerReportsTable;
+export default BrokerReportsInvoiceTables;

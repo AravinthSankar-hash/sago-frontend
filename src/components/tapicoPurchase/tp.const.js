@@ -70,6 +70,47 @@ export const expenseTableColumns = [
   'approval_status'
 ];
 
+export const brokerReportsHeaders = [
+  'Broker Name',
+  'Address',
+  'Comm %',
+  'AP',
+  'Total Bags',
+  'Avg. Bag Rate',
+  'Status',
+  'Outstandings',
+  'Last purchase date'
+]
+
+export const brokerReportsColumns = [
+  'broker_name',
+  'broker_address',
+  'broker_commission',
+  'total_ap_in_all_invoices',
+  'total_bags_purchased',
+  'avg_bag_rate',
+  'payment_status',
+  'outstandings',
+  'last_purchase_date'
+]
+
+export const brokerInvoicesHeaders = [
+  'Pur. date',
+  'Pur. No.',
+  'Total bags',
+  'AP',
+  'Com. %',
+  'Pur. Amount'
+];
+export const brokerInvoicesColumns = [
+  'purchase_date',
+  'invoice_number',
+  'total_bags_purchased',
+  'total_ap_in_all_invoices',
+  'commission',
+  'total_purchased_amount'
+];
+
 export const RESPONSE_MSG = {
   INVALID_SEARCH_TEXT: 'Invalid Search Text',
   NO_DATA_FOUND: 'No Data Found',
@@ -77,3 +118,4 @@ export const RESPONSE_MSG = {
 };
 
 export const TABLE_ROW_SIZE_OPTIONS = [10, 25, 100];
+

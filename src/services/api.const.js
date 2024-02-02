@@ -24,8 +24,8 @@ const SERVICES = {
     ROUTES: {
       BASE_ROUTE: '/purchase',
       TP: '/tp',
-      BROKERREPORT: '/broker-purchases',
-      REPORT: '/report',
+      BROKER_REPORT: '/broker-purchases',
+      REPORT: '/reports',
       PROCUREMENT: '/procurement',
       EXPENSES: '/expense'
     },
