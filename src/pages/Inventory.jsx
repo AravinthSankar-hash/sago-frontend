@@ -50,7 +50,7 @@ function Inventory() {
   const [inventoryDataList, setInventoryDataList] = useState([]);
   const [inventoryAvailableStocks, setInventoryAvailableStocks] = useState([]);
   const [totalInventoryDataCount, setTotalInventoryDataCount] = useState(0);
-  const [searchPayload, setSearchPayload] = useState({});
+  const [searchPayload, setSearchPayload] = useState({ category: 'All' });
   const [toasterBackground, setToasterBackground] = useState(null);
   const [toasterMsg, setToasterMsg] = useState('Inventory data saved');
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
@@ -70,7 +70,7 @@ function Inventory() {
   const invokeInventoryListAPI = (payload, query = null) => {
     InventoryService.getData(SERVICES.INVENTORY.QUERY_PARAMS.INVENTORYLIST, payload, query)
       .then((response) => {
-        // setCurrentRowsPerPage(currentRowsPerPage);
+        setRowsPerPage(rowsPerPage);
         setInventoryDataList(response.data.data.inventoryList);
         setInventoryAvailableStocks(response.data.data.productAvailableStocks);
         setTotalInventoryDataCount(response.data.totalCount);
@@ -181,7 +181,21 @@ function Inventory() {
     [fromDate, toDate],
     [inventoryDataList]
   );
-
+  const [selectedDDValue, setSelectedDDValue] = useState('All');
+  const handleSelectChange = (event) => {
+    setSelectedDDValue(event.target.value);
+    let apiPayload = {
+      ...searchPayload,
+      category: event.target.value
+    };
+    setSearchPayload((existingPayload) => {
+      return {
+        ...existingPayload,
+        category: event.target.value
+      };
+    });
+    invokeInventoryListAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  };
   const boldNumbers = { fontSize: '18px' };
 
   const fontHeader = { font: 'Roboto', color: '#62728D', fontSize: '12px' };
@@ -260,17 +274,28 @@ function Inventory() {
                         sx={{ m: 1, minWidth: 200, marginTop: '0px', backgroundColor: 'white' }}
                         size="small">
                         <InputLabel id="demo-select-small-label">Entry Type</InputLabel>
-                        <Select labelId="demo-select-small-label" label="Entry Type">
+                        <Select
+                          labelId="demo-select-small-label"
+                          onChange={handleSelectChange}
+                          label="Entry Type"
+                          value={selectedDDValue}>
+                          <MenuItem value="All">All</MenuItem>
                           <MenuItem value="sale">Sale</MenuItem>
                           <MenuItem value="produce">Produce</MenuItem>
                         </Select>
                       </FormControl>
                     </Col>
                     <Col lg="3">
-                      <DateSelector size="smaller" customLabel="From"></DateSelector>
+                      <DateSelector
+                        size="smaller"
+                        dateChangeHanlder={onDateChange}
+                        customLabel="From"></DateSelector>
                     </Col>
                     <Col lg="3">
-                      <DateSelector size="smaller" customLabel="From"></DateSelector>
+                      <DateSelector
+                        size="smaller"
+                        dateChangeHanlder={onDateChange}
+                        customLabel="To"></DateSelector>
                     </Col>
                     {/* <Col lg="2">
                       <IconButton size="small">

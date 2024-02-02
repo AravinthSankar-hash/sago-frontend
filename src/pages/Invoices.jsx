@@ -44,6 +44,7 @@ function Invoices() {
   const invokeSearchAPI = (payload, query = null, type) => {
     SaleService.getSales(SERVICES.SALE.SALE_TYPES[type], payload, query)
       .then((response) => {
+        setRowsPerPage(rowsPerPage);
         setsalesInvoices(response.data.data);
         setTotalDataCount(response.data.totalCount);
       })
@@ -52,10 +53,19 @@ function Invoices() {
       });
   };
 
-  const invoicePageChanged = (currentPageNo, rowsPerPage) => {
-    setRowsPerPage(rowsPerPage);
-    console.log('page changed - ', currentPageNo, rowsPerPage);
+  const invoicePageChanged = (event, currentPageNo) => {
+    setPage(currentPageNo);
     invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`, selectedValue);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+    invokeSearchAPI(
+      searchPayload,
+      `page=${0 + 1}&limit=${parseInt(event.target.value, 10)}`,
+      selectedValue
+    );
   };
 
   const onTableRowClick = (clickedRow) => {
@@ -285,8 +295,9 @@ function Invoices() {
                     tableHeaders={invoiceTableHeaders}
                     tableColumns={invoiceTableColumns}
                     totalDataCount={totalDataCount}
-                    hanldePageChange={invoicePageChanged}
                     tableRowClicked={onTableRowClick}
+                    handleChangePage={invoicePageChanged}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
                     rowsPerPage={rowsPerPage}
                     page={page}
                   />

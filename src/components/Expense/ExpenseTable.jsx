@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import dayjs from 'dayjs';
 
-// import '../css/index.css';
 import { TABLE_ROW_SIZE_OPTIONS } from '../tapicoPurchase/tp.const';
 
 const ExpenseTable = (props) => {

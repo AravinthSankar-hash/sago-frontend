@@ -24,24 +24,21 @@ function PendingApprovals() {
   const [pendingApprovalsData, setPendingApprovalsData] = useState([]);
   const [clickedRowData, setClickedRowData] = useState({});
   const [totalPendingDataCount, setTotalPendingDataCount] = useState(0);
-  const [page, setPage] = useState(0);
 
   // Store
   const updateShowApprovalsBackBtn = useUpdateShowApprovalsBackBtn();
   const showPendingApprovalDetails = useShowPendingApprovalDetails();
   const updateShowPendingApprovalDetails = useUpdateShowPendingApprovalDetails();
   const [searchPayload, setSearchPayload] = useState({ approval_status: 'PENDING' });
-  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
   const [toasterBackground, setToasterBackground] = useState(null);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
   const [toasterMsg, setToasterMsg] = useState('Procurement data saved');
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
   const [selectedChips, setSelectedChips] = useState(['procurement']);
 
   // const [url, setUrl] = useState('/procurement-invoices');
 
-  useEffect(() => {
-    invokePurchaseListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
-  }, [selectedChips]);
   const invokePurchaseListAPI = (payload, query = null) => {
     let url;
     if (selectedChips[0] == 'procurement') {
@@ -53,7 +50,7 @@ function PendingApprovals() {
     }
     ProService.getData(url, payload, query)
       .then((response) => {
-        // setCurrentRowsPerPage(currentRowsPerPage);
+        setRowsPerPage(rowsPerPage);
         setPendingApprovalsData(response.data.data);
         setTotalPendingDataCount(response.data.totalCount);
         if (response.data?.data.length === 0) {
@@ -87,16 +84,16 @@ function PendingApprovals() {
       })
     };
     setSearchPayload(payload);
-    invokePurchaseListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+    invokePurchaseListAPI(payload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
 
   const approvalPageChange = (event, currentPageNo) => {
     setPage(currentPageNo);
-    invokePurchaseListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${currentRowsPerPage}`);
+    invokePurchaseListAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setCurrentRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
     invokePurchaseListAPI(searchPayload, `page=${0 + 1}&limit=${parseInt(event.target.value, 10)}`);
   };
@@ -135,6 +132,48 @@ function PendingApprovals() {
     updateShowApprovalsBackBtn(shouldShow);
   };
 
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
+  const onDateChange = (selectedDate, dateType) => {
+    if (!selectedDate) {
+      // If the date is not selected, reset the corresponding state
+      if (dateType === 'from') {
+        setFromDate(null);
+      } else if (dateType === 'to') {
+        setToDate(null);
+      }
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: undefined
+      }));
+    } else {
+      // If the date is selected, update the corresponding state
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: selectedDate
+      }));
+      if (dateType === 'from') {
+        setFromDate(selectedDate);
+      } else if (dateType === 'to') {
+        setToDate(selectedDate);
+      }
+    }
+  };
+
+  useEffect(() => {
+    let apiPayload = searchPayload;
+    // Check if any fromDate and toDate are missing
+    if (!fromDate || !toDate) {
+      apiPayload = {
+        ...searchPayload,
+        from_date: undefined,
+        to_date: undefined
+      };
+    }
+    invokePurchaseListAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  }, [fromDate, toDate, selectedChips]);
+
   return (
     <>
       {showPendingApprovalDetails ? (
@@ -157,10 +196,15 @@ function PendingApprovals() {
                         inputValueChanged={onSearchBoxValueChange}></SearchBox>
                     </Col>
                     <Col lg="2">
-                      <DateSelector size="smaller" customLabel="From"></DateSelector>
+                      <DateSelector
+                        size="smaller"
+                        dateChangeHanlder={onDateChange}
+                        customLabel="From"></DateSelector>
                     </Col>
                     <Col lg="2">
-                      <DateSelector customLabel="To"></DateSelector>
+                      <DateSelector
+                        dateChangeHanlder={onDateChange}
+                        customLabel="To"></DateSelector>
                     </Col>
                     <Col lg="4" className="d-flex justify-content-end">
                       <IconButton size="small">
@@ -199,7 +243,7 @@ function PendingApprovals() {
                       totalDataCount={totalPendingDataCount}
                       hanldePageChange={approvalPageChange}
                       handleChangeRowsPerPage={handleChangeRowsPerPage}
-                      rowsPerPage={currentRowsPerPage}
+                      rowsPerPage={rowsPerPage}
                       page={page}
                     />
                   ) : (
