@@ -266,13 +266,13 @@ function Inventory() {
                         </Select>
                       </FormControl>
                     </Col>
-                    <Col lg="2">
+                    <Col lg="3">
                       <DateSelector size="smaller" customLabel="From"></DateSelector>
                     </Col>
-                    <Col lg="2">
+                    <Col lg="3">
                       <DateSelector size="smaller" customLabel="From"></DateSelector>
                     </Col>
-                    <Col lg="2">
+                    {/* <Col lg="2">
                       <IconButton size="small">
                         <IosShareIcon
                           fontSize="small"
@@ -282,8 +282,8 @@ function Inventory() {
                         />
                         Export Data
                       </IconButton>
-                    </Col>
-                    <Col lg="2" className="d-flex justify-content-end">
+                    </Col> */}
+                    <Col lg="3" className="d-flex justify-content-end">
                       <Button
                         sx={{
                           borderColor: '#00B7FF',
