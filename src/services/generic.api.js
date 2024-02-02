@@ -42,6 +42,14 @@ function getDashboardStats(data = {}, query = null) {
   });
 }
 
+function login(data) {
+  return request({
+    url: `login`,
+    method: 'POST',
+    data
+  });
+}
+
 function invoiceApprove(data) {
   return request({
     url: `${ROUTES.PURCHASE}${SERVICES.GENERIC.INVOICE_APPROVAL.APPROVE}`,
@@ -56,7 +64,8 @@ const GeneralService = {
   getPayments,
   deleteInvoice,
   getDashboardStats,
-  invoiceApprove
+  invoiceApprove,
+  login
 };
 
 export default GeneralService;

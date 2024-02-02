@@ -25,7 +25,7 @@ const SalesTab = ({ handleTabSwitch, tabToSelect }) => {
       />
       <Tab value="thippiSales" sx={{ textTransform: 'none' }} label="Thippi Sales" />
       <Tab value="generalSales" sx={{ textTransform: 'none' }} label="General Sales" />
-      <Tab value="salesPerformance" sx={{ textTransform: 'none' }} label="Sales Performance" />
+      {/* <Tab value="salesPerformance" sx={{ textTransform: 'none' }} label="Sales Performance" /> */}
     </Tabs>
   );
 };
