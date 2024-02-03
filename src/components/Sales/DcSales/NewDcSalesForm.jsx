@@ -11,8 +11,11 @@ import Toaster from '../../helper/Snackbar.jsx';
 import SaleService from '../../../services/sale.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 import { RESPONSE_MSG } from '../sale.const.js';
+import GstToggle from '../gstToggle';
 
 function NewDcSalesForm({ dcAdded }) {
+  const [isChecked, setIsChecked] = useState(true);
+
   const {
     register,
     handleSubmit,
@@ -30,6 +33,11 @@ function NewDcSalesForm({ dcAdded }) {
     }),
     []
   );
+
+  const handleSwitchChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+
   const formGrpStyle = {
     backgroundColor: 'white',
     borderRadius: '10px',
@@ -56,6 +64,12 @@ function NewDcSalesForm({ dcAdded }) {
     backgroundPosition: 'right .75rem center',
     backgroundSize: '8px 10px',
     paddingRight: '2rem'
+  };
+
+  const disabledInput = {
+    background: '#F4F5F7',
+    color: '#A5ADBA',
+    border: 'none'
   };
 
   const [rows, setRows] = useState([{ id: 1 }]);
@@ -123,8 +137,9 @@ function NewDcSalesForm({ dcAdded }) {
       // Footer data
       total_rate_sum: total_rate_sum,
       round_off: round_off,
-      vehicle_rent: vehicle_rent,
-      grand_total: grand_total
+      grand_total: grand_total,
+      gstPercent: isChecked ? 18 : 0,
+      taxable_value: isChecked ? +data.taxable_value : 0
     };
 
     invokeCreateAPI(SALE.SALE_TYPES.dc, formData);
@@ -551,9 +566,22 @@ function NewDcSalesForm({ dcAdded }) {
           ))}
           {/* Dynamic Rows */}
           <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
+          <Row className="m-3">
+            <GstToggle handleSwitchChange={handleSwitchChange} isChecked={isChecked} />
+          </Row>
           <Row>
             <Col xs={5}>
               <Row className="m-3">
+                {isChecked ? (
+                  <>
+                    <Form.Group as={Col}>
+                      <Form.Label>GST (%)</Form.Label>
+                      <Form.Control style={disabledInput} defaultValue="18 %" disabled />
+                    </Form.Group>
+                  </>
+                ) : (
+                  ''
+                )}
                 <Form.Group as={Col}>
                   <Form.Label>Discount (₹)</Form.Label>
                   <Form.Control
@@ -603,15 +631,26 @@ function NewDcSalesForm({ dcAdded }) {
                         <td style={summaztionFooterRows}>:</td>
                         <td>₹ 1,000</td>
                       </tr>
+                      {isChecked ? (
+                        <>
+                          <tr>
+                            <td style={summaztionFooterRows}>Taxable Value</td>
+                            <td style={summaztionFooterRows}>:</td>
+                            <td>₹ 1000</td>
+                          </tr>
+                          <tr>
+                            <td style={summaztionFooterRows}>GST Value</td>
+                            <td style={summaztionFooterRows}>:</td>
+                            <td>₹ 1000</td>
+                          </tr>
+                        </>
+                      ) : (
+                        ''
+                      )}
                       <tr>
-                        <td style={summaztionFooterRows}>Vehicle Rent</td>
+                        <td style={summaztionFooterRows}>Discount</td>
                         <td style={summaztionFooterRows}>:</td>
                         <td>₹ 8,944</td>
-                      </tr>
-                      <tr>
-                        <td style={summaztionFooterRows}>Round-Off</td>
-                        <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8914</td>
                       </tr>
                       <tr style={{ borderTop: '0.5px solid #62728D' }}>
                         <td style={summaztionFooterRows}>Total Amount</td>

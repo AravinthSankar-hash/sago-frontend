@@ -11,14 +11,27 @@ import Toaster from '../../helper/Snackbar.jsx';
 import SaleService from '../../../services/sale.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 import { RESPONSE_MSG } from '../sale.const.js';
+import GstToggle from '../gstToggle';
 
 function NewGsForm({ gsAdded }) {
+  const [isChecked, setIsChecked] = useState(true);
+
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
   const containerRef = useRef();
+
+  const handleSwitchChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+  const disabledInput = {
+    background: '#F4F5F7',
+    color: '#A5ADBA',
+    border: 'none'
+  };
+
   const gridStyle = useMemo(
     () => ({
       width: '100%',
@@ -120,13 +133,13 @@ function NewGsForm({ gsAdded }) {
       discount: +data.discount,
       top_rate: +data.top_rate,
       eway_bill_no: data.eway_bill_no,
-      gst_percent: +data.gst_percent,
-      tcs_percent: +data.tcs_percent,
+      gstPercent: isChecked ? 18 : 0,
+      tcs_percent: isChecked ? +data.tcs_percent : 0,
       items: itemDetails,
       // Footer data
       total_rate_sum: total_rate_sum,
       round_off: round_off,
-      vehicle_rent: vehicle_rent,
+      taxable_value: isChecked ? +data.taxable_value : 0,
       grand_total: grand_total
     };
     invokeCreateAPI(SALE.SALE_TYPES.general, formData);
@@ -541,8 +554,53 @@ function NewGsForm({ gsAdded }) {
           ))}
           {/* Dynamic Rows */}
           <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
+          <Row className="m-3">
+            <GstToggle handleSwitchChange={handleSwitchChange} isChecked={isChecked} />
+          </Row>
           <Row>
             <Col xs={5}>
+              {isChecked ? (
+                <Row className="m-3">
+                  <Form.Group as={Col}>
+                    <Form.Label>GST (%)</Form.Label>
+                    <Form.Control
+                      style={disabledInput}
+                      defaultValue="18 %"
+                      disabled
+                      // type="number"
+                      // style={inputStyle}
+                      // {...register('gst_percent', {
+                      //   required: 'Required'
+                      // })}
+                    />
+                    {errors.gst_percent && (
+                      <Form.Text className="text-danger">{errors.gst_percent.message}</Form.Text>
+                    )}
+                  </Form.Group>
+
+                  <Form.Group as={Col}>
+                    <Form.Label>TCS Value (%)</Form.Label>
+                    <Form.Control
+                      type="number"
+                      style={inputStyle}
+                      {...register('tcs_percent', {
+                        required: 'Required'
+                      })}
+                    />
+                    {errors.tcs_percent && (
+                      <Form.Text className="text-danger">{errors.tcs_percent.message}</Form.Text>
+                    )}
+                  </Form.Group>
+                </Row>
+              ) : (
+                // <>
+                //   <Form.Group as={Col}>
+                //     <Form.Label>GST (%)</Form.Label>
+                //     <Form.Control style={disabledInput} defaultValue="18 %" disabled />
+                //   </Form.Group>
+                // </>
+                ''
+              )}
               <Row className="m-3">
                 <Form.Group as={Col}>
                   <Form.Label>Discount (₹)</Form.Label>
@@ -580,35 +638,6 @@ function NewGsForm({ gsAdded }) {
                   )}
                 </Form.Group>
               </Row>
-              <Row className="m-3">
-                <Form.Group as={Col}>
-                  <Form.Label>GST (%)</Form.Label>
-                  <Form.Control
-                    type="number"
-                    style={inputStyle}
-                    {...register('gst_percent', {
-                      required: 'Required'
-                    })}
-                  />
-                  {errors.gst_percent && (
-                    <Form.Text className="text-danger">{errors.gst_percent.message}</Form.Text>
-                  )}
-                </Form.Group>
-
-                <Form.Group as={Col}>
-                  <Form.Label>TCS Value</Form.Label>
-                  <Form.Control
-                    type="number"
-                    style={inputStyle}
-                    {...register('tcs_percent', {
-                      required: 'Required'
-                    })}
-                  />
-                  {errors.tcs_percent && (
-                    <Form.Text className="text-danger">{errors.tcs_percent.message}</Form.Text>
-                  )}
-                </Form.Group>
-              </Row>
             </Col>
             <Col
               xs={4}
@@ -622,13 +651,29 @@ function NewGsForm({ gsAdded }) {
                         <td style={summaztionFooterRows}>:</td>
                         <td>₹ 1,000</td>
                       </tr>
+                      {isChecked ? (
+                        <>
+                          <tr>
+                            <td style={summaztionFooterRows}>Taxable Value</td>
+                            <td style={summaztionFooterRows}>:</td>
+                            <td>₹ 1000</td>
+                          </tr>
+                          <tr>
+                            <td style={summaztionFooterRows}>TCS Value</td>
+                            <td style={summaztionFooterRows}>:</td>
+                            <td>₹ 1000</td>
+                          </tr>
+                          <tr>
+                            <td style={summaztionFooterRows}>GST Value</td>
+                            <td style={summaztionFooterRows}>:</td>
+                            <td>₹ 1000</td>
+                          </tr>
+                        </>
+                      ) : (
+                        ''
+                      )}
                       <tr>
-                        <td style={summaztionFooterRows}>Vehicle Rent</td>
-                        <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8,944</td>
-                      </tr>
-                      <tr>
-                        <td style={summaztionFooterRows}>Round-Off</td>
+                        <td style={summaztionFooterRows}>Discount</td>
                         <td style={summaztionFooterRows}>:</td>
                         <td>₹ 8914</td>
                       </tr>
