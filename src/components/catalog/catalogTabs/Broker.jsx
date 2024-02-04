@@ -12,7 +12,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import BrokerTable from '../catalogTables/BrokerTable';
-import { brokerTableHeadersSample, brokerTableColumns, RESPONSE_MSG } from '../catalog.const';
+import { brokerTableHeaders, brokerTableColumns, RESPONSE_MSG } from '../catalog.const';
 import CatalogService from 'services/catalog.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 import Toaster from '../../helper/Snackbar.jsx';
@@ -49,15 +49,15 @@ const Broker = () => {
   const showBrokerNewForm = useShowBrokerNewForm(); // Show Broker Add form
   const updateShowBrokerNewForm = useUpdateShowBrokerNewForm(); // Show Broker Dashboard
 
-  useEffect(() => {
-    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.BROKER)
-      .then((response) => {
-        setBrokerData(response.data.data);
-      })
-      .catch((error) => {
-        console.log('Error in getting Broker data', error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.BROKER)
+  //     .then((response) => {
+  //       setBrokerData(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log('Error in getting Broker data', error);
+  //     });
+  // }, []);
 
   const showForm = (shouldShow) => {
     updateShowBrokerNewForm(shouldShow);
@@ -237,7 +237,7 @@ const Broker = () => {
                     {brokerData.length ? (
                       <BrokerTable
                         tableData={brokerData}
-                        tableHeaders={brokerTableHeadersSample}
+                        tableHeaders={brokerTableHeaders}
                         tableColumns={brokerTableColumns}
                         totalBrokerDataCount={totalBrokerDataCount}
                         hanldePageChange={brokerPageChanged}

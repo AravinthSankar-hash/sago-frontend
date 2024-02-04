@@ -105,6 +105,7 @@ function PendingPayments() {
 
   const onSearchBoxValueChange = (currentInputValue) => {
     let apiPayload = {};
+    setPage(0);
     setSearchPayload((existingPayload) => {
       apiPayload = {
         ...existingPayload,

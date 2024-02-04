@@ -22,22 +22,19 @@ const InventoryStatsGraph = ({ selectedinventory }) => {
   const [statsData, setStatsData] = useState([]);
   const [totalStatsDataCount, setTotalStatsDataCount] = useState(0);
   const [page, setPage] = useState(0);
-  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchPayload, setSearchPayload] = useState({ product_name: selectedinventory });
   const [toasterBackground, setToasterBackground] = useState(null);
   const [toasterMsg, setToasterMsg] = useState('Inventory data saved');
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
 
-  useEffect(() => {
-    invokeInventoryStatsAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
-  }, []);
-
   const invokeInventoryStatsAPI = (payload, query = null) => {
     InventoryService.getData(SERVICES.INVENTORY.QUERY_PARAMS.INVENTORYLIST, payload, query)
       .then((response) => {
         // setCurrentRowsPerPage(currentRowsPerPage);
+        setRowsPerPage(rowsPerPage);
         setStatsData(response.data.data.inventoryList);
-        setTotalStatsDataCount(response.data.data.totalCount);
+        setTotalStatsDataCount(response.data.totalCount);
         // if (response.data?.data.length === 0) {
         //   invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
         // }
@@ -61,7 +58,7 @@ const InventoryStatsGraph = ({ selectedinventory }) => {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setCurrentRowsPerPage(parseInt(event.target.value, 10));
+    setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
     invokeInventoryStatsAPI(
       searchPayload,
@@ -71,10 +68,72 @@ const InventoryStatsGraph = ({ selectedinventory }) => {
 
   const inventoryPageChanged = (event, currentPageNo) => {
     setPage(currentPageNo);
-    invokeInventoryStatsAPI(searchPayload, `page=${currentPageNo + 1}&limit=${currentRowsPerPage}`);
+    invokeInventoryStatsAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
   };
 
-  const handleChangePage = () => {};
+  const [selectedDDValue, setSelectedDDValue] = useState('All');
+  const handleSelectChange = (event) => {
+    setSelectedDDValue(event.target.value);
+    setPage(0);
+    let apiPayload = {
+      ...searchPayload,
+      category: event.target.value
+    };
+    setSearchPayload((existingPayload) => {
+      return {
+        ...existingPayload,
+        category: event.target.value
+      };
+    });
+    invokeInventoryStatsAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  };
+
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
+  const onDateChange = (selectedDate, dateType) => {
+    if (!selectedDate) {
+      // If the date is not selected, reset the corresponding state
+      if (dateType === 'from') {
+        setFromDate(null);
+      } else if (dateType === 'to') {
+        setToDate(null);
+      }
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: undefined
+      }));
+    } else {
+      // If the date is selected, update the corresponding state
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: selectedDate
+      }));
+      if (dateType === 'from') {
+        setFromDate(selectedDate);
+      } else if (dateType === 'to') {
+        setToDate(selectedDate);
+      }
+    }
+  };
+
+  useEffect(() => {
+    let apiPayload = searchPayload;
+    // Check if any fromDate and toDate are missing
+    if (!fromDate || !toDate) {
+      apiPayload = {
+        ...searchPayload,
+        from_date: undefined,
+        to_date: undefined
+      };
+    }
+    invokeInventoryStatsAPI(apiPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  }, [fromDate, toDate]);
+
+  // useEffect(() => {
+  //   invokeInventoryStatsAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
+  // }, []);
+
   return (
     <>
       <Container>
@@ -88,17 +147,25 @@ const InventoryStatsGraph = ({ selectedinventory }) => {
                     sx={{ m: 1, minWidth: 200, marginTop: '0px', backgroundColor: 'white' }}
                     size="small">
                     <InputLabel id="demo-select-small-label">Entry Type</InputLabel>
-                    <Select labelId="demo-select-small-label" label="Entry Type">
+                    <Select
+                      labelId="demo-select-small-label"
+                      onChange={handleSelectChange}
+                      label="Entry Type"
+                      value={selectedDDValue}>
+                      <MenuItem value="All">All</MenuItem>
                       <MenuItem value="sale">Sale</MenuItem>
                       <MenuItem value="produce">Produce</MenuItem>
                     </Select>
                   </FormControl>
                 </Col>
                 <Col lg="4">
-                  <DateSelector size="smaller" customLabel="From"></DateSelector>
+                  <DateSelector
+                    size="smaller"
+                    dateChangeHanlder={onDateChange}
+                    customLabel="From"></DateSelector>
                 </Col>
                 <Col lg="4">
-                  <DateSelector customLabel="To"></DateSelector>
+                  <DateSelector customLabel="To" dateChangeHanlder={onDateChange}></DateSelector>
                 </Col>
               </Row>
             </div>
@@ -110,9 +177,9 @@ const InventoryStatsGraph = ({ selectedinventory }) => {
                   tableHeaders={inventoryStatsTableHeaders}
                   tableColumns={inventoryStatsTableColumns}
                   totalDataCount={totalStatsDataCount}
-                  hanldePageChange={inventoryPageChanged}
+                  handleChangePage={inventoryPageChanged}
                   handleChangeRowsPerPage={handleChangeRowsPerPage}
-                  rowsPerPage={currentRowsPerPage}
+                  rowsPerPage={rowsPerPage}
                   page={page}
                 />
               )}

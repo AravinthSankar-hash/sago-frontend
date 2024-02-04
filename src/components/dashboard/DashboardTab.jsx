@@ -25,13 +25,13 @@ const DashboardTab = ({ showProductGraph, switchTab }) => {
             style={productGraph}
             onClick={() => switchTab(true)}
           />
-          <Tab
+          {/* <Tab
             value="common-tab"
             sx={{ textTransform: 'none' }}
             label="Common Reports"
             style={commonTabGraph}
             onClick={() => switchTab(false)}
-          />
+          /> */}
         </Tabs>
       </div>
     </div>

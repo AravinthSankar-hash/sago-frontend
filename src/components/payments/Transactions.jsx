@@ -65,7 +65,6 @@ function AllPayments() {
     }
 
     const updatedChipSet = new Set(selectedChips);
-    console.log(selectedChips, 'selectedChips');
 
     if (updatedChipSet.has('All')) {
       updatedChipSet.delete('All');

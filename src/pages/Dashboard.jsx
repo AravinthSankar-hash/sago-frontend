@@ -69,27 +69,35 @@ function Dashboard() {
           <Col lg="2">
             <DateSelector customLabel="To"></DateSelector>
           </Col>
-          <Col lg={{ span: 2, offset: 3 }} className="d-flex justify-content-end">
+          <Col lg={{ span: 2, offset: 3 }} className="justify-content-end">
             <Form.Label className="">Total Sales overall</Form.Label>
+            <div style={{ fontSize: '22px', fontWeight: 'bolder' }}>
+              ₹{graphData?.totalTransactions?.totalSales || 0}
+            </div>
           </Col>
-          <Col lg="2" className="d-flex justify-content-end">
+          <Col lg="2" className="justify-content-end">
             <Form.Label>Total Purchases</Form.Label>
+            <div style={{ fontSize: '22px', fontWeight: 'bolder' }}>
+              ₹
+              {graphData?.totalTransactions?.totalProAmount +
+                graphData?.totalTransactions?.totalTpAmount +
+                graphData?.totalTransactions?.totalExpense}
+            </div>
           </Col>
         </Row>
       </div>
-      <Container className="ag-theme-alpine" style={{ background: '#EBEEF0' }}>
-        <div ref={containerRef} className="m-3 mt-5" style={tableContainer}>
-          <DashboardTab showProductGraph={showProductGraph} switchTab={switchTabHandler} />
-          <Container style={gridStyle}>
-            {graphData && (
+      {graphData && (
+        <Container className="ag-theme-alpine" style={{ background: '#EBEEF0' }}>
+          <div ref={containerRef} className="m-3 mt-5" style={tableContainer}>
+            <DashboardTab showProductGraph={showProductGraph} switchTab={switchTabHandler} />
+            <Container style={gridStyle}>
               <>
-                {/* {showProductGraph ? <ProductGraph statisticsData={graphData} /> : <CommonGraph />} */}
                 <ProductGraph statisticsData={graphData} />
               </>
-            )}
-          </Container>
-        </div>
-      </Container>
+            </Container>
+          </div>
+        </Container>
+      )}
     </>
   );
 }

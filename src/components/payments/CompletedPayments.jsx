@@ -95,6 +95,7 @@ function CompletedPayments() {
 
   const onSearchBoxValueChange = (currentInputValue) => {
     let apiPayload = {};
+    setPage(0);
     setSearchPayload((existingPayload) => {
       apiPayload = {
         ...existingPayload,

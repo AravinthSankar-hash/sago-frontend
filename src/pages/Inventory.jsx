@@ -184,6 +184,7 @@ function Inventory() {
   const [selectedDDValue, setSelectedDDValue] = useState('All');
   const handleSelectChange = (event) => {
     setSelectedDDValue(event.target.value);
+    setPage(0);
     let apiPayload = {
       ...searchPayload,
       category: event.target.value
@@ -297,17 +298,6 @@ function Inventory() {
                         dateChangeHanlder={onDateChange}
                         customLabel="To"></DateSelector>
                     </Col>
-                    {/* <Col lg="2">
-                      <IconButton size="small">
-                        <IosShareIcon
-                          fontSize="small"
-                          style={{
-                            wordSpacing: 1
-                          }}
-                        />
-                        Export Data
-                      </IconButton>
-                    </Col> */}
                     <Col lg="3" className="d-flex justify-content-end">
                       <Button
                         sx={{
@@ -330,22 +320,22 @@ function Inventory() {
                 </div>
                 {/* Table */}
                 <div>
-                  {inventoryDataList.length > 0 ? (
-                    <InventoryTable
-                      tableData={inventoryDataList}
-                      tableHeaders={inventoryTableHeaders}
-                      tableColumns={inventoryTableColumns}
-                      totalDataCount={totalInventoryDataCount}
-                      hanldePageChange={inventoryPageChanged}
-                      handleChangeRowsPerPage={handleChangeRowsPerPage}
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                    />
-                  ) : (
-                    <Box sx={{ display: 'flex' }}>
-                      <CircularProgress />
-                    </Box>
-                  )}
+                  {/* {inventoryDataList.length > 0 ? ( */}
+                  <InventoryTable
+                    tableData={inventoryDataList.length ? inventoryDataList : []}
+                    tableHeaders={inventoryTableHeaders}
+                    tableColumns={inventoryTableColumns}
+                    totalDataCount={totalInventoryDataCount}
+                    hanldePageChange={inventoryPageChanged}
+                    handleChangeRowsPerPage={handleChangeRowsPerPage}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                  />
+                  {/* ) : ( */}
+                  {/* <Box sx={{ display: 'flex' }}> */}
+                  {/* <CircularProgress /> */}
+                  {/* </Box> */}
+                  {/* )} */}
                 </div>
               </Col>
             </Row>

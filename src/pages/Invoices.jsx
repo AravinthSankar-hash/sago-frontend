@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import SearchBox from '../components/helper/SearchBox.jsx';
 import DateSelector from '../components/helper/DateSelector.jsx';
@@ -14,9 +14,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
-import GsInvoiceDetails from 'components/invoice/GsInvoiceDetails.jsx';
-// import DcSalesInvoices from 'components/Invoice/DcInvoicesDetails.jsx';
-import TsInvoiceDetails from '../components/invoice/TsInvoiceDetails.jsx';
 import InvoiceTable from 'components/invoice/InvoiceTable.jsx';
 import SaleService from 'services/sale.api.js';
 import { SERVICES } from 'services/api.const.js';
@@ -29,7 +26,6 @@ import GsDetails from 'components/sales/GS/GsDetails.jsx';
 function Invoices() {
   const [salesInvoices, setsalesInvoices] = useState([]);
   const [totalDataCount, setTotalDataCount] = useState(0);
-  const [showNewForm, setShowNewForm] = useState(false);
   const [selectedChips, setSelectedChips] = useState(['All']);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const updateShowSalesBackBtn = useUpdateShowSalesBackBtn(); // Method to update bool, if back btn is clicked
@@ -78,6 +74,7 @@ function Invoices() {
 
   const onSearchBoxValueChange = (currentInputValue) => {
     let apiPayload = {};
+    setPage(0);
     setSearchPayload((existingPayload) => {
       apiPayload = {
         ...existingPayload,

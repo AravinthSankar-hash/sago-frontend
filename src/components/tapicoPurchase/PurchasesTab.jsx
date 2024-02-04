@@ -356,7 +356,7 @@ function Purchases() {
                             tpTableHeaders={tpTableHeaders}
                             tpTableColumns={tpTableColumns}
                             totalTpDataCount={totalTpDataCount}
-                            handleChangePage={tpPageChanged}
+                            hanldePageChange={tpPageChanged}
                             handleChangeRowsPerPage={handleChangeRowsPerPage}
                             rowsPerPage={rowsPerPage}
                             tableRowClicked={onTableRowClick}

@@ -29,7 +29,7 @@ import { SERVICES } from '../../../services/api.const.js';
 const Customer = () => {
   useEffect(() => {
     // By default invoke the fetch API with default limit and page
-    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   }, []);
 
   // Store
@@ -48,7 +48,8 @@ const Customer = () => {
   const [toasterMsg, setToasterMsg] = useState('Customer data saved');
   const [searchPayload, setSearchPayload] = useState({});
   const [totalCustomerDataCount, setTotalCustomerDataCount] = useState(0);
-  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
 
   const buttonStyle = {
     borderColor: '#00B7FF',
@@ -60,27 +61,6 @@ const Customer = () => {
     textTransform: 'none',
     fontWeight: 'bold'
   };
-
-  const chipStyle = (isSelected) => ({
-    border: '2px solid #00b7ff',
-    borderRadius: '8px',
-    backgroundColor: isSelected ? '#00b7ff' : 'white',
-    color: isSelected ? 'white' : '#00b7ff',
-    ':hover': {
-      background: '#00b7ff',
-      color: 'white',
-      boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)'
-    },
-    cursor: 'pointer'
-  });
-  const handleChipSelect = (label) => {
-    if (selectedChips.includes(label)) {
-      setSelectedChips((prevSelectedChips) => prevSelectedChips.filter((chip) => chip !== label));
-    } else {
-      setSelectedChips((prevSelectedChips) => [prevSelectedChips, label]);
-    }
-  };
-
   const addNewCustomer = () => {
     console.log('Customer table SHOW FORM CLICKED');
 
@@ -109,22 +89,30 @@ const Customer = () => {
     setShowCustomerDetailsSection(true);
     updateCatalogBackBtnTxt('Customer Details');
   };
-
-  const customerPageChanged = (currentPageNo, rowsPerPage) => {
-    setCurrentRowsPerPage(rowsPerPage);
-    console.log('page changed - ', currentPageNo, rowsPerPage);
+  const customerPageChanged = (event, currentPageNo) => {
+    setPage(currentPageNo);
     invokeSearchAPI(searchPayload, `page=${currentPageNo + 1}&limit=${rowsPerPage}`);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+    invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${parseInt(event.target.value, 10)}`);
   };
 
   // Called every time user changes input value in search, debounce 1 seconds.
   // If value is number phone search or name search, API call.
   const onSearchBoxValueChange = (currentInputValue) => {
+    setPage(0);
     const isPhoneNumberSearch = isNumeric(currentInputValue);
     const payload = {
-      ...(currentInputValue && { [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue })
+      ...searchPayload,
+      ...{
+        [isPhoneNumberSearch ? 'phone' : 'name']: currentInputValue
+      }
     };
     setSearchPayload(payload);
-    invokeSearchAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
 
   const invokeSearchAPI = (payload, query = null) => {
@@ -149,6 +137,65 @@ const Customer = () => {
     }
     setToasterBackground(backgroundClr);
     setShouldShowToaster(Math.random());
+  };
+
+  const filterOptions = [
+    { displayLabel: 'All', value: 'All' },
+    { displayLabel: 'Paid', value: 'PAID' },
+    { displayLabel: 'Unpaid', value: 'NOT_PAID' }
+  ];
+
+  const chipStyle = (isSelected) => ({
+    border: '2px solid #00b7ff',
+    borderRadius: '8px',
+    backgroundColor: isSelected ? '#00b7ff' : 'white',
+    color: isSelected ? 'white' : '#00b7ff',
+    ':hover': {
+      background: '#00b7ff',
+      color: 'white',
+      boxShadow: '0 0 5px rgba(0, 0, 0, 0.5)'
+    },
+    cursor: 'pointer'
+  });
+  const handleChipSelect = (labelObj) => {
+    let payload = searchPayload;
+    if (labelObj.displayLabel === 'All') {
+      setSelectedChips(['All']);
+      setSearchPayload((searchPayload) => ({
+        ...searchPayload,
+        payment_status: ['All']
+      }));
+      payload = { ...payload, payment_status: ['All'] };
+      invokeSearchAPI(payload, `page=${0 + 1}&limit=${rowsPerPage}`);
+      return;
+    }
+
+    const updatedChipSet = new Set(selectedChips);
+    console.log(selectedChips, 'selectedChips');
+
+    if (updatedChipSet.has('All')) {
+      updatedChipSet.delete('All');
+    }
+
+    if (updatedChipSet.has(labelObj.value)) {
+      updatedChipSet.delete(labelObj.value);
+    } else {
+      updatedChipSet.add(labelObj.value);
+    }
+
+    if (!updatedChipSet.size) {
+      updatedChipSet.add('All');
+    }
+
+    setSelectedChips([...updatedChipSet]);
+    setPage(0);
+    setSearchPayload((searchPayload) => ({
+      ...searchPayload,
+      payment_status: [...updatedChipSet]
+    }));
+    payload = { ...payload, payment_status: [...updatedChipSet] };
+
+    invokeSearchAPI(payload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
   return (
     <>
@@ -207,21 +254,17 @@ const Customer = () => {
                   <Row className="mt-3">
                     <Stack direction="row" spacing={1}>
                       <p style={{ color: '#6B778C' }}>Filter by : </p>
-                      <Chip
-                        label="All"
-                        sx={chipStyle(selectedChips.includes('All'))}
-                        onClick={() => handleChipSelect('All')}
-                      />
-                      <Chip
-                        label="Paid"
-                        sx={chipStyle(selectedChips.includes('Paid'))}
-                        onClick={() => handleChipSelect('Paid')}
-                      />
-                      <Chip
-                        label="Unpaid"
-                        sx={chipStyle(selectedChips.includes('Unpaid'))}
-                        onClick={() => handleChipSelect('Unpaid')}
-                      />
+                      {filterOptions.map((filterOptionObj, index) => (
+                        <Chip
+                          key={index}
+                          label={filterOptionObj.displayLabel}
+                          color={
+                            selectedChips.includes(filterOptionObj.value) ? 'primary' : 'default'
+                          }
+                          onClick={() => handleChipSelect(filterOptionObj)}
+                          sx={chipStyle(selectedChips.includes(filterOptionObj.value))}
+                        />
+                      ))}
                     </Stack>
                   </Row>
                 </div>
@@ -233,10 +276,11 @@ const Customer = () => {
                         tableHeaders={customerTableHeaders}
                         tableColumns={customerTableColumns}
                         totalCustomerDataCount={totalCustomerDataCount}
-                        hanldePageChange={customerPageChanged}
+                        handleChangePage={customerPageChanged}
                         tableRowClicked={onTableRowClick}
-                        rowsPerPage={10}
-                        page={5}></CustomerTable>
+                        handleChangeRowsPerPage={handleChangeRowsPerPage}
+                        rowsPerPage={rowsPerPage}
+                        page={page}></CustomerTable>
                     ) : null}
                   </Col>
                 </Row>
