@@ -567,7 +567,9 @@ function NewTsForm(tsAdded) {
           {/* Dynamic Rows */}
           <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
           <Row className="m-3">
-            <GstToggle handleSwitchChange={handleSwitchChange} isChecked={isChecked} />
+            <Col lg="1">
+              <GstToggle handleSwitchChange={handleSwitchChange} isChecked={isChecked} />
+            </Col>
           </Row>
           <Row>
             <Col xs={5}>
