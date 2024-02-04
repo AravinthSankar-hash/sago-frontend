@@ -11,13 +11,27 @@ import Toaster from '../../helper/Snackbar.jsx';
 import SaleService from '../../../services/sale.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 import { RESPONSE_MSG } from '../sale.const.js';
+import GstToggle from '../gstToggle';
 
 function NewTsForm(tsAdded) {
+  const [isChecked, setIsChecked] = useState(true);
+
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm();
+
+  const handleSwitchChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+
+  const disabledInput = {
+    background: '#F4F5F7',
+    color: '#A5ADBA',
+    border: 'none'
+  };
+
   const containerRef = useRef();
   const gridStyle = useMemo(
     () => ({
@@ -75,6 +89,7 @@ function NewTsForm(tsAdded) {
   const { SALE } = SERVICES;
 
   const onSubmit = (data) => {
+    console.log(data.taxable_value, 'data.taxable_value');
     const itemDetails = [];
     // Footer variables
     let total_rate_sum = 0;
@@ -122,8 +137,9 @@ function NewTsForm(tsAdded) {
       // Footer data
       total_rate_sum: total_rate_sum,
       round_off: round_off,
-      vehicle_rent: vehicle_rent,
-      grand_total: grand_total
+      grand_total: grand_total,
+      gstPercent: isChecked ? 18 : 0,
+      taxable_value: isChecked ? +data.taxable_value : 0
     };
 
     invokeCreateAPI(SALE.SALE_TYPES.tippi, formData);
@@ -550,9 +566,22 @@ function NewTsForm(tsAdded) {
           ))}
           {/* Dynamic Rows */}
           <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
+          <Row className="m-3">
+            <GstToggle handleSwitchChange={handleSwitchChange} isChecked={isChecked} />
+          </Row>
           <Row>
             <Col xs={5}>
               <Row className="m-3">
+                {isChecked ? (
+                  <>
+                    <Form.Group as={Col}>
+                      <Form.Label>GST (%)</Form.Label>
+                      <Form.Control style={disabledInput} defaultValue="18 %" disabled />
+                    </Form.Group>
+                  </>
+                ) : (
+                  ''
+                )}
                 <Form.Group as={Col}>
                   <Form.Label>Discount (₹)</Form.Label>
                   <Form.Control
@@ -602,15 +631,26 @@ function NewTsForm(tsAdded) {
                         <td style={summaztionFooterRows}>:</td>
                         <td>₹ 1,000</td>
                       </tr>
+                      {isChecked ? (
+                        <>
+                          <tr>
+                            <td style={summaztionFooterRows}>Taxable Value</td>
+                            <td style={summaztionFooterRows}>:</td>
+                            <td>₹ 1000</td>
+                          </tr>
+                          <tr>
+                            <td style={summaztionFooterRows}>GST Value</td>
+                            <td style={summaztionFooterRows}>:</td>
+                            <td>₹ 1000</td>
+                          </tr>
+                        </>
+                      ) : (
+                        ''
+                      )}
                       <tr>
-                        <td style={summaztionFooterRows}>Vehicle Rent</td>
+                        <td style={summaztionFooterRows}>Discount</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8,944</td>
-                      </tr>
-                      <tr>
-                        <td style={summaztionFooterRows}>Round-Off</td>
-                        <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8914</td>
+                        <td>₹ 1000</td>
                       </tr>
                       <tr style={{ borderTop: '0.5px solid #62728D' }}>
                         <td style={summaztionFooterRows}>Total Amount</td>
