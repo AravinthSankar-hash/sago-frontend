@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { Container, Form, Row, Col, Button } from 'react-bootstrap';
 import '../../css/catalogNewCust.css';
 import { useForm } from 'react-hook-form';
@@ -14,8 +14,42 @@ const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
+    getValues,
     formState: { errors }
   } = useForm();
+
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      formValueChanged(value, name, type);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  const formValueChanged = (newValue, name, type) => {
+    const splitArr = name?.split('_');
+    const rowIdx = splitArr[splitArr.length - 1] || null;
+    if (
+      name.includes('rate_') ||
+      (name.includes('quantity_') && !name.includes('amount') && rowIdx !== null)
+    ) {
+      const amount = +getValues(`rate_${rowIdx}`) + +getValues(`quantity_${rowIdx}`);
+      setValue(`amount_${rowIdx}`, amount);
+    }
+  };
+
+  const [purchaseTotalState, setPurchaseTotalState] = useState(0);
+  const [subTotalState, setSubTotalState] = useState(0);
+  const calculateFooter = () => {
+    let totalAmount = 0;
+    purchaseItemRows.forEach((eachRow, idx) => {
+      totalAmount += getValues(`amount_${idx}`);
+    });
+    setSubTotalState(totalAmount);
+    setPurchaseTotalState(totalAmount + Number(getValues(`tax`)) - Number(getValues(`discount`)));
+  };
+
   let sub_total = 0;
   let purchase_total = 0;
   let amount = 0;
@@ -31,7 +65,7 @@ const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
         units: data[`units_${index}`],
         amount: Number(data[`rate_${index}`]) * Number(data[`quantity_${index}`])
       });
-      amount = Number(data[`rate_${index}`]) + Number(data[`quantity_${index}`]);
+      amount = Number(data[`rate_${index}`]) * Number(data[`quantity_${index}`]);
       sub_total += Number(data[`amount_${index}`]);
     }),
       (purchase_total =
@@ -480,7 +514,7 @@ const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
                   <td style={{ padding: '10px', textAlign: 'right', color: '#5C9EB8' }}>
                     Sub Total:
                   </td>
-                  <td>{sub_total ? sub_total : 0}</td>
+                  <td>{subTotalState || 0}</td>
                 </tr>
                 <tr>
                   <td style={{ padding: '10px', textAlign: 'right', color: '#5C9EB8' }}>
@@ -558,7 +592,7 @@ const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
                   <td style={{ padding: '10px', textAlign: 'right', color: '#5C9EB8' }}>
                     purchase Total :
                   </td>
-                  <td>₹ {purchase_total ? purchase_total : 0}/-</td>
+                  <td>₹ {purchaseTotalState || 0}/-</td>
                 </tr>
                 <tr style={{ borderBottom: '1px solid #EBEEF0', color: '#6B778C' }}></tr>
                 <tr>
@@ -592,6 +626,18 @@ const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
             {/* </div> */}
             <Row>
               <div style={{ color: '#62728D', textDecoration: 'Underline', marginTop: '0' }}>
+                <Button
+                  className="m-4"
+                  style={{
+                    paddingLeft: '20px',
+                    paddingRight: '20px',
+                    background: 'grey',
+                    borderColor: 'grey'
+                  }}
+                  variant="primary"
+                  onClick={calculateFooter}>
+                  Calculate
+                </Button>
                 <LocalPrintshopOutlinedIcon />{' '}
                 <span style={{ marginLeft: '5px' }}>Save & Print </span>
                 <Button variant="primary" className="m-5" type="submit" style={buttonStyle}>

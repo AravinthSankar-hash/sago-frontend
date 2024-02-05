@@ -15,12 +15,74 @@ import Toaster from '../helper/Snackbar.jsx';
 
 function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
   const [farmerRows, setFarmerRows] = useState([{ id: 1 }]);
+  const [totalRateSumState, setTotalRateSumState] = useState(0);
+  const [grandTotalState, setGrandTotalState] = useState(0);
+  const [commissionValueState, setCommisstionValueState] = useState(0);
 
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
+    getValues,
     formState: { errors }
   } = useForm();
+
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      formValueChanged(value, name, type);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  const formValueChanged = (newValue, name, type) => {
+    const splitArr = name?.split('_');
+    const rowIdx = splitArr[splitArr.length - 1] || null;
+    if (
+      name.includes('point_1_') ||
+      name.includes('point_2_') ||
+      name.includes('point_3_') ||
+      (name.includes('point_4_') && !name.includes('ap_') && rowIdx !== null)
+    ) {
+      const avgPoint =
+        (+getValues(`point_1_${rowIdx}`) +
+          +getValues(`point_2_${rowIdx}`) +
+          +getValues(`point_3_${rowIdx}`) +
+          +getValues(`point_4_${rowIdx}`)) /
+        4;
+      setValue(`ap_${rowIdx}`, avgPoint);
+      setValue(`tp_${rowIdx}`, avgPoint);
+    } else if (name.includes('p_rate_') && !name.includes('total_rate_')) {
+      setValue(`total_rate_${rowIdx}`, +getValues(`tp_${rowIdx}`) * +getValues(`p_rate_${rowIdx}`));
+    } else if (
+      name.includes('total_weight_') ||
+      (name.includes('vehicle_weight_') && !name.includes('net_weight_'))
+    ) {
+      const netWeight =
+        +getValues(`total_weight_${rowIdx}`) - +getValues(`vehicle_weight_${rowIdx}`);
+      setValue(`net_weight_${rowIdx}`, netWeight);
+      const sandWeig = (netWeight * 5) / 100;
+      setValue(`sand_weight_percentage_${rowIdx}`, 5);
+      setValue(`sand_weight_${rowIdx}`, sandWeig);
+      setValue(`tonnage_${rowIdx}`, netWeight - sandWeig);
+    }
+  };
+
+  const calculateFooter = () => {
+    let totalRate = 0;
+    farmerRows.forEach((eachRow, idx) => {
+      totalRate += getValues(`total_rate_${idx}`);
+    });
+    setTotalRateSumState(totalRate);
+    const vr = +getValues(`vehicle_rent`);
+    const wk = +getValues(`weight_kickback`);
+    const oc = +getValues(`other_charges`);
+    const roff = +getValues(`round_off`);
+    const commission = (totalRate * +getValues(`commission`)) / 100;
+    setCommisstionValueState(commission);
+    setGrandTotalState(vr + wk + oc + roff + commission)?.toFixed(2);
+  };
+
   let total_rate_sum = 0;
   let grand_total = 0;
   let vehicle_rent = 0;
@@ -875,37 +937,37 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                       <tr>
                         <td style={summaztionFooterRows}>Total Rate</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>{total_rate_sum ? total_rate_sum : 0}</td>
+                        <td>{totalRateSumState || 0}</td>
                       </tr>
                       <tr>
                         <td style={summaztionFooterRows}>Vehicle Rent</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>{vehicle_rent ? vehicle_rent : 0}</td>
+                        <td>{+getValues(`vehicle_rent`) || 0}</td>
                       </tr>
                       <tr>
                         <td style={summaztionFooterRows}>Weight + Kickback</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>{weight_kickback ? weight_kickback : 0}</td>
+                        <td>{+getValues(`weight_kickback`) || 0}</td>
                       </tr>
                       <tr>
                         <td style={summaztionFooterRows}>Commission</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>{other_charges ? other_charges : 0}</td>
+                        <td>{commissionValueState || 0}</td>
                       </tr>
                       <tr>
                         <td style={summaztionFooterRows}>Other Charges</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>{round_off ? round_off : 0}</td>
+                        <td>{+getValues(`other_charges`) || 0}</td>
                       </tr>
                       <tr>
                         <td style={summaztionFooterRows}>Round-Off</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>{commission ? commission : 0}</td>
+                        <td>{+getValues(`round_off`) || 0}</td>
                       </tr>
                       <tr style={{ borderTop: '0.5px solid #62728D' }}>
                         <td style={summaztionFooterRows}>Total Amount</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>{grand_total ? grand_total : 0}</td>
+                        <td>{grandTotalState || 0}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -914,7 +976,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                   <div>
                     <p style={{ paddingLeft: '30px' }}>Grand Amount(₹)</p>
                     <p style={{ textAlign: 'center', fontWeight: 'bolder' }}>
-                      {grand_total ? grand_total : 0}
+                      {grandTotalState || 0}
                     </p>
                   </div>
                 </Col>
@@ -923,6 +985,18 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                 <div style={{ color: '#62728D', textDecoration: 'Underline', marginTop: '0' }}>
                   <LocalPrintshopOutlinedIcon />{' '}
                   <span style={{ marginLeft: '5px' }}>Save & Print </span>
+                  <Button
+                    className="m-4"
+                    style={{
+                      paddingLeft: '20px',
+                      paddingRight: '20px',
+                      background: 'grey',
+                      borderColor: 'grey'
+                    }}
+                    variant="primary"
+                    onClick={calculateFooter}>
+                    Calculate
+                  </Button>
                   <Button variant="primary" className="m-5" type="submit" style={buttonStyle}>
                     Save
                   </Button>
