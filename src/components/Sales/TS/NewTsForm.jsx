@@ -13,7 +13,7 @@ import { SERVICES } from '../../../services/api.const.js';
 import { RESPONSE_MSG } from '../sale.const.js';
 import GstToggle from '../gstToggle';
 
-function NewTsForm(tsAdded) {
+function NewTsForm({ tsAdded, tippiInvoiceNo }) {
   const [isChecked, setIsChecked] = useState(true);
 
   const {
@@ -115,7 +115,7 @@ function NewTsForm(tsAdded) {
     let grand_total = total_rate_sum + round_off + vehicle_rent;
 
     const formData = {
-      invoice_number: data.invoice_number,
+      invoice_number: tippiInvoiceNo,
       sale_date: new Date(data.sale_date),
       customer_name: data.customer_name,
       gst_in: data.gst_in,
@@ -178,13 +178,15 @@ function NewTsForm(tsAdded) {
               <Form.Label>Invoice No.</Form.Label>
               <Form.Control
                 style={inputStyle}
-                {...register('invoice_number', {
-                  required: 'Required'
-                })}
+                disabled
+                value={tippiInvoiceNo}
+                // {...register('invoice_number', {
+                //   required: 'Required'
+                // })}
               />
-              {errors.invoice_number && (
+              {/* {errors.invoice_number && (
                 <Form.Text className="text-danger">{errors.invoice_number.message}</Form.Text>
-              )}
+              )} */}
             </Form.Group>
 
             <Form.Group as={Col} xs={2}>

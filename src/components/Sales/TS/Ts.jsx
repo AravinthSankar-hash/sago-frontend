@@ -27,6 +27,7 @@ import { RESPONSE_MSG, tsTableHeaders, tsTableColumns } from '../sale.const.js';
 // API services
 import SaleService from 'services/sale.api.js';
 import { SERVICES } from 'services/api.const.js';
+import GenericService from '../../../services/generic.api.js';
 
 const TpSales = () => {
   // Internal State
@@ -40,6 +41,7 @@ const TpSales = () => {
   const [selectedRowData, setSelectedRowData] = useState({});
   const [totalDataCount, setTotalDataCount] = useState(0);
   const [searchPayload, setSearchPayload] = useState({});
+  const [invoiceNumber, setInvoiceNumber] = useState('');
 
   // Store
   const updateShowSalesBackBtn = useUpdateShowSalesBackBtn(); // Method to update bool, if back btn is clicked
@@ -70,6 +72,19 @@ const TpSales = () => {
     }
     setToasterBackground(backgroundClr);
     setShouldShowToaster(Math.random());
+  };
+
+  const hanldeAddSaleFormClick = () => {
+    GenericService.getInvoiceNo('TIPPI')
+      .then((response) => {
+        setInvoiceNumber(response.data.invoiceNumber);
+      })
+      .catch((error) => {
+        console.log('Error in getting customer data', error);
+      });
+
+    updateShowTSSalesNewForm(true);
+    updateShowSalesBackBtn(true);
   };
 
   const tsPageChanged = (event, currentPageNo) => {
@@ -231,7 +246,7 @@ const TpSales = () => {
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showTSSalesNewForm ? (
-            <NewTsForm tsAdded={onTSSave} />
+            <NewTsForm tsAdded={onTSSave} tippiInvoiceNo={invoiceNumber} />
           ) : (
             <>
               {' '}
@@ -281,7 +296,7 @@ const TpSales = () => {
                             fontWeight: 'bold'
                           }}
                           variant="outlined"
-                          onClick={() => showForm(true)}>
+                          onClick={() => hanldeAddSaleFormClick(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
                           New Sales
                         </Button>
