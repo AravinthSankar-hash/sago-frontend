@@ -1,6 +1,6 @@
 import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlined';
 import { Container, Form, Row, Col, Button } from 'react-bootstrap';
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, useEffect } from 'react';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import { useForm } from 'react-hook-form';
@@ -14,17 +14,69 @@ import { RESPONSE_MSG } from '../sale.const.js';
 import GstToggle from '../gstToggle';
 
 function NewGsForm({ gsAdded, gsInvoiceNo }) {
-  const [isChecked, setIsChecked] = useState(true);
+  const [isGstEnabled, setIsGstEnabled] = useState(true);
+  const [rows, setRows] = useState([{ id: 1 }]);
+  const [totalRateSumState, setTotalRateSumState] = useState(0);
+  const [taxableValueState, setTaxableValueState] = useState(0);
+  const [sgstValueState, setSgstValueState] = useState(0);
+  const [discountState, setDiscountState] = useState(0);
+  const [grandTotalState, setGrandTotalState] = useState(0);
+  const [tcsValueState, setTcsValueState] = useState(0);
 
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
+    getValues,
     formState: { errors }
   } = useForm();
-  const containerRef = useRef();
+
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      formValueChanged(value, name, type);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  const formValueChanged = (newValue, name, type) => {
+    const splitArr = name?.split('_');
+    const rowIdx = splitArr[splitArr.length - 1] || null;
+    if (
+      name.includes('bag_weight_') ||
+      (name.includes('qty_') && !name.includes('total_weight_') && rowIdx !== null)
+    ) {
+      setValue(
+        `total_weight_${rowIdx}`,
+        +getValues(`bag_weight_${rowIdx}`) * +getValues(`qty_${rowIdx}`)
+      );
+    } else if (name.includes('kg_rate_') && !name.includes('total_rate')) {
+      setValue(
+        `total_rate_${rowIdx}`,
+        +getValues(`total_weight_${rowIdx}`) * +getValues(`kg_rate_${rowIdx}`)
+      );
+    }
+  };
+
+  const calculateFooter = () => {
+    let totalRate = 0;
+    rows.forEach((eachRow, idx) => {
+      totalRate += getValues(`total_rate_${idx}`);
+    });
+    setTotalRateSumState(totalRate);
+    const taxableVal = totalRate - +getValues('discount');
+    setTaxableValueState(taxableVal);
+    const tcsValue = (taxableVal * +getValues('tcs_percent')) / 100;
+    setTcsValueState(tcsValue);
+
+    const tax = (taxableVal * 9) / 100;
+    setSgstValueState(isGstEnabled ? tax : 0);
+    setDiscountState(getValues('discount'));
+    setGrandTotalState((taxableVal + tcsValue + tax * 2).toFixed(2));
+  };
 
   const handleSwitchChange = (event) => {
-    setIsChecked(event.target.checked);
+    setIsGstEnabled((prev) => !prev);
   };
   const disabledInput = {
     background: '#F4F5F7',
@@ -70,9 +122,6 @@ function NewGsForm({ gsAdded, gsInvoiceNo }) {
     paddingRight: '2rem'
   };
 
-  const [rows, setRows] = useState([{ id: 1 }]);
-  const [grandTotalState, setGrandTotalState] = useState(0);
-
   const handleButtonClick = (index) => {
     if (index === rows.length - 1) {
       // If it's the last row, add a new row
@@ -106,7 +155,8 @@ function NewGsForm({ gsAdded, gsInvoiceNo }) {
         bag_weight: +data[`bag_weight_${index}`],
         qty: +data[`qty_${index}`],
         total_weight: +data[`total_weight_${index}`],
-        rate: +data[`rate_${index}`],
+        kg_rate: +data[`kg_rate_${index}`],
+        bag_rate: +data[`bag_rate_${index}`],
         total_rate: +data[`total_rate_${index}`]
       });
       // Footer calculations
@@ -133,13 +183,13 @@ function NewGsForm({ gsAdded, gsInvoiceNo }) {
       discount: +data.discount,
       top_rate: +data.top_rate,
       eway_bill_no: data.eway_bill_no,
-      gstPercent: isChecked ? 18 : 0,
-      tcs_percent: isChecked ? +data.tcs_percent : 0,
+      gstPercent: isGstEnabled ? 18 : 0,
+      tcs_percent: isGstEnabled ? +data.tcs_percent : 0,
       items: itemDetails,
       // Footer data
       total_rate_sum: total_rate_sum,
       round_off: round_off,
-      taxable_value: isChecked ? +data.taxable_value : 0,
+      taxable_value: isGstEnabled ? +data.taxable_value : 0,
       grand_total: grand_total
     };
     invokeCreateAPI(SALE.SALE_TYPES.general, formData);
@@ -166,6 +216,7 @@ function NewGsForm({ gsAdded, gsInvoiceNo }) {
     setToasterBackground(backgroundClr);
     setShouldShowToaster(Math.random());
   };
+  const containerRef = useRef();
   return (
     <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -407,10 +458,10 @@ function NewGsForm({ gsAdded, gsInvoiceNo }) {
               <Form.Label>Total Weight</Form.Label>
             </Form.Group>
             <Form.Group as={Col} xs={1}>
-              <Form.Label>Kg/rate</Form.Label>
+              <Form.Label>rate/kg</Form.Label>
             </Form.Group>
             <Form.Group as={Col} xs={2}>
-              <Form.Label>Rate</Form.Label>
+              <Form.Label>Rate/bag</Form.Label>
             </Form.Group>
             <Form.Group as={Col} xs={2}>
               <Form.Label>Total Rate</Form.Label>
@@ -500,11 +551,13 @@ function NewGsForm({ gsAdded, gsInvoiceNo }) {
                 <Form.Control
                   type="number"
                   style={inputStyle}
-                  {...register(`rate_${index}`, {
+                  {...register(`bag_rate_${index}`, {
                     required: 'Required'
                   })}></Form.Control>
-                {errors[`rate_${index}`] && (
-                  <Form.Text className="text-danger">{errors[`rate_${index}`].message}</Form.Text>
+                {errors[`bag_rate_${index}`] && (
+                  <Form.Text className="text-danger">
+                    {errors[`bag_rate_${index}`].message}
+                  </Form.Text>
                 )}
               </Form.Group>
               <Form.Group as={Col} xs={2}>
@@ -548,12 +601,12 @@ function NewGsForm({ gsAdded, gsInvoiceNo }) {
           <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
           <Row className="m-3">
             <Col lg="1">
-              <GstToggle handleSwitchChange={handleSwitchChange} isChecked={isChecked} />
+              <GstToggle handleSwitchChange={handleSwitchChange} isChecked={isGstEnabled} />
             </Col>
           </Row>
           <Row>
             <Col xs={5}>
-              {isChecked ? (
+              {isGstEnabled ? (
                 <Row className="m-3">
                   <Form.Group as={Col}>
                     <Form.Label>GST (%)</Form.Label>
@@ -643,38 +696,44 @@ function NewGsForm({ gsAdded, gsInvoiceNo }) {
                       <tr>
                         <td style={summaztionFooterRows}>Total Rate</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 1,000</td>
+                        <td>₹{totalRateSumState}</td>
                       </tr>
-                      {isChecked ? (
+                      <tr>
+                        <td style={summaztionFooterRows}>Discount</td>
+                        <td style={summaztionFooterRows}>:</td>
+                        <td>₹ {discountState || 0}</td>
+                      </tr>
+                      {isGstEnabled ? (
                         <>
                           <tr>
                             <td style={summaztionFooterRows}>Taxable Value</td>
                             <td style={summaztionFooterRows}>:</td>
-                            <td>₹ 1000</td>
+                            <td>₹ {taxableValueState}</td>
                           </tr>
                           <tr>
                             <td style={summaztionFooterRows}>TCS Value</td>
                             <td style={summaztionFooterRows}>:</td>
-                            <td>₹ 1000</td>
+                            <td>₹ {tcsValueState || 0}</td>
                           </tr>
                           <tr>
-                            <td style={summaztionFooterRows}>GST Value</td>
+                            <td style={summaztionFooterRows}>SGST Value</td>
                             <td style={summaztionFooterRows}>:</td>
-                            <td>₹ 1000</td>
+                            <td>₹ {sgstValueState}</td>
+                          </tr>
+                          <tr>
+                            <td style={summaztionFooterRows}>CGST Value</td>
+                            <td style={summaztionFooterRows}>:</td>
+                            <td>₹ {sgstValueState}</td>
                           </tr>
                         </>
                       ) : (
                         ''
                       )}
-                      <tr>
-                        <td style={summaztionFooterRows}>Discount</td>
-                        <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8914</td>
-                      </tr>
+
                       <tr style={{ borderTop: '0.5px solid #62728D' }}>
                         <td style={summaztionFooterRows}>Total Amount</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8,944</td>
+                        <td>₹ {grandTotalState}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -689,9 +748,21 @@ function NewGsForm({ gsAdded, gsInvoiceNo }) {
                 </Col>
               </Row>
               <Row className="mt-4">
-                <Col lg={2}></Col>
                 <Col lg={4} className="mt-2">
                   <LocalPrintshopOutlinedIcon /> <span>Save & Print </span>
+                </Col>
+                <Col lg={4}>
+                  <Button
+                    style={{
+                      paddingLeft: '20px',
+                      paddingRight: '20px',
+                      background: 'grey',
+                      borderColor: 'grey'
+                    }}
+                    variant="primary"
+                    onClick={calculateFooter}>
+                    Calculate
+                  </Button>
                 </Col>
                 <Col lg={3}>
                   <Button

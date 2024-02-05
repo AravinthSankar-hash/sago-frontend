@@ -84,7 +84,7 @@ function NewDcSalesForm({ dcAdded, dcInvoiceNo }) {
   );
 
   const handleSwitchChange = (event) => {
-    setIsGstEnabled(event.target.checked);
+    setIsGstEnabled((prev) => !prev);
     calculateFooter();
   };
 
@@ -618,7 +618,7 @@ function NewDcSalesForm({ dcAdded, dcInvoiceNo }) {
           <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
           <Row className="m-3">
             <Col lg="1">
-              <GstToggle handleSwitchChange={handleSwitchChange} isGstEnabled={isGstEnabled} />
+              <GstToggle handleSwitchChange={handleSwitchChange} isChecked={isGstEnabled} />
             </Col>
           </Row>
           <Row>

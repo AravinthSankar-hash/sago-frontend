@@ -73,7 +73,7 @@ function NewTsForm({ tsAdded, tippiInvoiceNo }) {
   };
 
   const handleSwitchChange = (event) => {
-    setIsGstEnabled(event.target.checked);
+    setIsGstEnabled((prev) => !prev);
   };
 
   const disabledInput = {
