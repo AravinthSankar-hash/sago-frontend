@@ -51,7 +51,7 @@ const PaymentModal = (props) => {
         category_type: paymentCategory,
         payment_ref_id: paymentRefId,
         partner_name: partyName,
-        payment_date: formData[`selectedDate_${index}`],
+        payment_date: new Date(formData[`selectedDate_${index}`]).toISOString(),
         mode: formData[`mode_${index}`],
         amount_paid: +formData[`amount_${index}`]
       });
