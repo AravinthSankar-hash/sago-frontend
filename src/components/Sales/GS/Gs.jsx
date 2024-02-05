@@ -27,6 +27,7 @@ import { RESPONSE_MSG, generalTableHeaders, generalTableColumns } from '../sale.
 // API services
 import SaleService from 'services/sale.api.js';
 import { SERVICES } from 'services/api.const.js';
+import GenericService from '../../../services/generic.api.js';
 
 const Gs = () => {
   // Internal Store
@@ -40,6 +41,7 @@ const Gs = () => {
   const [page, setPage] = useState(0);
   const [selectedRowData, setSelectedRowData] = useState({});
   const [searchPayload, setSearchPayload] = useState({});
+  const [invoiceNumber, setInvoiceNumber] = useState('');
 
   // Store
   const updateShowSalesBackBtn = useUpdateShowSalesBackBtn(); // Method to update bool, if back btn is clicked
@@ -70,6 +72,19 @@ const Gs = () => {
     }
     setToasterBackground(backgroundClr);
     setShouldShowToaster(Math.random());
+  };
+
+  const hanldeAddSaleFormClick = () => {
+    GenericService.getInvoiceNo('DC')
+      .then((response) => {
+        setInvoiceNumber(response.data.invoiceNumber);
+      })
+      .catch((error) => {
+        console.log('Error in getting customer data', error);
+      });
+
+    updateShowGSSalesNewForm(true);
+    updateShowSalesBackBtn(true);
   };
 
   const onGSSave = (newAddedGS) => {
@@ -233,7 +248,7 @@ const Gs = () => {
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showGSSalesNewForm ? (
-            <NewGsForm gsAdded={onGSSave} />
+            <NewGsForm gsAdded={onGSSave} gsInvoiceNo={invoiceNumber} />
           ) : (
             <>
               {' '}
@@ -283,7 +298,7 @@ const Gs = () => {
                             fontWeight: 'bold'
                           }}
                           variant="outlined"
-                          onClick={() => showForm(true)}>
+                          onClick={() => hanldeAddSaleFormClick(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
                           New Sales
                         </Button>
