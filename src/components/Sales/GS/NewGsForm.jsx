@@ -13,7 +13,7 @@ import { SERVICES } from '../../../services/api.const.js';
 import { RESPONSE_MSG } from '../sale.const.js';
 import GstToggle from '../gstToggle';
 
-function NewGsForm({ gsAdded }) {
+function NewGsForm({ gsAdded, gsInvoiceNo }) {
   const [isChecked, setIsChecked] = useState(true);
 
   const {
@@ -113,7 +113,7 @@ function NewGsForm({ gsAdded }) {
       total_rate_sum += +data[`total_rate_${index}`];
     });
     const formData = {
-      invoice_number: data.invoice_number,
+      invoice_number: gsInvoiceNo,
       sale_date: new Date(data.sale_date),
       customer_name: data.customer_name,
       gst_in: data.gst_in,
@@ -175,15 +175,7 @@ function NewGsForm({ gsAdded }) {
           <Row className="m-3 mb-4">
             <Form.Group as={Col} xs={3}>
               <Form.Label>Invoice No.</Form.Label>
-              <Form.Control
-                style={inputStyle}
-                {...register('invoice_number', {
-                  required: 'Required'
-                })}
-              />
-              {errors.invoice_number && (
-                <Form.Text className="text-danger">{errors.invoice_number.message}</Form.Text>
-              )}
+              <Form.Control disabled value={gsInvoiceNo} />
             </Form.Group>
 
             <Form.Group as={Col} xs={2}>

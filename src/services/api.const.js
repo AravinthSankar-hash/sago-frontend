@@ -64,7 +64,10 @@ const SERVICES = {
       TRANSACTIONS: 'transactions',
       PROCUREMENT: '/procurements',
       EXPENSES: '/expenses',
-      PURCHASE: '/purchase'
+      PURCHASE: '/purchase',
+      DC: '/dc',
+      GS: '/ds',
+      TIPPI: '/tippi'
     },
     PAYMENT_CATEGORY: {
       TIPPI: 'tippi'

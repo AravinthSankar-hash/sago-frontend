@@ -12,7 +12,7 @@ import SaleService from '../../../services/sale.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 import GstToggle from '../gstToggle';
 
-function NewDcSalesForm({ dcAdded }) {
+function NewDcSalesForm({ dcAdded, dcInvoiceNo }) {
   const [isGstEnabled, setIsGstEnabled] = useState(true);
   const [rows, setRows] = useState([{ id: 1 }]);
   const [totalRateSumState, setTotalRateSumState] = useState(0);
@@ -163,7 +163,7 @@ function NewDcSalesForm({ dcAdded }) {
     let grand_total = total_rate_sum + round_off + vehicle_rent;
 
     const formData = {
-      invoice_number: data.invoice_number,
+      invoice_number: dcInvoiceNo,
       sale_date: new Date(data.sale_date),
       customer_name: data.customer_name,
       gst_in: data.gst_in,
@@ -226,13 +226,15 @@ function NewDcSalesForm({ dcAdded }) {
               <Form.Label>Invoice No.</Form.Label>
               <Form.Control
                 style={inputStyle}
-                {...register('invoice_number', {
-                  required: 'Required'
-                })}
+                disabled
+                value={dcInvoiceNo}
+                // {...register('invoice_number', {
+                //   required: 'Required'
+                // })}
               />
-              {errors.invoice_number && (
+              {/* {errors.invoice_number && (
                 <Form.Text className="text-danger">{errors.invoice_number.message}</Form.Text>
-              )}
+              )} */}
             </Form.Group>
 
             <Form.Group as={Col} xs={2}>

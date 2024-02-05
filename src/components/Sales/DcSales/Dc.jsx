@@ -26,6 +26,7 @@ import { RESPONSE_MSG, dcTableHeaders, dcTableColumns } from '../sale.const.js';
 // API services
 import SaleService from 'services/sale.api.js';
 import { SERVICES } from 'services/api.const.js';
+import GenericService from '../../../services/generic.api.js';
 
 const Dc = () => {
   const [salesInvoices, setsalesInvoices] = useState([]);
@@ -38,6 +39,7 @@ const Dc = () => {
   const [page, setPage] = useState(0);
   const [selectedRowData, setSelectedRowData] = useState({});
   const [searchPayload, setSearchPayload] = useState({});
+  const [invoiceNumber, setInvoiceNumber] = useState('');
 
   // Store
   const updateShowSalesBackBtn = useUpdateShowSalesBackBtn(); // Method to update bool, if back btn is clicked
@@ -68,6 +70,19 @@ const Dc = () => {
     }
     setToasterBackground(backgroundClr);
     setShouldShowToaster(Math.random());
+  };
+
+  const hanldeAddSaleFormClick = () => {
+    GenericService.getInvoiceNo('DC')
+      .then((response) => {
+        setInvoiceNumber(response.data.invoiceNumber);
+      })
+      .catch((error) => {
+        console.log('Error in getting customer data', error);
+      });
+
+    updateShowDCSalesNewForm(true);
+    updateShowSalesBackBtn(true);
   };
 
   const showForm = (shouldShow) => {
@@ -230,7 +245,7 @@ const Dc = () => {
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showDCSalesNewForm ? (
-            <NewDcSalesForm dcAdded={onDCSave} />
+            <NewDcSalesForm dcAdded={onDCSave} dcInvoiceNo={invoiceNumber} />
           ) : (
             <>
               {' '}
@@ -280,7 +295,7 @@ const Dc = () => {
                             fontWeight: 'bold'
                           }}
                           variant="outlined"
-                          onClick={() => showForm(true)}>
+                          onClick={() => hanldeAddSaleFormClick(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
                           New Sales
                         </Button>
