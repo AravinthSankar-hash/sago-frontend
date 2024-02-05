@@ -2,7 +2,7 @@ import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlin
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import { Container, Form, Row, Col, Dropdown, Button } from 'react-bootstrap';
-import { useRef, useMemo, useState } from 'react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { IconButton } from '@mui/material';
 import '../../../css/index.css';
@@ -14,16 +14,66 @@ import { RESPONSE_MSG } from '../sale.const.js';
 import GstToggle from '../gstToggle';
 
 function NewTsForm({ tsAdded, tippiInvoiceNo }) {
-  const [isChecked, setIsChecked] = useState(true);
+  const [isGstEnabled, setIsGstEnabled] = useState(true);
+  const [rows, setRows] = useState([{ id: 1 }]);
+  const [totalRateSumState, setTotalRateSumState] = useState(0);
+  const [taxableValueState, setTaxableValueState] = useState(0);
+  const [sgstValueState, setSgstValueState] = useState(0);
+  const [discountState, setDiscountState] = useState(0);
+  const [grandTotalState, setGrandTotalState] = useState(0);
 
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
+    getValues,
     formState: { errors }
   } = useForm();
 
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      formValueChanged(value, name, type);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
+  const formValueChanged = (newValue, name, type) => {
+    const splitArr = name?.split('_');
+    const rowIdx = splitArr[splitArr.length - 1] || null;
+    if (
+      name.includes('bag_weight_') ||
+      (name.includes('qty_') && !name.includes('total_weight_') && rowIdx !== null)
+    ) {
+      setValue(
+        `total_weight_${rowIdx}`,
+        +getValues(`bag_weight_${rowIdx}`) * +getValues(`qty_${rowIdx}`)
+      );
+    } else if (name.includes('rate_') && !name.includes('total_rate')) {
+      setValue(
+        `total_rate_${rowIdx}`,
+        +getValues(`total_weight_${rowIdx}`) * +getValues(`rate_${rowIdx}`)
+      );
+    }
+  };
+
+  const calculateFooter = () => {
+    let totalRate = 0;
+    rows.forEach((eachRow, idx) => {
+      totalRate += getValues(`total_rate_${idx}`);
+    });
+    setTotalRateSumState(totalRate);
+    const taxableVal = totalRate - +getValues('discount');
+    setTaxableValueState(taxableVal);
+
+    const tax = (taxableVal * 9) / 100;
+    setSgstValueState(isGstEnabled ? tax : 0);
+    setDiscountState(getValues('discount'));
+    setGrandTotalState((taxableVal + tax * 2).toFixed(2));
+  };
+
   const handleSwitchChange = (event) => {
-    setIsChecked(event.target.checked);
+    setIsGstEnabled(event.target.checked);
   };
 
   const disabledInput = {
@@ -70,8 +120,6 @@ function NewTsForm({ tsAdded, tippiInvoiceNo }) {
     backgroundSize: '8px 10px',
     paddingRight: '2rem'
   };
-
-  const [rows, setRows] = useState([{ id: 1 }]);
 
   const handleButtonClick = (index) => {
     if (index === rows.length - 1) {
@@ -138,8 +186,8 @@ function NewTsForm({ tsAdded, tippiInvoiceNo }) {
       total_rate_sum: total_rate_sum,
       round_off: round_off,
       grand_total: grand_total,
-      gstPercent: isChecked ? 18 : 0,
-      taxable_value: isChecked ? +data.taxable_value : 0
+      gstPercent: isGstEnabled ? 18 : 0,
+      taxable_value: isGstEnabled ? +data.taxable_value : 0
     };
 
     invokeCreateAPI(SALE.SALE_TYPES.tippi, formData);
@@ -570,13 +618,13 @@ function NewTsForm({ tsAdded, tippiInvoiceNo }) {
           <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
           <Row className="m-3">
             <Col lg="1">
-              <GstToggle handleSwitchChange={handleSwitchChange} isChecked={isChecked} />
+              <GstToggle handleSwitchChange={handleSwitchChange} isChecked={isGstEnabled} />
             </Col>
           </Row>
           <Row>
             <Col xs={5}>
               <Row className="m-3">
-                {isChecked ? (
+                {isGstEnabled ? (
                   <>
                     <Form.Group as={Col}>
                       <Form.Label>GST (%)</Form.Label>
@@ -633,33 +681,39 @@ function NewTsForm({ tsAdded, tippiInvoiceNo }) {
                       <tr>
                         <td style={summaztionFooterRows}>Total Rate</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 1,000</td>
+                        <td>₹{totalRateSumState}</td>
                       </tr>
-                      {isChecked ? (
+                      <tr>
+                        <td style={summaztionFooterRows}>Discount</td>
+                        <td style={summaztionFooterRows}>:</td>
+                        <td>₹ {discountState}</td>
+                      </tr>
+                      {isGstEnabled ? (
                         <>
                           <tr>
                             <td style={summaztionFooterRows}>Taxable Value</td>
                             <td style={summaztionFooterRows}>:</td>
-                            <td>₹ 1000</td>
+                            <td>₹ {taxableValueState}</td>
                           </tr>
                           <tr>
-                            <td style={summaztionFooterRows}>GST Value</td>
+                            <td style={summaztionFooterRows}>SGST Value</td>
                             <td style={summaztionFooterRows}>:</td>
-                            <td>₹ 1000</td>
+                            <td>₹ {sgstValueState}</td>
+                          </tr>
+                          <tr>
+                            <td style={summaztionFooterRows}>CGST Value</td>
+                            <td style={summaztionFooterRows}>:</td>
+                            <td>₹ {sgstValueState}</td>
                           </tr>
                         </>
                       ) : (
                         ''
                       )}
-                      <tr>
-                        <td style={summaztionFooterRows}>Discount</td>
-                        <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 1000</td>
-                      </tr>
+
                       <tr style={{ borderTop: '0.5px solid #62728D' }}>
                         <td style={summaztionFooterRows}>Total Amount</td>
                         <td style={summaztionFooterRows}>:</td>
-                        <td>₹ 8,944</td>
+                        <td>₹ {grandTotalState}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -667,16 +721,28 @@ function NewTsForm({ tsAdded, tippiInvoiceNo }) {
                 <Col className="d-flex align-items-center">
                   <div>
                     <p style={{ paddingLeft: '30px' }}>Grand Amount(₹)</p>
-                    <p style={{ textAlign: 'center', fontWeight: 'bolder' }}>₹ 10,944</p>
+                    <p style={{ textAlign: 'center', fontWeight: 'bolder' }}>₹ {grandTotalState}</p>
                   </div>
                 </Col>
               </Row>
               <Row className="mt-4">
-                <Col lg={2}></Col>
                 <Col lg={4} className="mt-2">
                   <LocalPrintshopOutlinedIcon /> <span>Save & Print </span>
                 </Col>
-                <Col lg={3}>
+                <Col lg={4}>
+                  <Button
+                    style={{
+                      paddingLeft: '20px',
+                      paddingRight: '20px',
+                      background: 'grey',
+                      borderColor: 'grey'
+                    }}
+                    variant="primary"
+                    onClick={calculateFooter}>
+                    Calculate
+                  </Button>
+                </Col>
+                <Col lg={2}>
                   <Button
                     style={{
                       paddingLeft: '45px',
