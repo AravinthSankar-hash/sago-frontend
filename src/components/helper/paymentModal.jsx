@@ -23,7 +23,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const PaymentModal = (props) => {
-  const { paymentCategory, paymentRefId, partyName, onClose } = props;
+  const { paymentCategory, paymentRefId, partyName, onClose, paymentAddedHanlder } = props;
   const {
     register,
     control,
@@ -57,13 +57,15 @@ const PaymentModal = (props) => {
       });
     });
     invokePaymentSaveAPI(paymentPayload);
+    paymentAddedHanlder(paymentPayload);
+    onClose(true);
   };
 
   const invokePaymentSaveAPI = (payload) => {
     GeneralService.addPayment(payload)
       .then((response) => {
         if (response) {
-          onClose(true);
+          // onClose(true);
         }
       })
       .catch((error) => {

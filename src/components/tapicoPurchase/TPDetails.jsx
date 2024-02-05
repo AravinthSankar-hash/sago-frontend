@@ -103,6 +103,9 @@ function TPDetails({ selectedTP, onDeleteListApi }) {
         // invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
       });
   };
+  const onPaymentHanlder = (newPayments) => {
+    setPaymentTableData([...paymentTableData, ...newPayments]);
+  };
   // const detailsSection = {
   //   backgroundColor: 'white',
   //   borderRadius: '10px',
@@ -273,6 +276,7 @@ function TPDetails({ selectedTP, onDeleteListApi }) {
           <TabComponent
             showTab={showTab}
             showPurchase={showPurchase}
+            onPaymentHanlder={onPaymentHanlder}
             tabName={'Purchase'}
             paymentCategory="tp"
             paymentRefId={selectedTP?.item_id}

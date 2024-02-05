@@ -8,7 +8,7 @@ import PaymentModel from './paymentModal.jsx';
 import { RESPONSE_MSG } from '../sales/sale.const.js';
 
 const TabComponent = (props) => {
-  const { paymentCategory, paymentRefId, partyName } = props;
+  const { paymentCategory, paymentRefId, partyName, onPaymentHanlder } = props;
   const [dialogVisible, setDialogVisible] = useState(false);
   const [toasterBackground, setToasterBackground] = useState(null);
   const [shouldShowToaster, setShouldShowToaster] = useState(false);
@@ -39,6 +39,10 @@ const TabComponent = (props) => {
       return;
     }
     invokeToaster(RESPONSE_MSG.FAILED, 'red');
+  };
+
+  const onPaymentAdd = (payments) => {
+    onPaymentHanlder(payments);
   };
 
   return (
@@ -72,6 +76,7 @@ const TabComponent = (props) => {
             paymentRefId={paymentRefId}
             partyName={partyName}
             visible={dialogVisible}
+            paymentAddedHanlder={onPaymentAdd}
             onClose={handleDialogClose}
           />
         )}
