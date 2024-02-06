@@ -12,12 +12,20 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import { IconButton } from '@mui/material';
 import { RESPONSE_MSG } from './tp.const.js';
 import Toaster from '../helper/Snackbar.jsx';
+import CatalogService from 'services/catalog.api.js';
+import { SERVICES } from '../../services/api.const.js';
+import { isNumeric } from '../helper/helper.js';
+import SearchBox from '../helper/SearchBox.jsx';
 
 function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
   const [farmerRows, setFarmerRows] = useState([{ id: 1 }]);
   const [totalRateSumState, setTotalRateSumState] = useState(0);
   const [grandTotalState, setGrandTotalState] = useState(0);
   const [commissionValueState, setCommisstionValueState] = useState(0);
+  const [brokerData, setBrokerData] = useState([]);
+  const [selectedBroker, setSelectedBroker] = useState();
+  const [searchPayload, setSearchPayload] = useState('');
+  const [filteredBroker, setFilteredBroker] = useState([]);
 
   const {
     register,
@@ -92,6 +100,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
   let commission = 0;
 
   const onSubmit = async (data) => {
+    console.log(data, 'dataaaaa');
     let charges_details = [];
 
     chargesRows.map((row, index) => {
@@ -162,6 +171,21 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
     console.log(formData, 'tpInvoiceNo22');
     await TpService.create({ type: 'TP', data: formData });
     tpAdded(formData);
+  };
+
+  useEffect(() => {
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI({});
+  }, []);
+
+  const invokeSearchAPI = (payload, query = null) => {
+    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.BROKER, payload, query)
+      .then((response) => {
+        setBrokerData(response.data.data);
+      })
+      .catch((error) => {
+        console.log('Error in searching Broker data', error);
+      });
   };
 
   const containerRef = useRef();
@@ -263,6 +287,22 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
     }
   };
 
+  const onChange = (e) => {
+    setSearchPayload(e.target.value);
+    const updatedBroker = brokerData.filter((broker) =>
+      broker.broker_name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+
+    setFilteredBroker(updatedBroker);
+  };
+
+  const handleSelect = (broker) => {
+    setSearchPayload(broker.broker_name);
+    setSelectedBroker(broker);
+    setFilteredBroker([]);
+    console.log(broker, 'broker');
+  };
+
   // FARMER DYNAMIC FORM - END
 
   return (
@@ -305,11 +345,9 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                   }
                 })}
               />
-              {/* <Form.Control.Feedback type="invalid"> */}
               {errors.purchase_date && (
                 <Form.Text className="text-danger">{errors.purchase_date.message}</Form.Text>
               )}
-              {/* </Form.Control.Feedback> */}
             </Form.Group>
           </Row>
           <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
@@ -319,6 +357,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
               <Form.Label>Broker Name</Form.Label>
               <Form.Control
                 style={inputStyle}
+                placeholder="Search Name/Ph. No"
                 {...register('broker_name', {
                   required: 'Broker Name is required',
                   maxLength: {
@@ -326,12 +365,31 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                     message: 'Broker Name cannot exceed 50 characters'
                   }
                   // Add more validation rules as needed
-                })}></Form.Control>
-              {/* <Form.Control.Feedback type="invalid"> */}
+                })}
+                // value={selectedBroker ? searchPayload : ''}
+                defaultValue={selectedBroker?.broker_name}
+                onChange={onChange}
+              />
+              <div
+                style={{
+                  maxHeight: '120px',
+                  overflowY: 'auto'
+                }}>
+                <ul style={{ listStyle: 'none', padding: '5px', margin: '0px' }}>
+                  {searchPayload.length > 0 &&
+                    filteredBroker.map((broker) => (
+                      <li
+                        style={{ cursor: 'pointer', marginBottom: '8px' }}
+                        key={broker.broker_name}
+                        onClick={() => handleSelect(broker)}>
+                        {broker.broker_name}
+                      </li>
+                    ))}
+                </ul>
+              </div>
               {errors.broker_name && (
                 <Form.Text className="text-danger">{errors.broker_name.message}</Form.Text>
               )}
-              {/* </Form.Control.Feedback> */}
             </Form.Group>
             <Form.Group as={Col} xs={3}>
               <Form.Label>Commission(%)</Form.Label>
@@ -348,11 +406,13 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                     message: 'Commission cannot exceed 100%'
                   }
                   // Add more validation rules as needed
-                })}></Form.Control>{' '}
+                })}
+                readOnly
+                defaultValue={selectedBroker?.commission_percent}></Form.Control>{' '}
               {/* <Form.Control.Feedback type="invalid"> */}
-              {errors.commission && (
+              {/* {errors.commission && (
                 <Form.Text className="text-danger">{errors.commission.message}</Form.Text>
-              )}
+              )} */}
               {/* </Form.Control.Feedback> */}
             </Form.Group>
             <Form.Group as={Col} xs={3}>
@@ -376,35 +436,36 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
           </Row>
 
           <Row className="m-3">
-            {/* <Form.Group as={Col} xs={3}>
-              <Form.Label>Address</Form.Label>
-              <p>22/13 Bajanai koil 2nd street, Choolaimedu chennai-94</p>
-            </Form.Group> */}
             <Form.Group as={Col} xs={3}>
               <Form.Label>Address</Form.Label>
               <Form.Control
-                style={inputStyle}
+                readOnly
+                style={
+                  { border: 'none', backgroundColor: 'white' }
+                  // selectedBroker ? { border: 'none', backgroundColor: 'white' } : { ...inputStyle }
+                }
+                defaultValue={selectedBroker?.address}
                 {...register('address', {
                   required: 'address is required'
                 })}></Form.Control>
-              {errors.address && (
+              {/* {errors.address && (
                 <Form.Text className="text-danger">{errors.address.message}</Form.Text>
-              )}
+              )} */}
             </Form.Group>
-            {/* <Form.Group as={Col} xs={3}>
-              <Form.Label>Phone No.</Form.Label>
-              <p>1234567890</p>
-            </Form.Group> */}
             <Form.Group as={Col} xs={3}>
               <Form.Label>Phone</Form.Label>
               <Form.Control
-                style={inputStyle}
+                readOnly
+                style={
+                  selectedBroker ? { border: 'none', backgroundColor: 'white' } : { ...inputStyle }
+                }
                 {...register('phone', {
                   required: 'phone is required'
-                })}></Form.Control>
-              {errors.phone && (
+                })}
+                defaultValue={selectedBroker?.phone}></Form.Control>
+              {/* {errors.phone && (
                 <Form.Text className="text-danger">{errors.phone.message}</Form.Text>
-              )}
+              )} */}
             </Form.Group>
           </Row>
           <hr style={{ ...horizontalLine, marginLeft: '28px' }} />
