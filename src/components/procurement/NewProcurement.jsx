@@ -44,7 +44,7 @@ const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
   const calculateFooter = () => {
     let totalAmount = 0;
     purchaseItemRows.forEach((eachRow, idx) => {
-      totalAmount += getValues(`amount_${idx}`);
+      totalAmount += +getValues(`amount_${idx}`);
     });
     setSubTotalState(totalAmount);
     setPurchaseTotalState(totalAmount + Number(getValues(`tax`)) - Number(getValues(`discount`)));
@@ -625,7 +625,13 @@ const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
             </table>
             {/* </div> */}
             <Row>
-              <div style={{ color: '#62728D', textDecoration: 'Underline', marginTop: '0' }}>
+              <div
+                style={{
+                  color: '#62728D',
+                  textAlign: 'right',
+                  textDecoration: 'Underline',
+                  marginTop: '0'
+                }}>
                 <Button
                   className="m-4"
                   style={{

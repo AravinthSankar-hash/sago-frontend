@@ -71,7 +71,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
   const calculateFooter = () => {
     let totalRate = 0;
     farmerRows.forEach((eachRow, idx) => {
-      totalRate += getValues(`total_rate_${idx}`);
+      totalRate += +getValues(`total_rate_${idx}`);
     });
     setTotalRateSumState(totalRate);
     const vr = +getValues(`vehicle_rent`);
@@ -982,7 +982,13 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                 </Col>
               </Row>
               <Row>
-                <div style={{ color: '#62728D', textDecoration: 'Underline', marginTop: '0' }}>
+                <div
+                  style={{
+                    color: '#62728D',
+                    textAlign: 'right',
+                    textDecoration: 'Underline',
+                    marginTop: '0'
+                  }}>
                   <LocalPrintshopOutlinedIcon />{' '}
                   <span style={{ marginLeft: '5px' }}>Save & Print </span>
                   <Button
