@@ -12,6 +12,8 @@ import SaleService from '../../../services/sale.api.js';
 import { SERVICES } from '../../../services/api.const.js';
 import { RESPONSE_MSG } from '../sale.const.js';
 import GstToggle from '../gstToggle';
+// API
+import CatalogService from 'services/catalog.api.js';
 
 function NewTsForm({ tsAdded, tippiInvoiceNo }) {
   const [isGstEnabled, setIsGstEnabled] = useState(true);
@@ -21,6 +23,10 @@ function NewTsForm({ tsAdded, tippiInvoiceNo }) {
   const [sgstValueState, setSgstValueState] = useState(0);
   const [discountState, setDiscountState] = useState(0);
   const [grandTotalState, setGrandTotalState] = useState(0);
+  const [customerData, setCustomerData] = useState([]);
+  const [searchPayload, setSearchPayload] = useState('');
+  const [selectedCustomer, setSelectedCustomer] = useState();
+  const [filteredCustomer, setFilteredCustomer] = useState([]);
 
   const {
     register,
@@ -137,7 +143,6 @@ function NewTsForm({ tsAdded, tippiInvoiceNo }) {
   const { SALE } = SERVICES;
 
   const onSubmit = (data) => {
-    console.log(data.taxable_value, 'data.taxable_value');
     const itemDetails = [];
     // Footer variables
     let total_rate_sum = 0;
@@ -207,14 +212,39 @@ function NewTsForm({ tsAdded, tippiInvoiceNo }) {
   const [toasterBackground, setToasterBackground] = useState(null);
   const [toasterMsg, setToasterMsg] = useState('Customer data saved');
   // Just a generic method to invoke toaster
-  const invokeToaster = (msg, backgroundClr = '#4BB543') => {
-    if (msg) {
-      setToasterMsg(msg);
-    }
-    setToasterBackground(backgroundClr);
-    setShouldShowToaster(Math.random());
+  const invokeSearchAPI = (payload, query = null) => {
+    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.CUSTOMER, payload, query)
+      .then((response) => {
+        setCustomerData(response.data.data);
+      })
+      .catch((error) => {
+        console.log('Error in searching customer data', error);
+      });
   };
 
+  const onChange = (e) => {
+    setSearchPayload(e.target.value);
+    const updatedCustomer = customerData.filter((customer) =>
+      customer.customer_name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+
+    setFilteredCustomer(updatedCustomer);
+  };
+
+  const handleSelect = (customer) => {
+    setSearchPayload(customer.customer_name);
+    setValue('customer_name', customer.customer_name);
+    setValue('phone', customer.phone);
+    setValue('address', customer.address);
+    setValue('gst_in', customer.gst);
+    setFilteredCustomer([]);
+    console.log(customer, 'customer');
+  };
+
+  useEffect(() => {
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI({});
+  }, []);
   return (
     <Container ref={containerRef} className="ag-theme-alpine mt-4" style={gridStyle}>
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -249,10 +279,37 @@ function NewTsForm({ tsAdded, tippiInvoiceNo }) {
               <Form.Control
                 placeholder="Search Name/Ph. No"
                 style={inputStyle}
+                type="text"
                 {...register('customer_name', {
                   required: 'Required'
                 })}
+                onChange={onChange}
               />
+              {filteredCustomer.length > 0 && (
+                <div
+                  style={{
+                    maxHeight: '120px',
+                    overflowY: 'auto'
+                  }}>
+                  <ul
+                    style={{
+                      listStyle: 'none',
+                      padding: '5px',
+                      margin: '0px',
+                      backgroundColor: '#F4F5F7',
+                      borderRadius: '5px'
+                    }}>
+                    {filteredCustomer.map((customer) => (
+                      <li
+                        style={{ cursor: 'pointer', marginBottom: '8px' }}
+                        key={customer.customer_name}
+                        onClick={() => handleSelect(customer)}>
+                        {customer.customer_name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
               {errors.customer_name && (
                 <Form.Text className="text-danger">{errors.customer_name.message}</Form.Text>
               )}
@@ -261,17 +318,13 @@ function NewTsForm({ tsAdded, tippiInvoiceNo }) {
             <Form.Group as={Col} xs={3}>
               <Form.Label>GSTIN</Form.Label>
               <Form.Control
-                style={inputStyle}
+                // readOnly
+                style={{ background: '#F4F5F7', color: '#A5ADBA', border: 'none' }}
+                defaultValue={selectedCustomer?.gst}
                 {...register('gst_in', {
-                  pattern: {
-                    value: /^[A-Za-z0-9]{15}$/i,
-                    message: 'Invalid GSTIN'
-                  }
+                  required: 'GSTIN is required'
                 })}
               />
-              {errors.gst_in && (
-                <Form.Text className="text-danger">{errors.gst_in.message}</Form.Text>
-              )}
             </Form.Group>
 
             <Form.Group as={Col} xs={2}>
@@ -293,27 +346,25 @@ function NewTsForm({ tsAdded, tippiInvoiceNo }) {
             <Form.Group as={Col} xs={3}>
               <Form.Label>Address</Form.Label>
               <Form.Control
-                style={inputStyle}
+                readOnly
+                style={{ border: 'none', backgroundColor: 'white', padding: '0px' }}
+                defaultValue={selectedCustomer?.address}
                 {...register('address', {
                   required: 'Required'
                 })}
               />
-              {errors.address && (
-                <Form.Text className="text-danger">{errors.address.message}</Form.Text>
-              )}
             </Form.Group>
 
             <Form.Group as={Col} xs={3}>
               <Form.Label>Phone No.</Form.Label>
               <Form.Control
-                style={inputStyle}
+                readOnly
+                style={{ border: 'none', backgroundColor: 'white', padding: '0px' }}
+                defaultValue={selectedCustomer?.phone}
                 {...register('phone', {
                   required: 'Required'
                 })}
               />
-              {errors.phone && (
-                <Form.Text className="text-danger">{errors.phone.message}</Form.Text>
-              )}
             </Form.Group>
           </Row>
 

@@ -9,8 +9,15 @@ import LocalPrintshopOutlinedIcon from '@mui/icons-material/LocalPrintshopOutlin
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import '../../css/index.css';
 import ProService from '../../services/purchase.api';
+import CatalogService from 'services/catalog.api.js';
+import { SERVICES } from '../../services/api.const.js';
 
 const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
+  const [selectedSupplier, setSelectedSupplier] = useState();
+  const [supplierData, setSupplierData] = useState([]);
+  const [searchPayload, setSearchPayload] = useState('');
+  const [filteredSupplier, setFilteredSupplier] = useState([]);
+
   const {
     register,
     handleSubmit,
@@ -38,6 +45,43 @@ const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
       setValue(`amount_${rowIdx}`, amount);
     }
   };
+
+  //supplier details api starts
+
+  useEffect(() => {
+    // By default invoke the fetch API with default limit and page
+    invokeSearchAPI({});
+  }, []);
+
+  const invokeSearchAPI = (payload, query = null) => {
+    CatalogService.getPartners(SERVICES.CATALOG.QUERY_PARAMS.SUPPLIER, payload, query)
+      .then((response) => {
+        setSupplierData(response.data.data);
+      })
+      .catch((error) => {
+        console.log('Error in searching Supplier data', error);
+      });
+  };
+
+  const onChange = (e) => {
+    setSearchPayload(e.target.value);
+    const updatedSupplier = supplierData.filter((supplier) =>
+      supplier.supplier_name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+
+    setFilteredSupplier(updatedSupplier);
+  };
+
+  const handleSelect = (supplier) => {
+    setSearchPayload(supplier.supplier_name);
+    setValue('supplier_name', supplier.supplier_name);
+    setValue('phone', supplier.phone);
+    setValue('address', supplier.address);
+    setFilteredSupplier([]);
+    console.log(supplier, 'supplier');
+  };
+
+  //supplier details api ends
 
   const [purchaseTotalState, setPurchaseTotalState] = useState(0);
   const [subTotalState, setSubTotalState] = useState(0);
@@ -213,6 +257,7 @@ const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
                 <Form.Control
                   style={inputStyle}
                   type="text"
+                  placeholder="Search Name/Ph. No"
                   {...register('supplier_name', {
                     required: 'required',
                     maxLength: {
@@ -221,15 +266,45 @@ const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
                     }
                     // Add more validation rules as needed
                   })}
+                  onChange={onChange}
                 />
+                {filteredSupplier.length > 0 && (
+                  <div
+                    style={{
+                      maxHeight: '120px',
+                      overflowY: 'auto'
+                    }}>
+                    <ul
+                      style={{
+                        listStyle: 'none',
+                        padding: '5px',
+                        margin: '0px',
+                        backgroundColor: '#F4F5F7',
+                        borderRadius: '5px'
+                      }}>
+                      {filteredSupplier.map((supplier) => (
+                        <li
+                          style={{ cursor: 'pointer', marginBottom: '8px' }}
+                          key={supplier.supplier_name}
+                          onClick={() => handleSelect(supplier)}>
+                          {supplier.supplier_name}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {errors.supplier_name && (
+                  <Form.Text className="text-danger">{errors.supplier_name.message}</Form.Text>
+                )}
               </Form.Group>
 
               <Form.Group as={Col} xs={3} controlId="NewProPhone">
                 <Form.Label>Phone no.</Form.Label>
                 <Form.Control
+                  readOnly
                   style={{ background: '#F4F5F7', color: '#A5ADBA', border: 'none' }}
                   // placeholder="8941555367"
-                  defaultValue="8941555367"
+                  defaultValue={selectedSupplier?.address}
                   type="tel"
                   // disabled
                   {...register('phone', {
@@ -284,13 +359,15 @@ const NewProcurement = ({ procurementAdded, proInvoiceNo }) => {
               <Form.Group as={Col} xs={3}>
                 <Form.Label>Address</Form.Label>
                 <Form.Control
-                  style={inputStyle}
+                  readOnly
+                  style={{ border: 'none', backgroundColor: 'white', padding: '0px' }}
+                  defaultValue={selectedSupplier?.address}
                   {...register('address', {
                     required: 'address is required'
                   })}></Form.Control>
-                {errors.address && (
+                {/* {errors.address && (
                   <Form.Text className="text-danger">{errors.address.message}</Form.Text>
-                )}
+                )} */}
               </Form.Group>
               {/* <p className="mb-1" style={{ color: '#62728D' }}>
               Address

@@ -369,7 +369,6 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                   }
                   // Add more validation rules as needed
                 })}
-                // value={selectedBroker ? searchPayload : ''}
                 onChange={onChange}
               />
               {filteredBroker.length > 0 && (
@@ -383,7 +382,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                       listStyle: 'none',
                       padding: '5px',
                       margin: '0px',
-                      backgroundColor: '#d7dbde',
+                      backgroundColor: '#F4F5F7',
                       borderRadius: '5px'
                     }}>
                     {filteredBroker.map((broker) => (
@@ -450,7 +449,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
               <Form.Control
                 readOnly
                 style={
-                  { border: 'none', backgroundColor: 'white' }
+                  { border: 'none', backgroundColor: 'white', padding: '0px' }
                   // selectedBroker ? { border: 'none', backgroundColor: 'white' } : { ...inputStyle }
                 }
                 defaultValue={selectedBroker?.address}
@@ -465,9 +464,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
               <Form.Label>Phone</Form.Label>
               <Form.Control
                 readOnly
-                style={
-                  selectedBroker ? { border: 'none', backgroundColor: 'white' } : { ...inputStyle }
-                }
+                style={{ border: 'none', backgroundColor: 'white', padding: '0px' }}
                 {...register('phone', {
                   required: 'phone is required'
                 })}></Form.Control>
