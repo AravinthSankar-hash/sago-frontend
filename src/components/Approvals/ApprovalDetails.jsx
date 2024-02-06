@@ -2,8 +2,8 @@ import { useState } from 'react';
 import ProcurementDetails from '../procurement/ProcurementDetails';
 import { Button, Row, Col, Container } from 'react-bootstrap';
 import ActionPopup from './Popup.jsx';
-import ExpenseDetails from '../../components/expense/ExpenseDetails';
-import TPDetails from '../../components/tapicoPurchase/TPDetails';
+import ExpenseDetails from '../../components/expense/ExpenseDetails.jsx';
+import TPDetails from '../../components/tapicoPurchase/TPDetails.jsx';
 import GenericApi from 'services/generic.api';
 
 function ApprovalDetails({ detailsData, selectedChips, isActionRequired, showDetailsTab }) {
