@@ -298,7 +298,10 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
 
   const handleSelect = (broker) => {
     setSearchPayload(broker.broker_name);
-    setSelectedBroker(broker);
+    setValue('broker_name', broker.broker_name);
+    setValue('commission', broker.commission_percent);
+    setValue('phone', broker.phone);
+    setValue('address', broker.address);
     setFilteredBroker([]);
     console.log(broker, 'broker');
   };
@@ -367,17 +370,23 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                   // Add more validation rules as needed
                 })}
                 // value={selectedBroker ? searchPayload : ''}
-                defaultValue={selectedBroker?.broker_name}
                 onChange={onChange}
               />
-              <div
-                style={{
-                  maxHeight: '120px',
-                  overflowY: 'auto'
-                }}>
-                <ul style={{ listStyle: 'none', padding: '5px', margin: '0px' }}>
-                  {searchPayload.length > 0 &&
-                    filteredBroker.map((broker) => (
+              {filteredBroker.length > 0 && (
+                <div
+                  style={{
+                    maxHeight: '120px',
+                    overflowY: 'auto'
+                  }}>
+                  <ul
+                    style={{
+                      listStyle: 'none',
+                      padding: '5px',
+                      margin: '0px',
+                      backgroundColor: '#d7dbde',
+                      borderRadius: '5px'
+                    }}>
+                    {filteredBroker.map((broker) => (
                       <li
                         style={{ cursor: 'pointer', marginBottom: '8px' }}
                         key={broker.broker_name}
@@ -385,8 +394,9 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                         {broker.broker_name}
                       </li>
                     ))}
-                </ul>
-              </div>
+                  </ul>
+                </div>
+              )}
               {errors.broker_name && (
                 <Form.Text className="text-danger">{errors.broker_name.message}</Form.Text>
               )}
@@ -407,8 +417,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                   }
                   // Add more validation rules as needed
                 })}
-                readOnly
-                defaultValue={selectedBroker?.commission_percent}></Form.Control>{' '}
+                readOnly></Form.Control>{' '}
               {/* <Form.Control.Feedback type="invalid"> */}
               {/* {errors.commission && (
                 <Form.Text className="text-danger">{errors.commission.message}</Form.Text>
@@ -461,8 +470,7 @@ function TPAddForm({ showForm, tpAdded, tpInvoiceNo }) {
                 }
                 {...register('phone', {
                   required: 'phone is required'
-                })}
-                defaultValue={selectedBroker?.phone}></Form.Control>
+                })}></Form.Control>
               {/* {errors.phone && (
                 <Form.Text className="text-danger">{errors.phone.message}</Form.Text>
               )} */}
