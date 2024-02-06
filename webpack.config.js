@@ -3,11 +3,20 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: path.join(__dirname, 'src', 'index.js'),
+    mode: 'production',
     output: {
         path: path.resolve(__dirname, 'dist')
     },
     devServer: {
         historyApiFallback: true
+    },
+    resolve: {
+        extensions: ['.js', '.jsx'],
+        alias: {
+            components: path.resolve(__dirname, 'src', 'components'),
+            services: path.resolve(__dirname, 'src', 'services'),
+            pages: path.resolve(__dirname, 'src', 'pages'),
+        },
     },
     module: {
         rules: [
@@ -34,7 +43,19 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
-            }
+            },
+            {
+                test: /\.(jpg|jpeg)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'images/',
+                        },
+                    },
+                ],
+            },
         ]
     },
     plugins: [
