@@ -5,7 +5,7 @@ import '../../css/index.css';
 import Toaster from '../helper/Snackbar.jsx';
 import { Button } from '@mui/material';
 import PaymentModel from './paymentModal.jsx';
-import { RESPONSE_MSG } from '../sales/sale.const.js';
+import { RESPONSE_MSG } from '../../components/Sales/sale.const';
 
 const TabComponent = (props) => {
   const { paymentCategory, paymentRefId, partyName, onPaymentHanlder } = props;
