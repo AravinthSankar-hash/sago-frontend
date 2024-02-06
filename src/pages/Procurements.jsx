@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import SearchBox from '../components/SearchBox.jsx';
-import DateSelector from '../components/DateSelector.jsx';
+import SearchBox from '../components/helper/SearchBox.jsx';
+import DateSelector from '../components/helper/DateSelector.jsx';
 import AddIcon from '@mui/icons-material/Add';
 import Button from '@mui/material/Button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -10,45 +10,150 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import '../css/index.css';
-import MuiTable from '../components/ProcurementTable.jsx';
+import ProcurementTable from '../components/procurement/ProcurementTable.jsx';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import NewProcurement from '../components/forms/NewProcurement.jsx';
-import ProcurementDetails from '../components/ProcurementDetails.jsx';
+import NewProcurement from '../components/procurement/NewProcurement.jsx';
+import ProcurementDetails from '../components/procurement/ProcurementDetails.jsx';
+import {
+  proTableHeaders,
+  proTableColumns,
+  RESPONSE_MSG
+} from '../components/tapicoPurchase/tp.const.js';
+// API
+import ProService from 'services/purchase.api.js';
+import { SERVICES } from '../services/api.const.js';
+
+import { isNumeric } from '../components/helper/helper.js';
+import Toaster from '../components/helper/Snackbar.jsx';
+import GenericService from '../services/generic.api';
 
 function Procurements() {
   const [procurementData, setProcurementData] = useState([]);
+  const [totalProDataCount, setTotalProDataCount] = useState(0);
+
   const [showNewForm, setShowNewForm] = useState(false);
-  const [selectedChips, setSelectedChips] = useState([]);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedChips, setSelectedChips] = useState(['All']);
   const [page, setPage] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
-  const [rowData, setRowData] = useState({});
+  const [searchPayload, setSearchPayload] = useState({});
+  const [currentRowsPerPage, setCurrentRowsPerPage] = useState(10);
+  const [toasterBackground, setToasterBackground] = useState(null);
+  const [toasterMsg, setToasterMsg] = useState('Procurement data saved');
+  const [shouldShowToaster, setShouldShowToaster] = useState(false);
+  const [selectedPro, setSelectedPro] = useState();
+  const [invoiceNumber, setInvoiceNumber] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3001/procurement')
-      .then((rawResponse) => rawResponse.json())
+    invokeProcurementListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, []);
+
+  const invokeProcurementListAPI = (payload, query = null) => {
+    ProService.getData(SERVICES.TP.QUERY_PARAMS.PROCUREMENT, payload, query)
       .then((response) => {
-        setProcurementData(response.data);
-        console.log(response.data);
+        // setCurrentRowsPerPage(currentRowsPerPage);
+        setProcurementData(response.data.data);
+        setTotalProDataCount(response.data.totalCount);
+        if (response.data?.data.length === 0) {
+          invokeToaster(RESPONSE_MSG.NO_DATA_FOUND);
+        }
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        console.log('Error in searching Purchase data', error);
+        invokeToaster(RESPONSE_MSG.INVALID_SEARCH_TEXT, 'red');
       });
-  }, []);
+  };
+
+  const onTableRowClick = (clickedRow) => {
+    setSelectedPro(clickedRow);
+    setShowDetails(true);
+
+    console.log(selectedPro, 'selectedPro');
+    console.log('Procurement table row clicked');
+  };
+
+  const onDeleteList = (shouldShow) => {
+    setShowDetails(shouldShow);
+    invokeProcurementListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
+
+  const onSearchBoxValueChange = (currentInputValue) => {
+    setPage(0);
+    const isPhoneNumberSearch = isNumeric(currentInputValue);
+    const payload = {
+      ...searchPayload,
+      ...{
+        [isPhoneNumberSearch ? 'phone' : 'search_term']: currentInputValue
+      }
+    };
+    setSearchPayload(payload);
+    invokeProcurementListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
+
+  const proPageChanged = (event, currentPageNo) => {
+    setPage(currentPageNo);
+    invokeProcurementListAPI(
+      searchPayload,
+      `page=${currentPageNo + 1}&limit=${currentRowsPerPage}`
+    );
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setCurrentRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+    invokeProcurementListAPI(
+      searchPayload,
+      `page=${0 + 1}&limit=${parseInt(event.target.value, 10)}`
+    );
+  };
+
+  // Just a generic method to invoke toaster
+  const invokeToaster = (msg, backgroundClr = null) => {
+    if (msg) {
+      setToasterMsg(msg);
+    }
+    if (backgroundClr) {
+      setToasterBackground(backgroundClr);
+      setShouldShowToaster(Math.random());
+    }
+    // setShouldShowToaster(true);
+  };
+
+  const onProcurementSave = (newAddedProcurement) => {
+    invokeToaster();
+    showForm(false);
+    // updateShowTPBackBtn(false);
+    setProcurementData((procurement) => [newAddedProcurement, ...procurement]);
+    invokeProcurementListAPI(searchPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  };
+
+  const hanldeAddProcurementFormClick = () => {
+    GenericService.getInvoiceNo('PROCUREMENT')
+      .then((response) => {
+        setInvoiceNumber(response.data.invoiceNumber);
+      })
+      .catch((error) => {
+        console.log('Error in getting customer data', error);
+      });
+
+    showForm(true);
+    // updateShowTPBackBtn(true);
+  };
+
   const showForm = (shouldShow) => {
     setShowNewForm(shouldShow);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleShowDetails = (shouldShow, rowData) => {
-    setRowData(rowData);
+  const handleChangePage = (shouldShow) => {
+    showForm(shouldShow);
     setShowDetails(shouldShow);
   };
 
+  const filterOptions = [
+    { displayLabel: 'All', value: 'All' },
+    { displayLabel: 'Paid', value: 'PAID' },
+    { displayLabel: 'Unpaid', value: 'NOT_PAID' }
+  ];
   const chipStyle = (isSelected) => ({
     border: '2px solid #00b7ff',
     borderRadius: '8px',
@@ -61,16 +166,89 @@ function Procurements() {
     },
     cursor: 'pointer'
   });
-  const handleChipSelect = (label) => {
-    setSelectedChips([]);
-    setSelectedChips([label]);
+  const handleChipSelect = (labelObj) => {
+    let payload = searchPayload;
+    if (labelObj.displayLabel === 'All') {
+      setSelectedChips(['All']);
+      setSearchPayload((searchPayload) => ({
+        ...searchPayload,
+        payment_status: ['All']
+      }));
+      payload = { ...payload, payment_status: ['All'] };
+      invokeProcurementListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+      return;
+    }
+
+    const updatedChipSet = new Set(selectedChips);
+    console.log(selectedChips, 'selectedChips');
+
+    if (updatedChipSet.has('All')) {
+      updatedChipSet.delete('All');
+    }
+
+    if (updatedChipSet.has(labelObj.value)) {
+      updatedChipSet.delete(labelObj.value);
+    } else {
+      updatedChipSet.add(labelObj.value);
+    }
+
+    if (!updatedChipSet.size) {
+      updatedChipSet.add('All');
+    }
+
+    setSelectedChips([...updatedChipSet]);
+    setPage(0);
+    setSearchPayload((searchPayload) => ({
+      ...searchPayload,
+      payment_status: [...updatedChipSet]
+    }));
+    payload = { ...payload, payment_status: [...updatedChipSet] };
+
+    invokeProcurementListAPI(payload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
   };
 
-  // Function to handle rows per page change
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0); // Reset to the first page when changing rows per page
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
+
+  const onDateChange = (selectedDate, dateType) => {
+    if (!selectedDate) {
+      // If the date is not selected, reset the corresponding state
+      if (dateType === 'from') {
+        setFromDate(null);
+      } else if (dateType === 'to') {
+        setToDate(null);
+      }
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: undefined
+      }));
+    } else {
+      // If the date is selected, update the corresponding state
+      setSearchPayload((existingPayload) => ({
+        ...existingPayload,
+        [`${dateType}_date`]: selectedDate
+      }));
+      if (dateType === 'from') {
+        setFromDate(selectedDate);
+      } else if (dateType === 'to') {
+        setToDate(selectedDate);
+      }
+    }
   };
+
+  useEffect(() => {
+    let apiPayload = searchPayload;
+    // Check if any fromDate and toDate are missing
+    if (!fromDate || !toDate) {
+      apiPayload = {
+        ...searchPayload,
+        from_date: undefined,
+        to_date: undefined
+      };
+    }
+    invokeProcurementListAPI(apiPayload, `page=${0 + 1}&limit=${currentRowsPerPage}`);
+  }, [fromDate, toDate]);
+
   return (
     <Container style={{ background: '#EBEEF0' }}>
       <Row style={{ background: '#ffffff', height: '56px', alignItems: 'center' }}>
@@ -79,8 +257,7 @@ function Procurements() {
             <ArrowBackIcon
               style={{ cursor: 'pointer' }}
               onClick={() => {
-                showForm(false);
-                handleShowDetails(false);
+                handleChangePage(false);
               }}
               fontSize="medium"
             />
@@ -94,26 +271,33 @@ function Procurements() {
       <Row>
         <Col className="d-flex flex-column justify-content-center">
           {showNewForm ? (
-            <NewProcurement showForm={showForm} />
+            <NewProcurement procurementAdded={onProcurementSave} proInvoiceNo={invoiceNumber} />
           ) : (
             <>
               {' '}
-              {showDetails ? (
-                <ProcurementDetails rowData={rowData} />
+              {showDetails && selectedPro ? (
+                <ProcurementDetails selectedPro={selectedPro} onDeleteListApi={onDeleteList} />
               ) : (
-                <div>
-                  <div className="pt-3 pb-3 mt-2" style={{ height: '120px' }}>
+                <div style={{ padding: '0 12px', margin: '0 28px' }}>
+                  <div className="pt-3 pb-3 m-2" style={{ height: '120px' }}>
                     <Row>
                       <Col lg="3">
-                        <SearchBox placeHolder={'Search here'}></SearchBox>
+                        <SearchBox
+                          placeHolder={'Search here'}
+                          inputValueChanged={onSearchBoxValueChange}></SearchBox>
                       </Col>
                       <Col lg="2">
-                        <DateSelector size="smaller" customLabel="From"></DateSelector>
+                        <DateSelector
+                          size="smaller"
+                          dateChangeHanlder={onDateChange}
+                          customLabel="From"></DateSelector>
                       </Col>
                       <Col lg="2">
-                        <DateSelector customLabel="To"></DateSelector>
+                        <DateSelector
+                          dateChangeHanlder={onDateChange}
+                          customLabel="To"></DateSelector>
                       </Col>
-                      <Col lg="2" style={{ display: 'flex', justifyContent: 'space-around' }}>
+                      <Col lg="3" className="d-flex justify-content-end">
                         <IconButton size="small">
                           <IosShareIcon
                             fontSize="small"
@@ -124,7 +308,7 @@ function Procurements() {
                           Export Data
                         </IconButton>
                       </Col>
-                      <Col lg="3">
+                      <Col lg="2" className="d-flex justify-content-end">
                         <Button
                           sx={{
                             borderColor: '#00B7FF',
@@ -137,7 +321,7 @@ function Procurements() {
                             fontWeight: 'bold'
                           }}
                           variant="outlined"
-                          onClick={() => showForm(true)}>
+                          onClick={() => hanldeAddProcurementFormClick(true)}>
                           <AddIcon fontSize="small" sx={{ color: '#00B7FF' }} />
                           New Procurement
                         </Button>
@@ -146,54 +330,38 @@ function Procurements() {
                     <Row className="mt-3">
                       <Stack direction="row" spacing={1}>
                         <p style={{ color: '#6B778C' }}>Filter by : </p>
-                        <Chip
-                          label="All"
-                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                          onClick={() => handleChipSelect('All')}
-                          sx={chipStyle(selectedChips.includes('All'))}
-                        />
-                        <Chip
-                          label="Paid"
-                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                          onClick={() => handleChipSelect('Paid')}
-                          sx={chipStyle(selectedChips.includes('Paid'))}
-                        />
-                        <Chip
-                          label="Unpaid"
-                          color={selectedChips.includes('Unpaid') ? 'primary' : 'default'}
-                          onClick={() => handleChipSelect('UnPaid')}
-                          sx={chipStyle(selectedChips.includes('UnPaid'))}
-                        />
+                        {filterOptions.map((filterOptionObj, index) => (
+                          <Chip
+                            key={index}
+                            label={filterOptionObj.displayLabel}
+                            color={
+                              selectedChips.includes(filterOptionObj.value) ? 'primary' : 'default'
+                            }
+                            onClick={() => handleChipSelect(filterOptionObj)}
+                            sx={chipStyle(selectedChips.includes(filterOptionObj.value))}
+                          />
+                        ))}
                       </Stack>
                     </Row>
                   </div>
                   <div>
-                    {procurementData.length > 0 ? (
-                      <MuiTable
+                    {procurementData.length ? (
+                      <ProcurementTable
                         tableData={procurementData}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        handleChangePage={handleChangePage}
+                        proTableHeaders={proTableHeaders}
+                        proTableColumns={proTableColumns}
+                        totalproDataCount={totalProDataCount}
+                        hanldePageChange={proPageChanged}
+                        tableRowClicked={onTableRowClick}
                         handleChangeRowsPerPage={handleChangeRowsPerPage}
-                        handleShowDetails={handleShowDetails}
+                        rowsPerPage={currentRowsPerPage}
+                        page={page}
                       />
                     ) : (
                       <Box sx={{ display: 'flex' }}>
                         <CircularProgress />
                       </Box>
                     )}
-
-                    {/* <AgGridTable
-                columnDefs={[
-                  { field: 'Purchase date' },
-                  { field: 'Purchase No' },
-                  { field: 'Supplier Name' },
-                  { field: 'Outstandings' },
-                  { field: 'Last payment date' },
-                  { field: 'Approval Status' }
-                ]}
-                rowData={procurementData}
-              /> */}
                   </div>
                 </div>
               )}
@@ -201,6 +369,10 @@ function Procurements() {
           )}
         </Col>
       </Row>
+      <Toaster
+        shouldOpen={shouldShowToaster}
+        message={toasterMsg}
+        backgroundColor={toasterBackground}></Toaster>
     </Container>
   );
 }

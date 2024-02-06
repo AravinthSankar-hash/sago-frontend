@@ -20,8 +20,8 @@ function Header() {
     border-left: 1px solid #b2b3b7;
   `;
   return (
-    <Navbar style={{ padding: '0px', backgroundColor: '#FFFFFF', }}>
-      <Container >
+    <Navbar style={{ padding: '0px', backgroundColor: '#FFFFFF' }}>
+      <Container>
         <Navbar.Brand href="#home"></Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
@@ -43,7 +43,7 @@ function Header() {
               color: '#191C24',
               fontWeight: 'bold'
             }}>
-            Ranjith raj
+            ABCD XYSZ
           </Navbar.Text>
           <Navbar.Text>
             <FontAwesomeIcon icon={faAngleDown} style={dropDown} />

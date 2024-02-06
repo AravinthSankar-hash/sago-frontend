@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -8,7 +9,8 @@ import {
   useShowTPBackBtn,
   useUpdateShowTPBackBtn,
   useUpdateShowPurhcaseDetails,
-  useUpdateShowTPPurchaseNewForm
+  useUpdateShowTPPurchaseNewForm,
+  useUpdateShowTPBrokerReportDetails
 } from '../../store/store.js';
 import Purchases from './PurchasesTab.jsx';
 import BrokerReports from './BrokerReportsTab.jsx';
@@ -22,10 +24,13 @@ function TapicoPurchase() {
   const updateActiveTPTabComponent = useUpdateActiveTPTabComponent(); // Method to update the active component, whenver the tab is clicked
   const updateShowPurhcaseDetails = useUpdateShowPurhcaseDetails();
   const updateShowTPPurchaseNewForm = useUpdateShowTPPurchaseNewForm();
+  const updateShowTPBrokerReportDetails = useUpdateShowTPBrokerReportDetails();
   const onBackBtnClick = () => {
     updateShowTPBackBtn(false);
     updateShowTPPurchaseNewForm(false);
     updateShowPurhcaseDetails(false);
+    updateShowTPBrokerReportDetails(false);
+    updateActiveTPTabComponent(<Purchases />);
   };
 
   const renderTabComponent = (tabName) => {
@@ -35,11 +40,17 @@ function TapicoPurchase() {
       case 'brokerreports':
         return <BrokerReports />;
       case 'reports':
+        updateShowTPBackBtn(true);
         return <Reports />;
       default:
         return <div>Coming soon...</div>;
     }
   };
+  useEffect(() => {
+    updateActiveTPTabComponent(<Purchases />);
+    // On Component Init set store to defaults
+    onBackBtnClick();
+  }, []);
   const handleTabSwitch = (tabName) => {
     const currentTabComp = renderTabComponent(tabName);
     // On every tab switch update the active component

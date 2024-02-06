@@ -1,7 +1,7 @@
 /* AG Grid Custom CSS */
 
-body {
-  font-family: 'Roboto', sans-serif;
+* {
+  font-family: 'Roboto', sans-serif !important;
   /* font: 'Roboto' */
 }
 .ag-center-cols-container {
@@ -91,4 +91,21 @@ body {
 
 .MuiTablePagination-selectLabel {
   margin-bottom: 0px !important;
+}
+
+.sidebar .css-19colxx-MuiDrawer-docked .MuiDrawer-paper {
+  background: #0a3546;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
 }

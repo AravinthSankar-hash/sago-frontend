@@ -13,29 +13,29 @@ export const sideBarItems = [
   {
     itemHeader: 'REPORTS',
     items: [
-      { name: 'DashBoard', src: dashIcon, route: '/' },
-      { name: 'Inventory', src: inventIcon },
-      { name: 'Approvals', src: approvIcon }
+      { name: 'DashBoard', src: dashIcon, route: '/dashboard' },
+      { name: 'Inventory', src: inventIcon, route: '/inventory' },
+      { name: 'Approvals', src: approvIcon, route: '/approvals' }
     ]
   },
   {
     itemHeader: 'PURCHASE',
     items: [
-      { name: 'Tapico Purchase', src: topioIcon, route: '/purchase' },
+      { name: 'Tapioca Purchase', src: topioIcon, route: '/purchase' },
       { name: 'Procurements', src: procureIcon, route: '/procurement' },
-      { name: 'Expenses', src: expenseIcon }
+      { name: 'Expenses', src: expenseIcon, route: '/expense' }
     ]
   },
   {
     itemHeader: 'CREDIT/DEBIT',
     items: [
-      { name: 'Sales', src: saleIcon },
-      { name: 'Payment', src: paymentIcon },
-      { name: 'Invoices', src: invIcon }
+      { name: 'Sales', src: saleIcon, route: '/sales' },
+      { name: 'Payment', src: paymentIcon, route: '/payments' },
+      { name: 'Invoices', src: invIcon, route: '/invoice' }
     ]
   },
   {
     itemHeader: 'DATA',
-    items: [{ name: 'Cataglog', src: catIcon, route: '/catalog' }]
+    items: [{ name: 'Catalog', src: catIcon, route: '/catalog' }]
   }
 ];
