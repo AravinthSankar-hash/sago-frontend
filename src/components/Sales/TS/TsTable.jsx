@@ -14,6 +14,7 @@ import {
 import { useState } from 'react';
 import '../../../css/index.css';
 import { TABLE_ROW_SIZE_OPTIONS } from '../sale.const.js';
+import dayjs from 'dayjs';
 
 const TsTable = (props) => {
   const {
@@ -137,6 +138,8 @@ const TsTable = (props) => {
                             : tableRow[columnKey]}
                         </div>
                       );
+                    } else if (columnKey === 'sale_date' || columnKey === 'payment_due_date') {
+                      cellContent = dayjs(tableRow[columnKey]).format('DD MMM YY');
                     } else {
                       // Common logic for formatting numbers
                       isNumber = typeof tableRow[columnKey] === 'number';

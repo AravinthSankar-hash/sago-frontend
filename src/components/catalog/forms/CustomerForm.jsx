@@ -22,6 +22,7 @@ function CustomerForm({ customerAdded }) {
       city: data.city,
       pincode: data.pincode,
       aadhar: data.aadhar,
+      gst: data.gst,
       type: 'customer'
     };
     await CatalogService.create({ type: 'PARTNER', data: newCustomer });
@@ -223,8 +224,21 @@ function CustomerForm({ customerAdded }) {
 
         <Row className="mb-3 mt-2">
           <Form.Group as={Col} xs={3} controlId="NewCustFormGstNo">
-            <Form.Label>GST No.</Form.Label>
-            <Form.Control style={inputStyle} type="text" {...register('gstnum')} />
+            <Form.Label>
+              GST No. <span style={{ color: 'red' }}>*</span>
+            </Form.Label>
+            <Form.Control
+              style={inputStyle}
+              type="text"
+              {...register('gst', {
+                required: 'GST Number is required',
+                pattern: {
+                  value: /^\d{15,}$/i,
+                  message: 'Invalid GST Number format'
+                }
+              })}
+            />
+            {errors.gst && <Form.Text className="text-danger">{errors.gst.message}</Form.Text>}
           </Form.Group>
 
           <Form.Group as={Col} xs={3} controlId="NewCustFormPanNo">

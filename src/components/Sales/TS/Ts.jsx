@@ -94,8 +94,8 @@ const TpSales = () => {
 
   const onTSSave = (newAddedTS) => {
     invokeToaster();
-    setRowsPerPage(false);
-    // updateShowTPBackBtn(false);
+    updateShowSalesBackBtn(false);
+    updateShowTSSalesNewForm(false);
     setsalesInvoices((TS) => [newAddedTS, ...TS]);
     invokeSearchAPI(searchPayload, `page=${0 + 1}&limit=${rowsPerPage}`);
   };
